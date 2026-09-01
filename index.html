@@ -2,220 +2,620 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MY LOG</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
+
+:root{
+  --paper:#f7f5f0;
+  --white:#fffefa;
+  --ink:#292725;
+  --gray:#8b8882;
+  --line:#d9d5ce;
+  --soft:#eeeae3;
+  --accent:#292725;
+}
+
 body{
   margin:0;
-  background:#f4f1ed;
-  color:#272522;
-  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Sans",sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Helvetica Neue",
+    "Hiragino Kaku Gothic ProN",
+    "Yu Gothic",
+    sans-serif;
 }
-header{
-  background:#272522;
-  color:white;
-  padding:22px 18px 18px;
+
+/* ---------- 共通 ---------- */
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
 }
-header h1{
-  margin:0;
-  font-size:25px;
-  letter-spacing:2px;
-}
-header p{
-  margin:5px 0 0;
-  opacity:.7;
-  font-size:12px;
-}
-nav{
-  display:flex;
-  overflow-x:auto;
-  background:white;
-  border-bottom:1px solid #ddd;
-  position:sticky;
-  top:0;
-  z-index:10;
-}
-nav button{
-  flex:1;
-  min-width:85px;
-  border:0;
-  background:white;
-  padding:14px 8px;
-  font-size:12px;
-  color:#777;
-}
-nav button.active{
-  color:#222;
-  border-bottom:3px solid #272522;
-  font-weight:bold;
-}
-main{
-  max-width:900px;
-  margin:auto;
-  padding:18px;
-}
-.page{display:none}
-.page.active{display:block}
-.card{
-  background:white;
-  border-radius:14px;
-  padding:16px;
-  margin-bottom:15px;
-  box-shadow:0 2px 10px rgba(0,0,0,.04);
-}
-h2{
-  font-size:20px;
-  margin:5px 0 15px;
-}
-h3{
-  font-size:14px;
-  margin:0 0 10px;
-}
-input,select,textarea{
-  width:100%;
-  padding:11px;
-  border:1px solid #ddd;
-  border-radius:9px;
-  background:#fafafa;
-  font-size:14px;
-  margin:5px 0 10px;
-}
-textarea{min-height:90px;resize:vertical}
-label{
-  font-size:12px;
-  color:#777;
-}
+
 button{
   cursor:pointer;
 }
-.primary{
-  width:100%;
-  padding:12px;
-  border:0;
-  border-radius:10px;
-  background:#272522;
-  color:white;
+
+.top{
+  background:var(--white);
+  border-bottom:1px dashed var(--line);
+  padding:25px 18px 20px;
+}
+
+.logo{
+  font-family:monospace;
+  font-size:25px;
   font-weight:bold;
+  letter-spacing:3px;
 }
-.small{
-  border:1px solid #ddd;
-  background:white;
-  border-radius:8px;
-  padding:7px 10px;
-  font-size:12px;
+
+.subtitle{
+  color:var(--gray);
+  font-family:monospace;
+  font-size:10px;
+  letter-spacing:1.5px;
+  margin-top:5px;
 }
-.danger{
-  color:#a33;
-}
-.week-title{
+
+nav{
+  position:sticky;
+  top:0;
+  z-index:20;
   display:flex;
-  justify-content:space-between;
-  align-items:center;
+  overflow-x:auto;
+  background:rgba(255,254,250,.96);
+  border-bottom:1px solid var(--line);
+  scrollbar-width:none;
+}
+
+nav::-webkit-scrollbar{
+  display:none;
+}
+
+nav button{
+  flex:0 0 auto;
+  min-width:76px;
+  border:0;
+  border-right:1px solid var(--line);
+  background:transparent;
+  color:var(--gray);
+  padding:12px 9px;
+  font-size:11px;
+  letter-spacing:.5px;
+}
+
+nav button.active{
+  background:var(--ink);
+  color:white;
+}
+
+main{
+  width:100%;
+  max-width:1000px;
+  margin:0 auto;
+  padding:20px 15px 60px;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+.page-head{
+  margin-bottom:18px;
+}
+
+.page-label{
+  font-family:monospace;
+  font-size:10px;
+  color:var(--gray);
+  letter-spacing:2px;
+}
+
+.page-title{
+  font-family:monospace;
+  font-size:25px;
+  letter-spacing:2px;
+  margin:5px 0 0;
+}
+
+.paper{
+  background:var(--white);
+  border:1px solid var(--line);
+  padding:17px;
+  margin-bottom:15px;
+  box-shadow:0 2px 0 rgba(0,0,0,.025);
+}
+
+.paper-title{
+  font-family:monospace;
+  font-size:13px;
+  font-weight:bold;
+  letter-spacing:1px;
+  margin:0 0 13px;
+}
+
+.dash{
+  border-top:1px dashed var(--line);
+  margin:15px 0;
+}
+
+.field{
   margin-bottom:12px;
 }
-.week-grid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:6px;
-  overflow-x:auto;
-}
-.day{
-  min-width:115px;
-  background:#fafafa;
-  border-radius:10px;
-  padding:8px;
-  min-height:180px;
-}
-.day-name{
-  text-align:center;
-  font-weight:bold;
-  font-size:12px;
-  margin-bottom:8px;
-}
-.event{
-  border-radius:7px;
-  padding:7px;
-  margin-bottom:6px;
-  font-size:11px;
-  border-left:4px solid;
-}
-.event strong{display:block;font-size:12px}
-.todo{
-  display:flex;
-  align-items:flex-start;
-  gap:8px;
-  padding:12px 0;
-  border-bottom:1px solid #eee;
-}
-.todo:last-child{border-bottom:0}
-.todo-content{flex:1}
-.todo-name{
-  font-size:14px;
-  font-weight:bold;
-}
-.done .todo-name{
-  text-decoration:line-through;
-  color:#999;
-}
-.stars{
-  font-size:13px;
-  letter-spacing:1px;
-}
-.list-item{
-  border-bottom:1px solid #eee;
-  padding:12px 0;
-}
-.list-item:last-child{border:0}
-.row{
-  display:flex;
-  gap:8px;
-}
-.row>*{flex:1}
-.badge{
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:20px;
-  background:#eee;
+
+label{
+  display:block;
+  color:var(--gray);
   font-size:10px;
-  margin-right:4px;
+  margin-bottom:5px;
+  letter-spacing:.5px;
 }
-.money-total{
-  font-size:28px;
-  font-weight:bold;
-  margin:5px 0 15px;
+
+input,
+select,
+textarea{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:0;
+  background:#fcfbf8;
+  color:var(--ink);
+  padding:10px 11px;
+  outline:none;
 }
-.folder{
-  border:1px solid #ddd;
-  padding:12px;
-  border-radius:10px;
-  margin-bottom:8px;
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:var(--ink);
 }
-.note{
-  background:#fffef8;
-  padding:12px;
-  border-radius:9px;
-  margin-top:8px;
+
+textarea{
+  min-height:85px;
+  resize:vertical;
 }
-.photo{
-  max-width:100%;
-  border-radius:10px;
-  margin-top:8px;
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
 }
-.muted{
-  color:#999;
-  font-size:12px;
+
+.primary{
+  width:100%;
+  border:1px solid var(--ink);
+  background:var(--ink);
+  color:white;
+  padding:11px;
+  margin-top:3px;
 }
+
+.secondary{
+  border:1px solid var(--line);
+  background:var(--white);
+  color:var(--ink);
+  padding:7px 10px;
+  font-size:11px;
+}
+
+.delete{
+  color:#9b3c3c;
+}
+
 .empty{
   text-align:center;
   color:#aaa;
+  font-family:monospace;
+  font-size:11px;
   padding:25px 5px;
+}
+
+.muted{
+  color:var(--gray);
+  font-size:11px;
+}
+
+.badge{
+  display:inline-block;
+  padding:3px 7px;
+  background:var(--soft);
+  font-size:9px;
+  margin:2px 3px 2px 0;
+}
+
+.stars{
+  font-family:monospace;
+  letter-spacing:1px;
+  font-size:12px;
+}
+
+.money{
+  font-family:monospace;
+}
+
+.big-number{
+  font-family:monospace;
+  font-size:31px;
+  font-weight:bold;
+}
+
+.receipt-line{
+  border-top:1px dashed var(--ink);
+  margin:12px 0;
+}
+
+/* ---------- HOME ---------- */
+
+.home-date{
+  font-family:monospace;
+  font-size:12px;
+}
+
+.home-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.stat{
+  background:var(--white);
+  border:1px solid var(--line);
+  padding:15px;
+}
+
+.stat-label{
+  font-family:monospace;
+  color:var(--gray);
+  font-size:9px;
+  letter-spacing:1px;
+}
+
+.stat-number{
+  font-family:monospace;
+  font-size:22px;
+  font-weight:bold;
+  margin-top:7px;
+}
+
+/* ---------- WEEK ---------- */
+
+.week-controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+  margin-bottom:12px;
+}
+
+.week-range{
+  text-align:center;
+  font-family:monospace;
+  font-size:12px;
+  flex:1;
+}
+
+.week-grid{
+  display:grid;
+  grid-template-columns:repeat(7, minmax(110px,1fr));
+  gap:6px;
+  overflow-x:auto;
+  padding-bottom:5px;
+}
+
+.day{
+  min-width:110px;
+  min-height:210px;
+  border:1px solid var(--line);
+  background:#fcfbf8;
+  padding:8px;
+}
+
+.day.today{
+  border:2px solid var(--ink);
+}
+
+.day-head{
+  text-align:center;
+  border-bottom:1px dashed var(--line);
+  padding-bottom:7px;
+  margin-bottom:8px;
+}
+
+.day-name{
+  font-family:monospace;
+  font-size:11px;
+  font-weight:bold;
+}
+
+.day-date{
+  font-family:monospace;
+  color:var(--gray);
+  font-size:10px;
+}
+
+.event{
+  padding:7px;
+  margin-bottom:6px;
+  border-left:4px solid;
+  background:white;
+  font-size:10px;
+}
+
+.event-name{
+  font-weight:bold;
+  font-size:11px;
+}
+
+.event-time{
+  font-family:monospace;
+  margin-top:2px;
+}
+
+.event-meta{
+  color:var(--gray);
+  margin-top:3px;
+}
+
+.event button{
+  margin-top:5px;
+}
+
+/* ---------- TODO ---------- */
+
+.todo-item{
+  display:flex;
+  gap:9px;
+  align-items:flex-start;
+  padding:13px 0;
+  border-bottom:1px dashed var(--line);
+}
+
+.todo-item:last-child{
+  border-bottom:0;
+}
+
+.todo-check{
+  width:19px;
+  height:19px;
+  flex:none;
+  margin-top:2px;
+}
+
+.todo-main{
+  flex:1;
+  min-width:0;
+}
+
+.todo-name{
+  font-size:13px;
+  font-weight:bold;
+}
+
+.todo-done .todo-name{
+  text-decoration:line-through;
+  color:#999;
+}
+
+.todo-buttons{
+  margin-top:7px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+}
+
+.todo-buttons button{
+  padding:5px 7px;
+  font-size:10px;
+}
+
+/* ---------- LIST ---------- */
+
+.list-item{
+  padding:13px 0;
+  border-bottom:1px dashed var(--line);
+}
+
+.list-item:last-child{
+  border-bottom:0;
+}
+
+.item-title{
+  font-weight:bold;
   font-size:13px;
 }
-@media(max-width:700px){
-  .week-grid{
-    grid-template-columns:repeat(7,115px);
+
+.item-detail{
+  font-size:11px;
+  margin-top:5px;
+  white-space:pre-wrap;
+}
+
+.item-actions{
+  margin-top:7px;
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+}
+
+/* ---------- MEMO ---------- */
+
+.folder{
+  border:1px solid var(--line);
+  margin-bottom:10px;
+  background:#fcfbf8;
+}
+
+.folder-head{
+  padding:11px;
+  font-family:monospace;
+  font-size:12px;
+  font-weight:bold;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+}
+
+.folder-body{
+  padding:0 11px 11px;
+}
+
+.note{
+  background:white;
+  border-top:1px dashed var(--line);
+  padding:11px 0;
+}
+
+.note-title{
+  font-weight:bold;
+  font-size:12px;
+}
+
+.note-text{
+  white-space:pre-wrap;
+  font-size:11px;
+  margin-top:5px;
+}
+
+/* ---------- RECORD ---------- */
+
+.record-photo{
+  width:100%;
+  max-height:350px;
+  object-fit:cover;
+  margin-top:8px;
+  border:1px solid var(--line);
+}
+
+/* ---------- RECEIPT ---------- */
+
+.receipt-wrap{
+  max-width:430px;
+  margin:0 auto;
+}
+
+.receipt{
+  background:#fffefa;
+  padding:25px 20px;
+  border:1px solid var(--line);
+  font-family:monospace;
+  position:relative;
+}
+
+.receipt h2{
+  text-align:center;
+  letter-spacing:3px;
+  font-size:19px;
+  margin:0 0 3px;
+}
+
+.receipt-sub{
+  text-align:center;
+  font-size:9px;
+  color:#777;
+}
+
+.receipt-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size:11px;
+  margin:7px 0;
+}
+
+.receipt-center{
+  text-align:center;
+}
+
+.receipt-total{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.barcode{
+  text-align:center;
+  letter-spacing:3px;
+  font-size:22px;
+  margin-top:20px;
+}
+
+.print-button{
+  margin-top:12px;
+  width:100%;
+  padding:11px;
+  border:1px solid var(--ink);
+  background:var(--ink);
+  color:white;
+}
+
+/* ---------- RESPONSIVE ---------- */
+
+@media(max-width:600px){
+  main{
+    padding:16px 12px 50px;
+  }
+
+  .home-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .row{
+    grid-template-columns:1fr;
+    gap:0;
+  }
+}
+
+/* ---------- PRINT ---------- */
+
+@media print{
+
+  body{
+    background:white;
+  }
+
+  body *{
+    visibility:hidden;
+  }
+
+  #receipt,
+  #receipt *{
+    visibility:visible;
+  }
+
+  #receipt{
+    display:block !important;
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+  }
+
+  .receipt-wrap{
+    width:100%;
+    max-width:430px;
+  }
+
+  .receipt{
+    border:0;
+    box-shadow:none;
+  }
+
+  .print-button,
+  nav,
+  header{
+    display:none !important;
   }
 }
 </style>
@@ -223,248 +623,562 @@ button{
 
 <body>
 
-<header>
-  <h1>MY LOG</h1>
-  <p>my weekly record / schedule / money / memo</p>
+<header class="top">
+  <div class="logo">MY LOG</div>
+  <div class="subtitle">RECORD / PLAN / NOTE / 2026</div>
 </header>
 
 <nav>
-  <button class="active" onclick="showPage('week',this)">📅 WEEK</button>
-  <button onclick="showPage('todo',this)">☑ TODO</button>
-  <button onclick="showPage('money',this)">💰 MONEY</button>
-  <button onclick="showPage('wish',this)">🛍 WISH</button>
-  <button onclick="showPage('memo',this)">📝 MEMO</button>
-  <button onclick="showPage('record',this)">📚 RECORD</button>
+  <button class="active" onclick="showPage('home',this)">HOME</button>
+  <button onclick="showPage('week',this)">WEEK</button>
+  <button onclick="showPage('todo',this)">TODO</button>
+  <button onclick="showPage('money',this)">MONEY</button>
+  <button onclick="showPage('wish',this)">WISH</button>
+  <button onclick="showPage('memo',this)">MEMO</button>
+  <button onclick="showPage('record',this)">RECORD</button>
+  <button onclick="showPage('receipt',this)">RECEIPT</button>
 </nav>
 
 <main>
 
-<!-- WEEK -->
-<section id="week" class="page active">
-  <div class="card">
-    <div class="week-title">
-      <div>
-        <h2>THIS WEEK</h2>
-        <div id="weekRange" class="muted"></div>
-      </div>
-      <div>
-        <button class="small" onclick="changeWeek(-1)">← 前週</button>
-        <button class="small" onclick="changeWeek(1)">次週 →</button>
-      </div>
-    </div>
-    <div id="weekGrid" class="week-grid"></div>
+<!-- ================= HOME ================= -->
+
+<section id="home" class="page active">
+
+  <div class="page-head">
+    <div class="page-label">PERSONAL LOG</div>
+    <div class="page-title">HOME</div>
   </div>
 
-  <div class="card">
-    <h3>予定を追加</h3>
+  <div class="paper">
+    <div class="home-date" id="homeDate"></div>
+    <div class="receipt-line"></div>
 
-    <label>名前 *</label>
-    <input id="eventName" placeholder="例：数学の授業">
+    <div class="paper-title">TODAY</div>
+    <div id="homeToday"></div>
+  </div>
+
+  <div class="home-grid">
+
+    <div class="stat">
+      <div class="stat-label">TODAY'S TODO</div>
+      <div class="stat-number" id="homeTodo">0</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">STUDY TIME</div>
+      <div class="stat-number" id="homeStudy">0m</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">SPENDING</div>
+      <div class="stat-number" id="homeMoney">¥0</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">THIS WEEK</div>
+      <div class="stat-number" id="homeEvents">0</div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= WEEK ================= -->
+
+<section id="week" class="page">
+
+  <div class="page-head">
+    <div class="page-label">SCHEDULE</div>
+    <div class="page-title">WEEK</div>
+  </div>
+
+  <div class="paper">
+
+    <div class="week-controls">
+      <button class="secondary" onclick="changeWeek(-1)">← 前週</button>
+
+      <div class="week-range" id="weekRange"></div>
+
+      <button class="secondary" onclick="changeWeek(1)">次週 →</button>
+    </div>
+
+    <div class="week-grid" id="weekGrid"></div>
+
+  </div>
+
+  <div class="paper">
+
+    <div class="paper-title">ADD SCHEDULE</div>
+
+    <div class="field">
+      <label>名前 *</label>
+      <input id="eventName" placeholder="例：数学の授業">
+    </div>
 
     <div class="row">
-      <div>
+
+      <div class="field">
         <label>日付 *</label>
         <input id="eventDate" type="date">
       </div>
-      <div>
+
+      <div class="field">
         <label>時間 *</label>
         <input id="eventTime" type="time">
       </div>
+
     </div>
 
-    <label>
-      <input id="eventAllDay" type="checkbox" style="width:auto">
-      終日
-    </label>
+    <div class="field">
+      <label>
+        <input id="eventAllDay"
+               type="checkbox"
+               style="width:auto">
+        終日
+      </label>
+    </div>
 
-    <label>場所</label>
-    <input id="eventPlace" placeholder="例：学校 / 塾">
+    <div class="field">
+      <label>場所</label>
+      <input id="eventPlace" placeholder="例：学校">
+    </div>
 
-    <label>詳細メモ</label>
-    <textarea id="eventMemo" placeholder="詳細など"></textarea>
+    <div class="field">
+      <label>詳細メモ</label>
+      <textarea id="eventMemo" placeholder="詳細など"></textarea>
+    </div>
 
-    <label>色 *</label>
-    <select id="eventColor">
-      <option value="#8fa8c7">ブルー</option>
-      <option value="#d69a9a">レッド</option>
-      <option value="#a8b99a">グリーン</option>
-      <option value="#c7a7c7">パープル</option>
-      <option value="#d6b77a">イエロー</option>
-      <option value="#aaa">グレー</option>
-    </select>
+    <div class="field">
+      <label>色 *</label>
+      <select id="eventColor">
+        <option value="#777777">BLACK / GRAY</option>
+        <option value="#879bb5">BLUE</option>
+        <option value="#b88787">RED</option>
+        <option value="#8e9c83">GREEN</option>
+        <option value="#a48fa8">PURPLE</option>
+        <option value="#b69a67">YELLOW</option>
+      </select>
+    </div>
 
-    <button class="primary" onclick="addEvent()">予定を追加</button>
+    <button class="primary" onclick="addEvent()">
+      + 予定を追加
+    </button>
+
   </div>
+
+  <div class="paper">
+
+    <div class="paper-title">THIS WEEK TODO</div>
+
+    <div id="weekTodo"></div>
+
+  </div>
+
 </section>
 
 
-<!-- TODO -->
+<!-- ================= TODO ================= -->
+
 <section id="todo" class="page">
-  <div class="card">
-    <h2>☑ TODO</h2>
 
-    <label>やること *</label>
-    <input id="todoName" placeholder="例：英単語をやる">
-
-    <label>優先度</label>
-    <select id="todoPriority">
-      <option value="1">★</option>
-      <option value="2">★★</option>
-      <option value="3" selected>★★★</option>
-      <option value="4">★★★★</option>
-      <option value="5">★★★★★</option>
-    </select>
-
-    <label>期限</label>
-    <input id="todoDue" type="date">
-
-    <label>詳細</label>
-    <textarea id="todoDetail" placeholder="やる内容など"></textarea>
-
-    <button class="primary" onclick="addTodo()">追加</button>
+  <div class="page-head">
+    <div class="page-label">TASK MANAGEMENT</div>
+    <div class="page-title">TODO</div>
   </div>
 
-  <div class="card">
-    <h3>やることリスト</h3>
+  <div class="paper">
+
+    <div class="paper-title">ADD TODO</div>
+
+    <div class="field">
+      <label>やること *</label>
+      <input id="todoName" placeholder="例：英単語を覚える">
+    </div>
+
+    <div class="field">
+      <label>優先度</label>
+      <select id="todoPriority">
+        <option value="5">★★★★★</option>
+        <option value="4">★★★★☆</option>
+        <option value="3" selected>★★★☆☆</option>
+        <option value="2">★★☆☆☆</option>
+        <option value="1">★☆☆☆☆</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>期限（任意）</label>
+      <input id="todoDue" type="date">
+    </div>
+
+    <div class="field">
+      <label>詳細</label>
+      <textarea id="todoDetail" placeholder="やる内容など"></textarea>
+    </div>
+
+    <button class="primary" onclick="addTodo()">
+      + TODOを追加
+    </button>
+
+  </div>
+
+  <div class="paper">
+
+    <div class="paper-title">TASK LIST</div>
+
     <div id="todoList"></div>
+
   </div>
+
 </section>
 
 
-<!-- MONEY -->
+<!-- ================= MONEY ================= -->
+
 <section id="money" class="page">
-  <div class="card">
-    <h2>💰 MONEY</h2>
-    <div class="muted">記録した支出の合計</div>
-    <div class="money-total" id="moneyTotal">¥0</div>
 
-    <label>日付 *</label>
-    <input id="moneyDate" type="date">
-
-    <label>欲しいレベル</label>
-    <select id="moneyLevel">
-      <option>★★★ 絶対ほしい</option>
-      <option>★★ ほしい</option>
-      <option>★ いつかほしい</option>
-    </select>
-
-    <label>ジャンル *</label>
-    <select id="moneyGenre">
-      <option>食費</option>
-      <option>交通</option>
-      <option>学校</option>
-      <option>部活</option>
-      <option>趣味</option>
-      <option>服・美容</option>
-      <option>その他</option>
-    </select>
-
-    <label>値段 *</label>
-    <input id="moneyPrice" type="number" placeholder="1000">
-
-    <label>詳細</label>
-    <textarea id="moneyDetail" placeholder="何に使ったかなど"></textarea>
-
-    <button class="primary" onclick="addMoney()">記録する</button>
+  <div class="page-head">
+    <div class="page-label">SPENDING LOG</div>
+    <div class="page-title">MONEY</div>
   </div>
 
-  <div class="card">
-    <h3>支出記録</h3>
+  <div class="paper">
+
+    <div class="paper-title">TOTAL SPENDING</div>
+
+    <div class="big-number" id="moneyTotal">¥0</div>
+
+    <div class="muted">
+      記録した支出の合計
+    </div>
+
+  </div>
+
+  <div class="paper">
+
+    <div class="paper-title">ADD MONEY LOG</div>
+
+    <div class="field">
+      <label>日付 *</label>
+      <input id="moneyDate" type="date">
+    </div>
+
+    <div class="field">
+      <label>欲しいレベル</label>
+      <select id="moneyLevel">
+        <option>★★★★★ 絶対ほしい</option>
+        <option>★★★★☆ かなりほしい</option>
+        <option>★★★☆☆ ほしい</option>
+        <option>★★☆☆☆ 少しほしい</option>
+        <option>★☆☆☆☆ いつかほしい</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>ジャンル *</label>
+      <select id="moneyGenre">
+        <option>食費</option>
+        <option>交通</option>
+        <option>学校</option>
+        <option>部活</option>
+        <option>服・美容</option>
+        <option>趣味</option>
+        <option>その他</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>値段 *</label>
+      <input id="moneyPrice"
+             type="number"
+             min="0"
+             placeholder="1000">
+    </div>
+
+    <div class="field">
+      <label>詳細</label>
+      <textarea id="moneyDetail"
+                placeholder="何に使ったかなど"></textarea>
+    </div>
+
+    <button class="primary" onclick="addMoney()">
+      + お金を記録
+    </button>
+
+  </div>
+
+  <div class="paper">
+
+    <div class="paper-title">MONEY LOG</div>
+
     <div id="moneyList"></div>
+
   </div>
+
 </section>
 
 
-<!-- WISH -->
+<!-- ================= WISH ================= -->
+
 <section id="wish" class="page">
-  <div class="card">
-    <h2>🛍 WISH LIST</h2>
 
-    <label>ほしいもの *</label>
-    <input id="wishName" placeholder="例：イヤホン">
-
-    <label>欲しいレベル</label>
-    <select id="wishLevel">
-      <option value="5">★★★★★ 絶対ほしい</option>
-      <option value="4">★★★★ かなりほしい</option>
-      <option value="3" selected>★★★ ほしい</option>
-      <option value="2">★★ ちょっとほしい</option>
-      <option value="1">★ いつかほしい</option>
-    </select>
-
-    <label>ジャンル</label>
-    <select id="wishGenre">
-      <option>服</option>
-      <option>美容</option>
-      <option>音楽</option>
-      <option>学校</option>
-      <option>部活</option>
-      <option>趣味</option>
-      <option>電子機器</option>
-      <option>その他</option>
-    </select>
-
-    <label>値段</label>
-    <input id="wishPrice" type="number" placeholder="5000">
-
-    <label>詳細</label>
-    <textarea id="wishDetail"></textarea>
-
-    <button class="primary" onclick="addWish()">ほしいものを追加</button>
+  <div class="page-head">
+    <div class="page-label">WANT TO BUY</div>
+    <div class="page-title">WISH LIST</div>
   </div>
 
-  <div class="card">
-    <h3>ほしいもの</h3>
+  <div class="paper">
+
+    <div class="paper-title">ADD WISH</div>
+
+    <div class="field">
+      <label>ほしいもの *</label>
+      <input id="wishName" placeholder="例：イヤホン">
+    </div>
+
+    <div class="field">
+      <label>欲しいレベル</label>
+      <select id="wishLevel">
+        <option value="5">★★★★★ 絶対ほしい</option>
+        <option value="4">★★★★☆ かなりほしい</option>
+        <option value="3" selected>★★★☆☆ ほしい</option>
+        <option value="2">★★☆☆☆ 少しほしい</option>
+        <option value="1">★☆☆☆☆ いつかほしい</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>ジャンル</label>
+      <select id="wishGenre">
+        <option>服</option>
+        <option>美容</option>
+        <option>学校</option>
+        <option>部活</option>
+        <option>趣味</option>
+        <option>音楽</option>
+        <option>電子機器</option>
+        <option>その他</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>値段</label>
+      <input id="wishPrice"
+             type="number"
+             min="0"
+             placeholder="5000">
+    </div>
+
+    <div class="field">
+      <label>詳細</label>
+      <textarea id="wishDetail"></textarea>
+    </div>
+
+    <button class="primary" onclick="addWish()">
+      + ほしいものを追加
+    </button>
+
+  </div>
+
+  <div class="paper">
+
+    <div class="paper-title">MY WISHES</div>
+
     <div id="wishList"></div>
+
   </div>
+
 </section>
 
 
-<!-- MEMO -->
+<!-- ================= MEMO ================= -->
+
 <section id="memo" class="page">
-  <div class="card">
-    <h2>📝 MEMO</h2>
 
-    <label>フォルダー</label>
-    <input id="folderName" placeholder="例：学校">
-
-    <label>メモのタイトル</label>
-    <input id="noteTitle" placeholder="例：先生に聞くこと">
-
-    <label>内容</label>
-    <textarea id="noteText" placeholder="ここにメモ"></textarea>
-
-    <button class="primary" onclick="addNote()">メモを保存</button>
+  <div class="page-head">
+    <div class="page-label">PERSONAL NOTES</div>
+    <div class="page-title">MEMO</div>
   </div>
 
-  <div class="card">
-    <h3>メモフォルダー</h3>
+  <div class="paper">
+
+    <div class="paper-title">NEW NOTE</div>
+
+    <div class="field">
+      <label>フォルダー</label>
+      <input id="folderName"
+             placeholder="例：学校">
+    </div>
+
+    <div class="field">
+      <label>タイトル *</label>
+      <input id="noteTitle"
+             placeholder="例：先生に聞くこと">
+    </div>
+
+    <div class="field">
+      <label>内容</label>
+      <textarea id="noteText"
+                placeholder="ここにメモ"></textarea>
+    </div>
+
+    <button class="primary" onclick="addNote()">
+      + メモを保存
+    </button>
+
+  </div>
+
+  <div class="paper">
+
+    <div class="paper-title">FOLDERS</div>
+
     <div id="memoList"></div>
+
   </div>
+
 </section>
 
 
-<!-- RECORD -->
+<!-- ================= RECORD ================= -->
+
 <section id="record" class="page">
-  <div class="card">
-    <h2>📚 RECORD</h2>
 
-    <label>日付 *</label>
-    <input id="recordDate" type="date">
-
-    <label>今日はどのくらい勉強した？</label>
-    <input id="studyTime" type="number" placeholder="分">
-
-    <label>写真</label>
-    <input id="recordPhoto" type="file" accept="image/*">
-
-    <button class="primary" onclick="addRecord()">今日を記録</button>
+  <div class="page-head">
+    <div class="page-label">DAILY RECORD</div>
+    <div class="page-title">RECORD</div>
   </div>
 
-  <div class="card">
-    <h3>勉強記録</h3>
+  <div class="paper">
+
+    <div class="paper-title">TODAY'S RECORD</div>
+
+    <div class="field">
+      <label>日付 *</label>
+      <input id="recordDate" type="date">
+    </div>
+
+    <div class="field">
+      <label>今日はどのくらい勉強した？</label>
+      <div class="row">
+        <input id="studyHour"
+               type="number"
+               min="0"
+               placeholder="時間">
+
+        <input id="studyMinute"
+               type="number"
+               min="0"
+               max="59"
+               placeholder="分">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>写真</label>
+      <input id="recordPhoto"
+             type="file"
+             accept="image/*">
+    </div>
+
+    <button class="primary" onclick="addRecord()">
+      + 今日を記録
+    </button>
+
+  </div>
+
+  <div class="paper">
+
+    <div class="paper-title">PAST RECORDS</div>
+
     <div id="recordList"></div>
+
   </div>
+
+</section>
+
+
+<!-- ================= RECEIPT ================= -->
+
+<section id="receipt" class="page">
+
+  <div class="page-head">
+    <div class="page-label">WEEKLY SUMMARY</div>
+    <div class="page-title">RECEIPT</div>
+  </div>
+
+  <div class="receipt-wrap">
+
+    <div class="receipt">
+
+      <h2>MY LOG</h2>
+
+      <div class="receipt-sub">
+        WEEKLY RECEIPT
+      </div>
+
+      <div class="receipt-line"></div>
+
+      <div class="receipt-center"
+           id="receiptDate">
+      </div>
+
+      <div class="receipt-line"></div>
+
+      <div class="receipt-row">
+        <span>STUDY TIME</span>
+        <span id="receiptStudy">0m</span>
+      </div>
+
+      <div class="receipt-row">
+        <span>TODO DONE</span>
+        <span id="receiptTodo">0 / 0</span>
+      </div>
+
+      <div class="receipt-row">
+        <span>EVENTS</span>
+        <span id="receiptEvents">0</span>
+      </div>
+
+      <div class="receipt-row">
+        <span>SPENDING</span>
+        <span id="receiptMoney">¥0</span>
+      </div>
+
+      <div class="receipt-line"></div>
+
+      <div class="receipt-row">
+        <span>WEEK TOTAL</span>
+        <span id="receiptTotal"
+              class="receipt-total">
+          ¥0
+        </span>
+      </div>
+
+      <div class="receipt-line"></div>
+
+      <div class="receipt-center">
+        THANK YOU FOR TODAY.
+      </div>
+
+      <div class="barcode">
+        ||| || |||| | ||| ||
+      </div>
+
+      <div class="receipt-sub receipt-center">
+        MY LOG / PERSONAL USE
+      </div>
+
+    </div>
+
+    <button class="print-button"
+            onclick="window.print()">
+      PRINT / PDF
+    </button>
+
+  </div>
+
 </section>
 
 </main>
@@ -472,483 +1186,1655 @@ button{
 
 <script>
 
-let events=JSON.parse(localStorage.getItem("events")||"[]");
-let todos=JSON.parse(localStorage.getItem("todos")||"[]");
-let money=JSON.parse(localStorage.getItem("money")||"[]");
-let wishes=JSON.parse(localStorage.getItem("wishes")||"[]");
-let notes=JSON.parse(localStorage.getItem("notes")||"[]");
-let records=JSON.parse(localStorage.getItem("records")||"[]");
+/* =====================================================
+   DATA
+===================================================== */
 
-let weekOffset=0;
+let events =
+  JSON.parse(localStorage.getItem("mylog_events") || "[]");
 
-function save(){
-  localStorage.setItem("events",JSON.stringify(events));
-  localStorage.setItem("todos",JSON.stringify(todos));
-  localStorage.setItem("money",JSON.stringify(money));
-  localStorage.setItem("wishes",JSON.stringify(wishes));
-  localStorage.setItem("notes",JSON.stringify(notes));
-  localStorage.setItem("records",JSON.stringify(records));
+let todos =
+  JSON.parse(localStorage.getItem("mylog_todos") || "[]");
+
+let money =
+  JSON.parse(localStorage.getItem("mylog_money") || "[]");
+
+let wishes =
+  JSON.parse(localStorage.getItem("mylog_wishes") || "[]");
+
+let notes =
+  JSON.parse(localStorage.getItem("mylog_notes") || "[]");
+
+let records =
+  JSON.parse(localStorage.getItem("mylog_records") || "[]");
+
+let weekOffset = 0;
+
+
+/* =====================================================
+   SAVE
+===================================================== */
+
+function saveAll(){
+
+  localStorage.setItem(
+    "mylog_events",
+    JSON.stringify(events)
+  );
+
+  localStorage.setItem(
+    "mylog_todos",
+    JSON.stringify(todos)
+  );
+
+  localStorage.setItem(
+    "mylog_money",
+    JSON.stringify(money)
+  );
+
+  localStorage.setItem(
+    "mylog_wishes",
+    JSON.stringify(wishes)
+  );
+
+  localStorage.setItem(
+    "mylog_notes",
+    JSON.stringify(notes)
+  );
+
+  localStorage.setItem(
+    "mylog_records",
+    JSON.stringify(records)
+  );
+
 }
 
-function showPage(id,btn){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-}
+
+/* =====================================================
+   BASIC
+===================================================== */
 
 function todayString(){
-  let d=new Date();
-  return d.toISOString().split("T")[0];
+
+  const d = new Date();
+
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+
+  return `${y}-${m}-${day}`;
 }
 
-document.getElementById("eventDate").value=todayString();
-document.getElementById("moneyDate").value=todayString();
-document.getElementById("recordDate").value=todayString();
 
-function getMonday(offset=0){
-  let d=new Date();
-  d.setHours(0,0,0,0);
-  let day=d.getDay();
-  let diff=day===0?-6:1-day;
-  d.setDate(d.getDate()+diff+(offset*7));
-  return d;
+function dateObj(str){
+
+  const p = str.split("-");
+
+  return new Date(
+    Number(p[0]),
+    Number(p[1])-1,
+    Number(p[2])
+  );
+
 }
+
 
 function dateString(d){
-  return d.toISOString().split("T")[0];
-}
 
-function formatDate(d){
-  return `${d.getMonth()+1}/${d.getDate()}`;
-}
+  const y = d.getFullYear();
 
-function changeWeek(n){
-  weekOffset+=n;
-  renderWeek();
-}
+  const m =
+    String(d.getMonth()+1).padStart(2,"0");
 
-function renderWeek(){
+  const day =
+    String(d.getDate()).padStart(2,"0");
 
-  let monday=getMonday(weekOffset);
-  let days=["月","火","水","木","金","土","日"];
-
-  document.getElementById("weekRange").textContent=
-    `${formatDate(monday)}〜${formatDate(new Date(monday.getTime()+6*86400000))}`;
-
-  let html="";
-
-  for(let i=0;i<7;i++){
-
-    let d=new Date(monday);
-    d.setDate(monday.getDate()+i);
-
-    let ds=dateString(d);
-
-    let dayEvents=events.filter(e=>e.date===ds);
-
-    html+=`
-      <div class="day">
-        <div class="day-name">${days[i]}<br>${formatDate(d)}</div>
-        ${dayEvents.map(e=>`
-          <div class="event" style="border-color:${e.color}">
-            <strong>${escapeHTML(e.name)}</strong>
-            ${e.allDay?"終日":e.time}
-            ${e.place?`<br>📍${escapeHTML(e.place)}`:""}
-            ${e.memo?`<br><span class="muted">${escapeHTML(e.memo)}</span>`:""}
-            <br>
-            <button class="small" onclick="deleteEvent(${e.id})">削除</button>
-          </div>
-        `).join("")}
-      </div>
-    `;
-  }
-
-  document.getElementById("weekGrid").innerHTML=html;
-}
-
-function addEvent(){
-
-  let name=document.getElementById("eventName").value.trim();
-  let date=document.getElementById("eventDate").value;
-  let time=document.getElementById("eventTime").value;
-  let allDay=document.getElementById("eventAllDay").checked;
-  let place=document.getElementById("eventPlace").value;
-  let memo=document.getElementById("eventMemo").value;
-  let color=document.getElementById("eventColor").value;
-
-  if(!name||!date||( !time&&!allDay)){
-    alert("名前・日付・時間（または終日）は必須です");
-    return;
-  }
-
-  events.push({
-    id:Date.now(),name,date,time,allDay,place,memo,color
-  });
-
-  save();
-  renderWeek();
-
-  document.getElementById("eventName").value="";
-  document.getElementById("eventTime").value="";
-  document.getElementById("eventPlace").value="";
-  document.getElementById("eventMemo").value="";
-}
-
-function deleteEvent(id){
-  events=events.filter(e=>e.id!==id);
-  save();
-  renderWeek();
+  return `${y}-${m}-${day}`;
 }
 
 
-function addTodo(){
+function displayDate(str){
 
-  let name=document.getElementById("todoName").value.trim();
+  if(!str) return "";
 
-  if(!name){
-    alert("やることを入力してください");
-    return;
-  }
+  const d = dateObj(str);
 
-  todos.push({
-    id:Date.now(),
-    name,
-    priority:Number(document.getElementById("todoPriority").value),
-    due:document.getElementById("todoDue").value,
-    detail:document.getElementById("todoDetail").value,
-    done:false
-  });
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
 
-  save();
-  renderTodos();
-
-  document.getElementById("todoName").value="";
-  document.getElementById("todoDue").value="";
-  document.getElementById("todoDetail").value="";
 }
 
-function toggleTodo(id){
-  let t=todos.find(x=>x.id===id);
-  t.done=!t.done;
-  save();
-  renderTodos();
-}
-
-function deleteTodo(id){
-  todos=todos.filter(x=>x.id!==id);
-  save();
-  renderTodos();
-}
-
-function editTodo(id){
-
-  let t=todos.find(x=>x.id===id);
-  let newName=prompt("名前を変更",t.name);
-
-  if(newName&&newName.trim()){
-    t.name=newName.trim();
-    save();
-    renderTodos();
-  }
-}
-
-function moveTodo(id,dir){
-
-  let i=todos.findIndex(x=>x.id===id);
-
-  if(dir==="up"&&i>0){
-    [todos[i-1],todos[i]]=[todos[i],todos[i-1]];
-  }
-
-  if(dir==="down"&&i<todos.length-1){
-    [todos[i+1],todos[i]]=[todos[i],todos[i+1]];
-  }
-
-  save();
-  renderTodos();
-}
-
-function renderTodos(){
-
-  if(!todos.length){
-    document.getElementById("todoList").innerHTML='<div class="empty">まだToDoがありません</div>';
-    return;
-  }
-
-  document.getElementById("todoList").innerHTML=
-    todos.map((t,i)=>`
-      <div class="todo ${t.done?"done":""}">
-        <input type="checkbox" ${t.done?"checked":""}
-          onclick="toggleTodo(${t.id})"
-          style="width:20px;height:20px">
-
-        <div class="todo-content">
-          <div class="todo-name">${escapeHTML(t.name)}</div>
-          <div class="stars">${"★".repeat(t.priority)}${"☆".repeat(5-t.priority)}</div>
-          ${t.due?`<span class="badge">期限 ${t.due}</span>`:""}
-          ${t.detail?`<div class="muted">${escapeHTML(t.detail)}</div>`:""}
-
-          <div style="margin-top:6px">
-            <button class="small" onclick="editTodo(${t.id})">名前変更</button>
-            <button class="small" onclick="moveTodo(${t.id},'up')">↑</button>
-            <button class="small" onclick="moveTodo(${t.id},'down')">↓</button>
-            <button class="small danger" onclick="deleteTodo(${t.id})">削除</button>
-          </div>
-        </div>
-      </div>
-    `).join("");
-}
-
-
-function addMoney(){
-
-  let date=document.getElementById("moneyDate").value;
-  let price=Number(document.getElementById("moneyPrice").value);
-
-  if(!date||!price){
-    alert("日付と値段は必須です");
-    return;
-  }
-
-  money.push({
-    id:Date.now(),
-    date,
-    level:document.getElementById("moneyLevel").value,
-    genre:document.getElementById("moneyGenre").value,
-    price,
-    detail:document.getElementById("moneyDetail").value
-  });
-
-  save();
-  renderMoney();
-
-  document.getElementById("moneyPrice").value="";
-  document.getElementById("moneyDetail").value="";
-}
-
-function deleteMoney(id){
-  money=money.filter(x=>x.id!==id);
-  save();
-  renderMoney();
-}
-
-function renderMoney(){
-
-  let total=money.reduce((s,x)=>s+x.price,0);
-
-  document.getElementById("moneyTotal").textContent=
-    "¥"+total.toLocaleString();
-
-  if(!money.length){
-    document.getElementById("moneyList").innerHTML='<div class="empty">まだ記録がありません</div>';
-    return;
-  }
-
-  document.getElementById("moneyList").innerHTML=
-    [...money].reverse().map(x=>`
-      <div class="list-item">
-        <strong>¥${x.price.toLocaleString()}</strong>
-        <span class="badge">${x.genre}</span>
-        <span class="badge">${x.level}</span>
-        <div class="muted">${x.date}</div>
-        ${x.detail?`<div>${escapeHTML(x.detail)}</div>`:""}
-        <button class="small danger" onclick="deleteMoney(${x.id})">削除</button>
-      </div>
-    `).join("");
-}
-
-
-function addWish(){
-
-  let name=document.getElementById("wishName").value.trim();
-
-  if(!name){
-    alert("ほしいものの名前を入力してください");
-    return;
-  }
-
-  wishes.push({
-    id:Date.now(),
-    name,
-    level:Number(document.getElementById("wishLevel").value),
-    genre:document.getElementById("wishGenre").value,
-    price:Number(document.getElementById("wishPrice").value)||0,
-    detail:document.getElementById("wishDetail").value
-  });
-
-  save();
-  renderWishes();
-
-  document.getElementById("wishName").value="";
-  document.getElementById("wishPrice").value="";
-  document.getElementById("wishDetail").value="";
-}
-
-function deleteWish(id){
-  wishes=wishes.filter(x=>x.id!==id);
-  save();
-  renderWishes();
-}
-
-function renderWishes(){
-
-  if(!wishes.length){
-    document.getElementById("wishList").innerHTML='<div class="empty">ほしいものはまだありません</div>';
-    return;
-  }
-
-  document.getElementById("wishList").innerHTML=
-    wishes.map(x=>`
-      <div class="list-item">
-        <strong>${escapeHTML(x.name)}</strong>
-        <div class="stars">${"★".repeat(x.level)}${"☆".repeat(5-x.level)}</div>
-        <span class="badge">${x.genre}</span>
-        ${x.price?`<span class="badge">¥${x.price.toLocaleString()}</span>`:""}
-        ${x.detail?`<div class="muted">${escapeHTML(x.detail)}</div>`:""}
-        <button class="small danger" onclick="deleteWish(${x.id})">削除</button>
-      </div>
-    `).join("");
-}
-
-
-function addNote(){
-
-  let folder=document.getElementById("folderName").value.trim()||"その他";
-  let title=document.getElementById("noteTitle").value.trim();
-
-  if(!title){
-    alert("メモのタイトルを入力してください");
-    return;
-  }
-
-  notes.push({
-    id:Date.now(),
-    folder,
-    title,
-    text:document.getElementById("noteText").value
-  });
-
-  save();
-  renderNotes();
-
-  document.getElementById("noteTitle").value="";
-  document.getElementById("noteText").value="";
-}
-
-function deleteNote(id){
-  notes=notes.filter(x=>x.id!==id);
-  save();
-  renderNotes();
-}
-
-function renderNotes(){
-
-  if(!notes.length){
-    document.getElementById("memoList").innerHTML='<div class="empty">まだメモがありません</div>';
-    return;
-  }
-
-  let folders=[...new Set(notes.map(x=>x.folder))];
-
-  document.getElementById("memoList").innerHTML=
-    folders.map(f=>`
-      <div class="folder">
-        <strong>📁 ${escapeHTML(f)}</strong>
-        ${notes.filter(x=>x.folder===f).map(x=>`
-          <div class="note">
-            <strong>${escapeHTML(x.title)}</strong>
-            <div>${escapeHTML(x.text).replace(/\n/g,"<br>")}</div>
-            <button class="small danger" onclick="deleteNote(${x.id})">削除</button>
-          </div>
-        `).join("")}
-      </div>
-    `).join("");
-}
-
-
-function addRecord(){
-
-  let date=document.getElementById("recordDate").value;
-  let time=Number(document.getElementById("studyTime").value)||0;
-  let file=document.getElementById("recordPhoto").files[0];
-
-  if(!date){
-    alert("日付を入力してください");
-    return;
-  }
-
-  if(!file){
-    records.push({
-      id:Date.now(),
-      date,
-      time,
-      photo:""
-    });
-    save();
-    renderRecords();
-    return;
-  }
-
-  let reader=new FileReader();
-
-  reader.onload=function(e){
-
-    records.push({
-      id:Date.now(),
-      date,
-      time,
-      photo:e.target.result
-    });
-
-    save();
-    renderRecords();
-
-    document.getElementById("recordPhoto").value="";
-  };
-
-  reader.readAsDataURL(file);
-}
-
-function deleteRecord(id){
-  records=records.filter(x=>x.id!==id);
-  save();
-  renderRecords();
-}
-
-function renderRecords(){
-
-  if(!records.length){
-    document.getElementById("recordList").innerHTML='<div class="empty">まだ記録がありません</div>';
-    return;
-  }
-
-  document.getElementById("recordList").innerHTML=
-    [...records].reverse().map(x=>`
-      <div class="list-item">
-        <strong>${x.date}</strong>
-        <div>📚 ${x.time}分 勉強</div>
-        ${x.photo?`<img class="photo" src="${x.photo}">`:""}
-        <button class="small danger" onclick="deleteRecord(${x.id})">削除</button>
-      </div>
-    `).join("");
-}
 
 function escapeHTML(str){
-  return String(str||"")
+
+  return String(str || "")
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
+
 }
 
+
+/* =====================================================
+   PAGE
+===================================================== */
+
+function showPage(id, button){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(p => p.classList.remove("active"));
+
+  document
+    .getElementById(id)
+    .classList.add("active");
+
+  document
+    .querySelectorAll("nav button")
+    .forEach(b => b.classList.remove("active"));
+
+  button.classList.add("active");
+
+  if(id === "home") renderHome();
+  if(id === "week") renderWeek();
+  if(id === "todo") renderTodos();
+  if(id === "money") renderMoney();
+  if(id === "wish") renderWishes();
+  if(id === "memo") renderNotes();
+  if(id === "record") renderRecords();
+  if(id === "receipt") renderReceipt();
+
+}
+
+
+/* =====================================================
+   INITIAL INPUTS
+===================================================== */
+
+document.getElementById("eventDate").value =
+  todayString();
+
+document.getElementById("moneyDate").value =
+  todayString();
+
+document.getElementById("recordDate").value =
+  todayString();
+
+
+/* =====================================================
+   WEEK CALENDAR
+===================================================== */
+
+function getMonday(offset){
+
+  const d = new Date();
+
+  d.setHours(0,0,0,0);
+
+  const day = d.getDay();
+
+  const diff = day === 0 ? -6 : 1-day;
+
+  d.setDate(
+    d.getDate() + diff + offset*7
+  );
+
+  return d;
+
+}
+
+
+function changeWeek(n){
+
+  weekOffset += n;
+
+  renderWeek();
+  renderReceipt();
+  renderHome();
+
+}
+
+
+function formatShortDate(d){
+
+  return `${d.getMonth()+1}/${d.getDate()}`;
+
+}
+
+
+function renderWeek(){
+
+  const monday =
+    getMonday(weekOffset);
+
+  const sunday =
+    new Date(monday);
+
+  sunday.setDate(
+    monday.getDate()+6
+  );
+
+  document.getElementById("weekRange").textContent =
+    `${formatShortDate(monday)} — ${formatShortDate(sunday)}`;
+
+  const names =
+    ["MON","TUE","WED","THU","FRI","SAT","SUN"];
+
+  let html = "";
+
+  for(let i=0;i<7;i++){
+
+    const d = new Date(monday);
+
+    d.setDate(
+      monday.getDate()+i
+    );
+
+    const ds = dateString(d);
+
+    const isToday =
+      ds === todayString();
+
+    const dayEvents =
+      events.filter(e => e.date === ds);
+
+    html += `
+      <div class="day ${isToday ? "today" : ""}">
+
+        <div class="day-head">
+
+          <div class="day-name">
+            ${names[i]}
+          </div>
+
+          <div class="day-date">
+            ${formatShortDate(d)}
+          </div>
+
+        </div>
+
+        ${
+          dayEvents.length
+          ?
+          dayEvents.map(e => `
+
+            <div class="event"
+                 style="border-left-color:${e.color}">
+
+              <div class="event-name">
+                ${escapeHTML(e.name)}
+              </div>
+
+              <div class="event-time">
+                ${
+                  e.allDay
+                  ? "ALL DAY"
+                  : escapeHTML(e.time)
+                }
+              </div>
+
+              ${
+                e.place
+                ?
+                `<div class="event-meta">
+                  ${escapeHTML(e.place)}
+                </div>`
+                :
+                ""
+              }
+
+              ${
+                e.memo
+                ?
+                `<div class="event-meta">
+                  ${escapeHTML(e.memo)}
+                </div>`
+                :
+                ""
+              }
+
+              <button
+                class="secondary delete"
+                onclick="deleteEvent(${e.id})">
+                削除
+              </button>
+
+            </div>
+
+          `).join("")
+          :
+          `<div class="empty">—</div>`
+        }
+
+      </div>
+    `;
+
+  }
+
+  document.getElementById("weekGrid").innerHTML =
+    html;
+
+  renderWeekTodo();
+
+}
+
+
+function addEvent(){
+
+  const name =
+    document.getElementById("eventName").value.trim();
+
+  const date =
+    document.getElementById("eventDate").value;
+
+  const time =
+    document.getElementById("eventTime").value;
+
+  const allDay =
+    document.getElementById("eventAllDay").checked;
+
+  const place =
+    document.getElementById("eventPlace").value.trim();
+
+  const memo =
+    document.getElementById("eventMemo").value.trim();
+
+  const color =
+    document.getElementById("eventColor").value;
+
+  if(!name || !date || (!time && !allDay)){
+
+    alert(
+      "名前・日付・時間（または終日）は必須です。"
+    );
+
+    return;
+  }
+
+  events.push({
+
+    id:Date.now(),
+
+    name:name,
+
+    date:date,
+
+    time:time,
+
+    allDay:allDay,
+
+    place:place,
+
+    memo:memo,
+
+    color:color
+
+  });
+
+  saveAll();
+
+  renderWeek();
+  renderHome();
+  renderReceipt();
+
+  document.getElementById("eventName").value="";
+  document.getElementById("eventTime").value="";
+  document.getElementById("eventPlace").value="";
+  document.getElementById("eventMemo").value="";
+
+}
+
+
+function deleteEvent(id){
+
+  if(!confirm("この予定を削除しますか？"))
+    return;
+
+  events =
+    events.filter(e => e.id !== id);
+
+  saveAll();
+
+  renderWeek();
+  renderHome();
+  renderReceipt();
+
+}
+
+
+/* =====================================================
+   WEEK TODO
+===================================================== */
+
+function renderWeekTodo(){
+
+  const monday =
+    getMonday(weekOffset);
+
+  const sunday =
+    new Date(monday);
+
+  sunday.setDate(
+    monday.getDate()+6
+  );
+
+  const start =
+    dateString(monday);
+
+  const end =
+    dateString(sunday);
+
+  const list =
+    todos.filter(t =>
+      t.due &&
+      t.due >= start &&
+      t.due <= end
+    );
+
+  const el =
+    document.getElementById("weekTodo");
+
+  if(!list.length){
+
+    el.innerHTML =
+      `<div class="empty">
+        この週に期限があるTODOはありません
+      </div>`;
+
+    return;
+  }
+
+  el.innerHTML =
+    list.map(t => `
+
+      <div class="list-item">
+
+        <div class="item-title">
+          ${t.done ? "✓ " : "□ "}
+          ${escapeHTML(t.name)}
+        </div>
+
+        <div class="stars">
+          ${"★".repeat(t.priority)}
+          ${"☆".repeat(5-t.priority)}
+        </div>
+
+        <div class="muted">
+          期限：${displayDate(t.due)}
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =====================================================
+   TODO
+===================================================== */
+
+function addTodo(){
+
+  const name =
+    document.getElementById("todoName").value.trim();
+
+  if(!name){
+
+    alert("やることを入力してください。");
+
+    return;
+
+  }
+
+  todos.push({
+
+    id:Date.now(),
+
+    name:name,
+
+    priority:
+      Number(
+        document.getElementById("todoPriority").value
+      ),
+
+    due:
+      document.getElementById("todoDue").value,
+
+    detail:
+      document.getElementById("todoDetail").value.trim(),
+
+    done:false
+
+  });
+
+  saveAll();
+
+  renderTodos();
+  renderHome();
+  renderWeek();
+
+  document.getElementById("todoName").value="";
+  document.getElementById("todoDue").value="";
+  document.getElementById("todoDetail").value="";
+
+}
+
+
+function toggleTodo(id){
+
+  const todo =
+    todos.find(t => t.id === id);
+
+  if(!todo) return;
+
+  todo.done = !todo.done;
+
+  saveAll();
+
+  renderTodos();
+  renderHome();
+  renderWeek();
+  renderReceipt();
+
+}
+
+
+function editTodo(id){
+
+  const todo =
+    todos.find(t => t.id === id);
+
+  if(!todo) return;
+
+  const newName =
+    prompt(
+      "TODOの名前を変更",
+      todo.name
+    );
+
+  if(newName && newName.trim()){
+
+    todo.name =
+      newName.trim();
+
+    saveAll();
+
+    renderTodos();
+    renderHome();
+    renderWeek();
+
+  }
+
+}
+
+
+function moveTodo(id,direction){
+
+  const index =
+    todos.findIndex(t => t.id === id);
+
+  if(index < 0) return;
+
+  if(direction === "up" && index > 0){
+
+    [
+      todos[index-1],
+      todos[index]
+    ] =
+    [
+      todos[index],
+      todos[index-1]
+    ];
+
+  }
+
+  if(
+    direction === "down" &&
+    index < todos.length-1
+  ){
+
+    [
+      todos[index+1],
+      todos[index]
+    ] =
+    [
+      todos[index],
+      todos[index+1]
+    ];
+
+  }
+
+  saveAll();
+
+  renderTodos();
+
+}
+
+
+function deleteTodo(id){
+
+  if(!confirm("このTODOを削除しますか？"))
+    return;
+
+  todos =
+    todos.filter(t => t.id !== id);
+
+  saveAll();
+
+  renderTodos();
+  renderHome();
+  renderWeek();
+  renderReceipt();
+
+}
+
+
+function renderTodos(){
+
+  const el =
+    document.getElementById("todoList");
+
+  if(!todos.length){
+
+    el.innerHTML =
+      `<div class="empty">
+        まだTODOがありません
+      </div>`;
+
+    return;
+
+  }
+
+  el.innerHTML =
+    todos.map((t,index) => `
+
+      <div class="todo-item
+        ${t.done ? "todo-done" : ""}">
+
+        <input
+          class="todo-check"
+          type="checkbox"
+          ${t.done ? "checked" : ""}
+          onclick="toggleTodo(${t.id})">
+
+        <div class="todo-main">
+
+          <div class="todo-name">
+            ${escapeHTML(t.name)}
+          </div>
+
+          <div class="stars">
+            ${"★".repeat(t.priority)}
+            ${"☆".repeat(5-t.priority)}
+          </div>
+
+          ${
+            t.due
+            ?
+            `<span class="badge">
+              期限 ${displayDate(t.due)}
+            </span>`
+            :
+            ""
+          }
+
+          ${
+            t.detail
+            ?
+            `<div class="item-detail">
+              ${escapeHTML(t.detail)}
+            </div>`
+            :
+            ""
+          }
+
+          <div class="todo-buttons">
+
+            <button
+              class="secondary"
+              onclick="editTodo(${t.id})">
+              名前変更
+            </button>
+
+            <button
+              class="secondary"
+              onclick="moveTodo(${t.id},'up')">
+              ↑
+            </button>
+
+            <button
+              class="secondary"
+              onclick="moveTodo(${t.id},'down')">
+              ↓
+            </button>
+
+            <button
+              class="secondary delete"
+              onclick="deleteTodo(${t.id})">
+              削除
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =====================================================
+   MONEY
+===================================================== */
+
+function addMoney(){
+
+  const date =
+    document.getElementById("moneyDate").value;
+
+  const price =
+    Number(
+      document.getElementById("moneyPrice").value
+    );
+
+  if(!date || price <= 0){
+
+    alert("日付と値段を入力してください。");
+
+    return;
+
+  }
+
+  money.push({
+
+    id:Date.now(),
+
+    date:date,
+
+    level:
+      document.getElementById("moneyLevel").value,
+
+    genre:
+      document.getElementById("moneyGenre").value,
+
+    price:price,
+
+    detail:
+      document.getElementById("moneyDetail").value.trim()
+
+  });
+
+  saveAll();
+
+  renderMoney();
+  renderHome();
+  renderReceipt();
+
+  document.getElementById("moneyPrice").value="";
+  document.getElementById("moneyDetail").value="";
+
+}
+
+
+function deleteMoney(id){
+
+  if(!confirm("このお金の記録を削除しますか？"))
+    return;
+
+  money =
+    money.filter(x => x.id !== id);
+
+  saveAll();
+
+  renderMoney();
+  renderHome();
+  renderReceipt();
+
+}
+
+
+function renderMoney(){
+
+  const total =
+    money.reduce(
+      (sum,x) => sum + x.price,
+      0
+    );
+
+  document.getElementById("moneyTotal").textContent =
+    "¥" + total.toLocaleString();
+
+  const el =
+    document.getElementById("moneyList");
+
+  if(!money.length){
+
+    el.innerHTML =
+      `<div class="empty">
+        まだお金の記録がありません
+      </div>`;
+
+    return;
+
+  }
+
+  el.innerHTML =
+    [...money]
+    .reverse()
+    .map(x => `
+
+      <div class="list-item">
+
+        <div class="item-title money">
+          ¥${x.price.toLocaleString()}
+        </div>
+
+        <div>
+          <span class="badge">
+            ${escapeHTML(x.genre)}
+          </span>
+
+          <span class="badge">
+            ${escapeHTML(x.level)}
+          </span>
+        </div>
+
+        <div class="muted">
+          ${displayDate(x.date)}
+        </div>
+
+        ${
+          x.detail
+          ?
+          `<div class="item-detail">
+            ${escapeHTML(x.detail)}
+          </div>`
+          :
+          ""
+        }
+
+        <div class="item-actions">
+
+          <button
+            class="secondary delete"
+            onclick="deleteMoney(${x.id})">
+            削除
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =====================================================
+   WISH
+===================================================== */
+
+function addWish(){
+
+  const name =
+    document.getElementById("wishName").value.trim();
+
+  if(!name){
+
+    alert("ほしいものの名前を入力してください。");
+
+    return;
+
+  }
+
+  wishes.push({
+
+    id:Date.now(),
+
+    name:name,
+
+    level:
+      Number(
+        document.getElementById("wishLevel").value
+      ),
+
+    genre:
+      document.getElementById("wishGenre").value,
+
+    price:
+      Number(
+        document.getElementById("wishPrice").value
+      ) || 0,
+
+    detail:
+      document.getElementById("wishDetail").value.trim()
+
+  });
+
+  saveAll();
+
+  renderWishes();
+
+  document.getElementById("wishName").value="";
+  document.getElementById("wishPrice").value="";
+  document.getElementById("wishDetail").value="";
+
+}
+
+
+function editWish(id){
+
+  const wish =
+    wishes.find(x => x.id === id);
+
+  if(!wish) return;
+
+  const newName =
+    prompt(
+      "ほしいものの名前を変更",
+      wish.name
+    );
+
+  if(newName && newName.trim()){
+
+    wish.name =
+      newName.trim();
+
+    saveAll();
+
+    renderWishes();
+
+  }
+
+}
+
+
+function deleteWish(id){
+
+  if(!confirm("このほしいものを削除しますか？"))
+    return;
+
+  wishes =
+    wishes.filter(x => x.id !== id);
+
+  saveAll();
+
+  renderWishes();
+
+}
+
+
+function renderWishes(){
+
+  const el =
+    document.getElementById("wishList");
+
+  if(!wishes.length){
+
+    el.innerHTML =
+      `<div class="empty">
+        まだほしいものがありません
+      </div>`;
+
+    return;
+
+  }
+
+  el.innerHTML =
+    wishes
+    .sort((a,b) => b.level-a.level)
+    .map(x => `
+
+      <div class="list-item">
+
+        <div class="item-title">
+          ${escapeHTML(x.name)}
+        </div>
+
+        <div class="stars">
+          ${"★".repeat(x.level)}
+          ${"☆".repeat(5-x.level)}
+        </div>
+
+        <span class="badge">
+          ${escapeHTML(x.genre)}
+        </span>
+
+        ${
+          x.price
+          ?
+          `<span class="badge">
+            ¥${x.price.toLocaleString()}
+          </span>`
+          :
+          ""
+        }
+
+        ${
+          x.detail
+          ?
+          `<div class="item-detail">
+            ${escapeHTML(x.detail)}
+          </div>`
+          :
+          ""
+        }
+
+        <div class="item-actions">
+
+          <button
+            class="secondary"
+            onclick="editWish(${x.id})">
+            名前変更
+          </button>
+
+          <button
+            class="secondary delete"
+            onclick="deleteWish(${x.id})">
+            削除
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =====================================================
+   MEMO
+===================================================== */
+
+function addNote(){
+
+  const folder =
+    document.getElementById("folderName")
+      .value.trim() || "その他";
+
+  const title =
+    document.getElementById("noteTitle")
+      .value.trim();
+
+  const text =
+    document.getElementById("noteText")
+      .value;
+
+  if(!title){
+
+    alert("メモのタイトルを入力してください。");
+
+    return;
+
+  }
+
+  notes.push({
+
+    id:Date.now(),
+
+    folder:folder,
+
+    title:title,
+
+    text:text
+
+  });
+
+  saveAll();
+
+  renderNotes();
+
+  document.getElementById("noteTitle").value="";
+  document.getElementById("noteText").value="";
+
+}
+
+
+function editNote(id){
+
+  const note =
+    notes.find(x => x.id === id);
+
+  if(!note) return;
+
+  const title =
+    prompt(
+      "メモのタイトル",
+      note.title
+    );
+
+  if(title === null) return;
+
+  const text =
+    prompt(
+      "メモの内容",
+      note.text
+    );
+
+  if(text === null) return;
+
+  note.title =
+    title.trim() || note.title;
+
+  note.text =
+    text;
+
+  saveAll();
+
+  renderNotes();
+
+}
+
+
+function deleteNote(id){
+
+  if(!confirm("このメモを削除しますか？"))
+    return;
+
+  notes =
+    notes.filter(x => x.id !== id);
+
+  saveAll();
+
+  renderNotes();
+
+}
+
+
+function renderNotes(){
+
+  const el =
+    document.getElementById("memoList");
+
+  if(!notes.length){
+
+    el.innerHTML =
+      `<div class="empty">
+        まだメモがありません
+      </div>`;
+
+    return;
+
+  }
+
+  const folders =
+    [...new Set(notes.map(x => x.folder))];
+
+  el.innerHTML =
+    folders.map(folder => `
+
+      <div class="folder">
+
+        <div class="folder-head">
+
+          <span>
+            📁 ${escapeHTML(folder)}
+          </span>
+
+          <span>
+            ${notes.filter(x =>
+              x.folder === folder
+            ).length}
+          </span>
+
+        </div>
+
+        <div class="folder-body">
+
+          ${
+            notes
+            .filter(x => x.folder === folder)
+            .map(x => `
+
+              <div class="note">
+
+                <div class="note-title">
+                  ${escapeHTML(x.title)}
+                </div>
+
+                ${
+                  x.text
+                  ?
+                  `<div class="note-text">
+                    ${escapeHTML(x.text)}
+                  </div>`
+                  :
+                  ""
+                }
+
+                <div class="item-actions">
+
+                  <button
+                    class="secondary"
+                    onclick="editNote(${x.id})">
+                    編集
+                  </button>
+
+                  <button
+                    class="secondary delete"
+                    onclick="deleteNote(${x.id})">
+                    削除
+                  </button>
+
+                </div>
+
+              </div>
+
+            `).join("")
+          }
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =====================================================
+   RECORD
+===================================================== */
+
+function addRecord(){
+
+  const date =
+    document.getElementById("recordDate").value;
+
+  const hours =
+    Number(
+      document.getElementById("studyHour").value
+    ) || 0;
+
+  const minutes =
+    Number(
+      document.getElementById("studyMinute").value
+    ) || 0;
+
+  const file =
+    document.getElementById("recordPhoto").files[0];
+
+  if(!date){
+
+    alert("日付を入力してください。");
+
+    return;
+
+  }
+
+  const totalMinutes =
+    hours*60 + minutes;
+
+  if(!file){
+
+    records.push({
+
+      id:Date.now(),
+
+      date:date,
+
+      minutes:totalMinutes,
+
+      photo:""
+
+    });
+
+    saveAll();
+
+    renderRecords();
+    renderHome();
+    renderReceipt();
+
+    clearRecordInputs();
+
+    return;
+
+  }
+
+  const reader =
+    new FileReader();
+
+  reader.onload = function(e){
+
+    records.push({
+
+      id:Date.now(),
+
+      date:date,
+
+      minutes:totalMinutes,
+
+      photo:e.target.result
+
+    });
+
+    saveAll();
+
+    renderRecords();
+    renderHome();
+    renderReceipt();
+
+    clearRecordInputs();
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+function clearRecordInputs(){
+
+  document.getElementById("studyHour").value="";
+  document.getElementById("studyMinute").value="";
+  document.getElementById("recordPhoto").value="";
+
+}
+
+
+function deleteRecord(id){
+
+  if(!confirm("この記録を削除しますか？"))
+    return;
+
+  records =
+    records.filter(x => x.id !== id);
+
+  saveAll();
+
+  renderRecords();
+  renderHome();
+  renderReceipt();
+
+}
+
+
+function formatMinutes(minutes){
+
+  const h =
+    Math.floor(minutes/60);
+
+  const m =
+    minutes%60;
+
+  if(h > 0 && m > 0)
+    return `${h}h ${m}m`;
+
+  if(h > 0)
+    return `${h}h`;
+
+  return `${m}m`;
+
+}
+
+
+function renderRecords(){
+
+  const el =
+    document.getElementById("recordList");
+
+  if(!records.length){
+
+    el.innerHTML =
+      `<div class="empty">
+        まだ記録がありません
+      </div>`;
+
+    return;
+
+  }
+
+  el.innerHTML =
+    [...records]
+    .reverse()
+    .map(x => `
+
+      <div class="list-item">
+
+        <div class="item-title">
+          ${displayDate(x.date)}
+        </div>
+
+        <div class="money">
+          STUDY / ${formatMinutes(x.minutes)}
+        </div>
+
+        ${
+          x.photo
+          ?
+          `<img
+            class="record-photo"
+            src="${x.photo}"
+            alt="study record">`
+          :
+          ""
+        }
+
+        <div class="item-actions">
+
+          <button
+            class="secondary delete"
+            onclick="deleteRecord(${x.id})">
+            削除
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =====================================================
+   HOME
+===================================================== */
+
+function renderHome(){
+
+  const today =
+    todayString();
+
+  const d =
+    dateObj(today);
+
+  const weekdays =
+    ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+
+  document.getElementById("homeDate").textContent =
+    `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")} / ${weekdays[d.getDay()]}`;
+
+  const todayEvents =
+    events.filter(e => e.date === today);
+
+  const todayTodos =
+    todos.filter(t => !t.done);
+
+  const todayRecord =
+    records.find(r => r.date === today);
+
+  const todayMoney =
+    money
+      .filter(x => x.date === today)
+      .reduce((s,x) => s+x.price,0);
+
+  let html = "";
+
+  if(todayEvents.length){
+
+    html += `
+      <div class="muted">SCHEDULE</div>
+    `;
+
+    html += todayEvents.map(e => `
+      <div class="list-item">
+
+        <div class="item-title">
+          ${escapeHTML(e.name)}
+        </div>
+
+        <div class="muted">
+          ${
+            e.allDay
+            ? "終日"
+            : escapeHTML(e.time)
+          }
+
+          ${
+            e.place
+            ? " / " + escapeHTML(e.place)
+            : ""
+          }
+        </div>
+
+      </div>
+    `).join("");
+
+  }else{
+
+    html += `
+      <div class="empty">
+        今日の予定はありません
+      </div>
+    `;
+
+  }
+
+  document.getElementById("homeToday").innerHTML =
+    html;
+
+  document.getElementById("homeTodo").textContent =
+    todayTodos.length;
+
+  document.getElementById("homeStudy").textContent =
+    todayRecord
+    ? formatMinutes(todayRecord.minutes)
+    : "0m";
+
+  document.getElementById("homeMoney").textContent =
+    "¥" + todayMoney.toLocaleString();
+
+  const monday =
+    getMonday(0);
+
+  const sunday =
+    new Date(monday);
+
+  sunday.setDate(
+    monday.getDate()+6
+  );
+
+  const start =
+    dateString(monday);
+
+  const end =
+    dateString(sunday);
+
+  const weekEvents =
+    events.filter(e =>
+      e.date >= start &&
+      e.date <= end
+    );
+
+  document.getElementById("homeEvents").textContent =
+    weekEvents.length;
+
+}
+
+
+/* =====================================================
+   RECEIPT
+===================================================== */
+
+function renderReceipt(){
+
+  const monday =
+    getMonday(weekOffset);
+
+  const sunday =
+    new Date(monday);
+
+  sunday.setDate(
+    monday.getDate()+6
+  );
+
+  const start =
+    dateString(monday);
+
+  const end =
+    dateString(sunday);
+
+  document.getElementById("receiptDate").textContent =
+    `${displayDate(start)} — ${displayDate(end)}`;
+
+  const weekRecords =
+    records.filter(r =>
+      r.date >= start &&
+      r.date <= end
+    );
+
+  const study =
+    weekRecords.reduce(
+      (s,r) => s+r.minutes,
+      0
+    );
+
+  document.getElementById("receiptStudy").textContent =
+    formatMinutes(study);
+
+  const completed =
+    todos.filter(t => t.done).length;
+
+  document.getElementById("receiptTodo").textContent =
+    `${completed} / ${todos.length}`;
+
+  const weekEvents =
+    events.filter(e =>
+      e.date >= start &&
+      e.date <= end
+    );
+
+  document.getElementById("receiptEvents").textContent =
+    weekEvents.length;
+
+  const weekMoney =
+    money
+      .filter(x =>
+        x.date >= start &&
+        x.date <= end
+      )
+      .reduce(
+        (s,x) => s+x.price,
+        0
+      );
+
+  document.getElementById("receiptMoney").textContent =
+    "¥" + weekMoney.toLocaleString();
+
+  document.getElementById("receiptTotal").textContent =
+    "¥" + weekMoney.toLocaleString();
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+renderHome();
 renderWeek();
 renderTodos();
 renderMoney();
 renderWishes();
 renderNotes();
 renderRecords();
+renderReceipt();
 
 </script>
 
