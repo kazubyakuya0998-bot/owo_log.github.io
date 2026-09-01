@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MY LOG</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#f4f1ed;
+  color:#272522;
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Hiragino Sans",sans-serif;
+}
+header{
+  background:#272522;
+  color:white;
+  padding:22px 18px 18px;
+}
+header h1{
+  margin:0;
+  font-size:25px;
+  letter-spacing:2px;
+}
+header p{
+  margin:5px 0 0;
+  opacity:.7;
+  font-size:12px;
+}
+nav{
+  display:flex;
+  overflow-x:auto;
+  background:white;
+  border-bottom:1px solid #ddd;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+nav button{
+  flex:1;
+  min-width:85px;
+  border:0;
+  background:white;
+  padding:14px 8px;
+  font-size:12px;
+  color:#777;
+}
+nav button.active{
+  color:#222;
+  border-bottom:3px solid #272522;
+  font-weight:bold;
+}
+main{
+  max-width:900px;
+  margin:auto;
+  padding:18px;
+}
+.page{display:none}
+.page.active{display:block}
+.card{
+  background:white;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:15px;
+  box-shadow:0 2px 10px rgba(0,0,0,.04);
+}
+h2{
+  font-size:20px;
+  margin:5px 0 15px;
+}
+h3{
+  font-size:14px;
+  margin:0 0 10px;
+}
+input,select,textarea{
+  width:100%;
+  padding:11px;
+  border:1px solid #ddd;
+  border-radius:9px;
+  background:#fafafa;
+  font-size:14px;
+  margin:5px 0 10px;
+}
+textarea{min-height:90px;resize:vertical}
+label{
+  font-size:12px;
+  color:#777;
+}
+button{
+  cursor:pointer;
+}
+.primary{
+  width:100%;
+  padding:12px;
+  border:0;
+  border-radius:10px;
+  background:#272522;
+  color:white;
+  font-weight:bold;
+}
+.small{
+  border:1px solid #ddd;
+  background:white;
+  border-radius:8px;
+  padding:7px 10px;
+  font-size:12px;
+}
+.danger{
+  color:#a33;
+}
+.week-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+.week-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+  overflow-x:auto;
+}
+.day{
+  min-width:115px;
+  background:#fafafa;
+  border-radius:10px;
+  padding:8px;
+  min-height:180px;
+}
+.day-name{
+  text-align:center;
+  font-weight:bold;
+  font-size:12px;
+  margin-bottom:8px;
+}
+.event{
+  border-radius:7px;
+  padding:7px;
+  margin-bottom:6px;
+  font-size:11px;
+  border-left:4px solid;
+}
+.event strong{display:block;font-size:12px}
+.todo{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  padding:12px 0;
+  border-bottom:1px solid #eee;
+}
+.todo:last-child{border-bottom:0}
+.todo-content{flex:1}
+.todo-name{
+  font-size:14px;
+  font-weight:bold;
+}
+.done .todo-name{
+  text-decoration:line-through;
+  color:#999;
+}
+.stars{
+  font-size:13px;
+  letter-spacing:1px;
+}
+.list-item{
+  border-bottom:1px solid #eee;
+  padding:12px 0;
+}
+.list-item:last-child{border:0}
+.row{
+  display:flex;
+  gap:8px;
+}
+.row>*{flex:1}
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:20px;
+  background:#eee;
+  font-size:10px;
+  margin-right:4px;
+}
+.money-total{
+  font-size:28px;
+  font-weight:bold;
+  margin:5px 0 15px;
+}
+.folder{
+  border:1px solid #ddd;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:8px;
+}
+.note{
+  background:#fffef8;
+  padding:12px;
+  border-radius:9px;
+  margin-top:8px;
+}
+.photo{
+  max-width:100%;
+  border-radius:10px;
+  margin-top:8px;
+}
+.muted{
+  color:#999;
+  font-size:12px;
+}
+.empty{
+  text-align:center;
+  color:#aaa;
+  padding:25px 5px;
+  font-size:13px;
+}
+@media(max-width:700px){
+  .week-grid{
+    grid-template-columns:repeat(7,115px);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>MY LOG</h1>
+  <p>my weekly record / schedule / money / memo</p>
+</header>
+
+<nav>
+  <button class="active" onclick="showPage('week',this)">📅 WEEK</button>
+  <button onclick="showPage('todo',this)">☑ TODO</button>
+  <button onclick="showPage('money',this)">💰 MONEY</button>
+  <button onclick="showPage('wish',this)">🛍 WISH</button>
+  <button onclick="showPage('memo',this)">📝 MEMO</button>
+  <button onclick="showPage('record',this)">📚 RECORD</button>
+</nav>
+
+<main>
+
+<!-- WEEK -->
+<section id="week" class="page active">
+  <div class="card">
+    <div class="week-title">
+      <div>
+        <h2>THIS WEEK</h2>
+        <div id="weekRange" class="muted"></div>
+      </div>
+      <div>
+        <button class="small" onclick="changeWeek(-1)">← 前週</button>
+        <button class="small" onclick="changeWeek(1)">次週 →</button>
+      </div>
+    </div>
+    <div id="weekGrid" class="week-grid"></div>
+  </div>
+
+  <div class="card">
+    <h3>予定を追加</h3>
+
+    <label>名前 *</label>
+    <input id="eventName" placeholder="例：数学の授業">
+
+    <div class="row">
+      <div>
+        <label>日付 *</label>
+        <input id="eventDate" type="date">
+      </div>
+      <div>
+        <label>時間 *</label>
+        <input id="eventTime" type="time">
+      </div>
+    </div>
+
+    <label>
+      <input id="eventAllDay" type="checkbox" style="width:auto">
+      終日
+    </label>
+
+    <label>場所</label>
+    <input id="eventPlace" placeholder="例：学校 / 塾">
+
+    <label>詳細メモ</label>
+    <textarea id="eventMemo" placeholder="詳細など"></textarea>
+
+    <label>色 *</label>
+    <select id="eventColor">
+      <option value="#8fa8c7">ブルー</option>
+      <option value="#d69a9a">レッド</option>
+      <option value="#a8b99a">グリーン</option>
+      <option value="#c7a7c7">パープル</option>
+      <option value="#d6b77a">イエロー</option>
+      <option value="#aaa">グレー</option>
+    </select>
+
+    <button class="primary" onclick="addEvent()">予定を追加</button>
+  </div>
+</section>
+
+
+<!-- TODO -->
+<section id="todo" class="page">
+  <div class="card">
+    <h2>☑ TODO</h2>
+
+    <label>やること *</label>
+    <input id="todoName" placeholder="例：英単語をやる">
+
+    <label>優先度</label>
+    <select id="todoPriority">
+      <option value="1">★</option>
+      <option value="2">★★</option>
+      <option value="3" selected>★★★</option>
+      <option value="4">★★★★</option>
+      <option value="5">★★★★★</option>
+    </select>
+
+    <label>期限</label>
+    <input id="todoDue" type="date">
+
+    <label>詳細</label>
+    <textarea id="todoDetail" placeholder="やる内容など"></textarea>
+
+    <button class="primary" onclick="addTodo()">追加</button>
+  </div>
+
+  <div class="card">
+    <h3>やることリスト</h3>
+    <div id="todoList"></div>
+  </div>
+</section>
+
+
+<!-- MONEY -->
+<section id="money" class="page">
+  <div class="card">
+    <h2>💰 MONEY</h2>
+    <div class="muted">記録した支出の合計</div>
+    <div class="money-total" id="moneyTotal">¥0</div>
+
+    <label>日付 *</label>
+    <input id="moneyDate" type="date">
+
+    <label>欲しいレベル</label>
+    <select id="moneyLevel">
+      <option>★★★ 絶対ほしい</option>
+      <option>★★ ほしい</option>
+      <option>★ いつかほしい</option>
+    </select>
+
+    <label>ジャンル *</label>
+    <select id="moneyGenre">
+      <option>食費</option>
+      <option>交通</option>
+      <option>学校</option>
+      <option>部活</option>
+      <option>趣味</option>
+      <option>服・美容</option>
+      <option>その他</option>
+    </select>
+
+    <label>値段 *</label>
+    <input id="moneyPrice" type="number" placeholder="1000">
+
+    <label>詳細</label>
+    <textarea id="moneyDetail" placeholder="何に使ったかなど"></textarea>
+
+    <button class="primary" onclick="addMoney()">記録する</button>
+  </div>
+
+  <div class="card">
+    <h3>支出記録</h3>
+    <div id="moneyList"></div>
+  </div>
+</section>
+
+
+<!-- WISH -->
+<section id="wish" class="page">
+  <div class="card">
+    <h2>🛍 WISH LIST</h2>
+
+    <label>ほしいもの *</label>
+    <input id="wishName" placeholder="例：イヤホン">
+
+    <label>欲しいレベル</label>
+    <select id="wishLevel">
+      <option value="5">★★★★★ 絶対ほしい</option>
+      <option value="4">★★★★ かなりほしい</option>
+      <option value="3" selected>★★★ ほしい</option>
+      <option value="2">★★ ちょっとほしい</option>
+      <option value="1">★ いつかほしい</option>
+    </select>
+
+    <label>ジャンル</label>
+    <select id="wishGenre">
+      <option>服</option>
+      <option>美容</option>
+      <option>音楽</option>
+      <option>学校</option>
+      <option>部活</option>
+      <option>趣味</option>
+      <option>電子機器</option>
+      <option>その他</option>
+    </select>
+
+    <label>値段</label>
+    <input id="wishPrice" type="number" placeholder="5000">
+
+    <label>詳細</label>
+    <textarea id="wishDetail"></textarea>
+
+    <button class="primary" onclick="addWish()">ほしいものを追加</button>
+  </div>
+
+  <div class="card">
+    <h3>ほしいもの</h3>
+    <div id="wishList"></div>
+  </div>
+</section>
+
+
+<!-- MEMO -->
+<section id="memo" class="page">
+  <div class="card">
+    <h2>📝 MEMO</h2>
+
+    <label>フォルダー</label>
+    <input id="folderName" placeholder="例：学校">
+
+    <label>メモのタイトル</label>
+    <input id="noteTitle" placeholder="例：先生に聞くこと">
+
+    <label>内容</label>
+    <textarea id="noteText" placeholder="ここにメモ"></textarea>
+
+    <button class="primary" onclick="addNote()">メモを保存</button>
+  </div>
+
+  <div class="card">
+    <h3>メモフォルダー</h3>
+    <div id="memoList"></div>
+  </div>
+</section>
+
+
+<!-- RECORD -->
+<section id="record" class="page">
+  <div class="card">
+    <h2>📚 RECORD</h2>
+
+    <label>日付 *</label>
+    <input id="recordDate" type="date">
+
+    <label>今日はどのくらい勉強した？</label>
+    <input id="studyTime" type="number" placeholder="分">
+
+    <label>写真</label>
+    <input id="recordPhoto" type="file" accept="image/*">
+
+    <button class="primary" onclick="addRecord()">今日を記録</button>
+  </div>
+
+  <div class="card">
+    <h3>勉強記録</h3>
+    <div id="recordList"></div>
+  </div>
+</section>
+
+</main>
+
+
+<script>
+
+let events=JSON.parse(localStorage.getItem("events")||"[]");
+let todos=JSON.parse(localStorage.getItem("todos")||"[]");
+let money=JSON.parse(localStorage.getItem("money")||"[]");
+let wishes=JSON.parse(localStorage.getItem("wishes")||"[]");
+let notes=JSON.parse(localStorage.getItem("notes")||"[]");
+let records=JSON.parse(localStorage.getItem("records")||"[]");
+
+let weekOffset=0;
+
+function save(){
+  localStorage.setItem("events",JSON.stringify(events));
+  localStorage.setItem("todos",JSON.stringify(todos));
+  localStorage.setItem("money",JSON.stringify(money));
+  localStorage.setItem("wishes",JSON.stringify(wishes));
+  localStorage.setItem("notes",JSON.stringify(notes));
+  localStorage.setItem("records",JSON.stringify(records));
+}
+
+function showPage(id,btn){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+function todayString(){
+  let d=new Date();
+  return d.toISOString().split("T")[0];
+}
+
+document.getElementById("eventDate").value=todayString();
+document.getElementById("moneyDate").value=todayString();
+document.getElementById("recordDate").value=todayString();
+
+function getMonday(offset=0){
+  let d=new Date();
+  d.setHours(0,0,0,0);
+  let day=d.getDay();
+  let diff=day===0?-6:1-day;
+  d.setDate(d.getDate()+diff+(offset*7));
+  return d;
+}
+
+function dateString(d){
+  return d.toISOString().split("T")[0];
+}
+
+function formatDate(d){
+  return `${d.getMonth()+1}/${d.getDate()}`;
+}
+
+function changeWeek(n){
+  weekOffset+=n;
+  renderWeek();
+}
+
+function renderWeek(){
+
+  let monday=getMonday(weekOffset);
+  let days=["月","火","水","木","金","土","日"];
+
+  document.getElementById("weekRange").textContent=
+    `${formatDate(monday)}〜${formatDate(new Date(monday.getTime()+6*86400000))}`;
+
+  let html="";
+
+  for(let i=0;i<7;i++){
+
+    let d=new Date(monday);
+    d.setDate(monday.getDate()+i);
+
+    let ds=dateString(d);
+
+    let dayEvents=events.filter(e=>e.date===ds);
+
+    html+=`
+      <div class="day">
+        <div class="day-name">${days[i]}<br>${formatDate(d)}</div>
+        ${dayEvents.map(e=>`
+          <div class="event" style="border-color:${e.color}">
+            <strong>${escapeHTML(e.name)}</strong>
+            ${e.allDay?"終日":e.time}
+            ${e.place?`<br>📍${escapeHTML(e.place)}`:""}
+            ${e.memo?`<br><span class="muted">${escapeHTML(e.memo)}</span>`:""}
+            <br>
+            <button class="small" onclick="deleteEvent(${e.id})">削除</button>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  document.getElementById("weekGrid").innerHTML=html;
+}
+
+function addEvent(){
+
+  let name=document.getElementById("eventName").value.trim();
+  let date=document.getElementById("eventDate").value;
+  let time=document.getElementById("eventTime").value;
+  let allDay=document.getElementById("eventAllDay").checked;
+  let place=document.getElementById("eventPlace").value;
+  let memo=document.getElementById("eventMemo").value;
+  let color=document.getElementById("eventColor").value;
+
+  if(!name||!date||( !time&&!allDay)){
+    alert("名前・日付・時間（または終日）は必須です");
+    return;
+  }
+
+  events.push({
+    id:Date.now(),name,date,time,allDay,place,memo,color
+  });
+
+  save();
+  renderWeek();
+
+  document.getElementById("eventName").value="";
+  document.getElementById("eventTime").value="";
+  document.getElementById("eventPlace").value="";
+  document.getElementById("eventMemo").value="";
+}
+
+function deleteEvent(id){
+  events=events.filter(e=>e.id!==id);
+  save();
+  renderWeek();
+}
+
+
+function addTodo(){
+
+  let name=document.getElementById("todoName").value.trim();
+
+  if(!name){
+    alert("やることを入力してください");
+    return;
+  }
+
+  todos.push({
+    id:Date.now(),
+    name,
+    priority:Number(document.getElementById("todoPriority").value),
+    due:document.getElementById("todoDue").value,
+    detail:document.getElementById("todoDetail").value,
+    done:false
+  });
+
+  save();
+  renderTodos();
+
+  document.getElementById("todoName").value="";
+  document.getElementById("todoDue").value="";
+  document.getElementById("todoDetail").value="";
+}
+
+function toggleTodo(id){
+  let t=todos.find(x=>x.id===id);
+  t.done=!t.done;
+  save();
+  renderTodos();
+}
+
+function deleteTodo(id){
+  todos=todos.filter(x=>x.id!==id);
+  save();
+  renderTodos();
+}
+
+function editTodo(id){
+
+  let t=todos.find(x=>x.id===id);
+  let newName=prompt("名前を変更",t.name);
+
+  if(newName&&newName.trim()){
+    t.name=newName.trim();
+    save();
+    renderTodos();
+  }
+}
+
+function moveTodo(id,dir){
+
+  let i=todos.findIndex(x=>x.id===id);
+
+  if(dir==="up"&&i>0){
+    [todos[i-1],todos[i]]=[todos[i],todos[i-1]];
+  }
+
+  if(dir==="down"&&i<todos.length-1){
+    [todos[i+1],todos[i]]=[todos[i],todos[i+1]];
+  }
+
+  save();
+  renderTodos();
+}
+
+function renderTodos(){
+
+  if(!todos.length){
+    document.getElementById("todoList").innerHTML='<div class="empty">まだToDoがありません</div>';
+    return;
+  }
+
+  document.getElementById("todoList").innerHTML=
+    todos.map((t,i)=>`
+      <div class="todo ${t.done?"done":""}">
+        <input type="checkbox" ${t.done?"checked":""}
+          onclick="toggleTodo(${t.id})"
+          style="width:20px;height:20px">
+
+        <div class="todo-content">
+          <div class="todo-name">${escapeHTML(t.name)}</div>
+          <div class="stars">${"★".repeat(t.priority)}${"☆".repeat(5-t.priority)}</div>
+          ${t.due?`<span class="badge">期限 ${t.due}</span>`:""}
+          ${t.detail?`<div class="muted">${escapeHTML(t.detail)}</div>`:""}
+
+          <div style="margin-top:6px">
+            <button class="small" onclick="editTodo(${t.id})">名前変更</button>
+            <button class="small" onclick="moveTodo(${t.id},'up')">↑</button>
+            <button class="small" onclick="moveTodo(${t.id},'down')">↓</button>
+            <button class="small danger" onclick="deleteTodo(${t.id})">削除</button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+}
+
+
+function addMoney(){
+
+  let date=document.getElementById("moneyDate").value;
+  let price=Number(document.getElementById("moneyPrice").value);
+
+  if(!date||!price){
+    alert("日付と値段は必須です");
+    return;
+  }
+
+  money.push({
+    id:Date.now(),
+    date,
+    level:document.getElementById("moneyLevel").value,
+    genre:document.getElementById("moneyGenre").value,
+    price,
+    detail:document.getElementById("moneyDetail").value
+  });
+
+  save();
+  renderMoney();
+
+  document.getElementById("moneyPrice").value="";
+  document.getElementById("moneyDetail").value="";
+}
+
+function deleteMoney(id){
+  money=money.filter(x=>x.id!==id);
+  save();
+  renderMoney();
+}
+
+function renderMoney(){
+
+  let total=money.reduce((s,x)=>s+x.price,0);
+
+  document.getElementById("moneyTotal").textContent=
+    "¥"+total.toLocaleString();
+
+  if(!money.length){
+    document.getElementById("moneyList").innerHTML='<div class="empty">まだ記録がありません</div>';
+    return;
+  }
+
+  document.getElementById("moneyList").innerHTML=
+    [...money].reverse().map(x=>`
+      <div class="list-item">
+        <strong>¥${x.price.toLocaleString()}</strong>
+        <span class="badge">${x.genre}</span>
+        <span class="badge">${x.level}</span>
+        <div class="muted">${x.date}</div>
+        ${x.detail?`<div>${escapeHTML(x.detail)}</div>`:""}
+        <button class="small danger" onclick="deleteMoney(${x.id})">削除</button>
+      </div>
+    `).join("");
+}
+
+
+function addWish(){
+
+  let name=document.getElementById("wishName").value.trim();
+
+  if(!name){
+    alert("ほしいものの名前を入力してください");
+    return;
+  }
+
+  wishes.push({
+    id:Date.now(),
+    name,
+    level:Number(document.getElementById("wishLevel").value),
+    genre:document.getElementById("wishGenre").value,
+    price:Number(document.getElementById("wishPrice").value)||0,
+    detail:document.getElementById("wishDetail").value
+  });
+
+  save();
+  renderWishes();
+
+  document.getElementById("wishName").value="";
+  document.getElementById("wishPrice").value="";
+  document.getElementById("wishDetail").value="";
+}
+
+function deleteWish(id){
+  wishes=wishes.filter(x=>x.id!==id);
+  save();
+  renderWishes();
+}
+
+function renderWishes(){
+
+  if(!wishes.length){
+    document.getElementById("wishList").innerHTML='<div class="empty">ほしいものはまだありません</div>';
+    return;
+  }
+
+  document.getElementById("wishList").innerHTML=
+    wishes.map(x=>`
+      <div class="list-item">
+        <strong>${escapeHTML(x.name)}</strong>
+        <div class="stars">${"★".repeat(x.level)}${"☆".repeat(5-x.level)}</div>
+        <span class="badge">${x.genre}</span>
+        ${x.price?`<span class="badge">¥${x.price.toLocaleString()}</span>`:""}
+        ${x.detail?`<div class="muted">${escapeHTML(x.detail)}</div>`:""}
+        <button class="small danger" onclick="deleteWish(${x.id})">削除</button>
+      </div>
+    `).join("");
+}
+
+
+function addNote(){
+
+  let folder=document.getElementById("folderName").value.trim()||"その他";
+  let title=document.getElementById("noteTitle").value.trim();
+
+  if(!title){
+    alert("メモのタイトルを入力してください");
+    return;
+  }
+
+  notes.push({
+    id:Date.now(),
+    folder,
+    title,
+    text:document.getElementById("noteText").value
+  });
+
+  save();
+  renderNotes();
+
+  document.getElementById("noteTitle").value="";
+  document.getElementById("noteText").value="";
+}
+
+function deleteNote(id){
+  notes=notes.filter(x=>x.id!==id);
+  save();
+  renderNotes();
+}
+
+function renderNotes(){
+
+  if(!notes.length){
+    document.getElementById("memoList").innerHTML='<div class="empty">まだメモがありません</div>';
+    return;
+  }
+
+  let folders=[...new Set(notes.map(x=>x.folder))];
+
+  document.getElementById("memoList").innerHTML=
+    folders.map(f=>`
+      <div class="folder">
+        <strong>📁 ${escapeHTML(f)}</strong>
+        ${notes.filter(x=>x.folder===f).map(x=>`
+          <div class="note">
+            <strong>${escapeHTML(x.title)}</strong>
+            <div>${escapeHTML(x.text).replace(/\n/g,"<br>")}</div>
+            <button class="small danger" onclick="deleteNote(${x.id})">削除</button>
+          </div>
+        `).join("")}
+      </div>
+    `).join("");
+}
+
+
+function addRecord(){
+
+  let date=document.getElementById("recordDate").value;
+  let time=Number(document.getElementById("studyTime").value)||0;
+  let file=document.getElementById("recordPhoto").files[0];
+
+  if(!date){
+    alert("日付を入力してください");
+    return;
+  }
+
+  if(!file){
+    records.push({
+      id:Date.now(),
+      date,
+      time,
+      photo:""
+    });
+    save();
+    renderRecords();
+    return;
+  }
+
+  let reader=new FileReader();
+
+  reader.onload=function(e){
+
+    records.push({
+      id:Date.now(),
+      date,
+      time,
+      photo:e.target.result
+    });
+
+    save();
+    renderRecords();
+
+    document.getElementById("recordPhoto").value="";
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function deleteRecord(id){
+  records=records.filter(x=>x.id!==id);
+  save();
+  renderRecords();
+}
+
+function renderRecords(){
+
+  if(!records.length){
+    document.getElementById("recordList").innerHTML='<div class="empty">まだ記録がありません</div>';
+    return;
+  }
+
+  document.getElementById("recordList").innerHTML=
+    [...records].reverse().map(x=>`
+      <div class="list-item">
+        <strong>${x.date}</strong>
+        <div>📚 ${x.time}分 勉強</div>
+        ${x.photo?`<img class="photo" src="${x.photo}">`:""}
+        <button class="small danger" onclick="deleteRecord(${x.id})">削除</button>
+      </div>
+    `).join("");
+}
+
+function escapeHTML(str){
+  return String(str||"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+renderWeek();
+renderTodos();
+renderMoney();
+renderWishes();
+renderNotes();
+renderRecords();
+
+</script>
+
+</body>
+</html>
