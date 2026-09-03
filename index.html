@@ -881,7 +881,7 @@ h1{
         placeholder="パスワード"
       >
 
-      <button class="primary" onclick="login()">
+      <button type="button" id="loginButton" class="primary" onclick="login()">
         ログイン
       </button>
     </div>
@@ -915,7 +915,7 @@ h1{
         placeholder="もう一度入力"
       >
 
-      <button class="primary" onclick="signup()">
+      <button type="button" id="signupButton" class="primary" onclick="signup()">
         アカウントを作る
       </button>
 
@@ -1428,6 +1428,30 @@ let weekOffset = 0;
 let monthOffset = 0;
 
 let saveQueue = Promise.resolve();
+
+/* =========================
+   Supabase
+   ========================= */
+
+const SUPABASE_URL =
+  "https://xjanjhywkozjohxultta.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_ICkqvGWwyLdz5_rPE7YCCg_yyoqIL0v";
+
+let supabaseClient = null;
+
+try{
+  if(window.supabase && typeof window.supabase.createClient === "function"){
+    supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+  }
+}catch(error){
+  console.error("SUPABASE INIT ERROR:", error);
+}
 
 
 /* =========================
@@ -4847,6 +4871,11 @@ function saveAll(){
 
 async function enterApp(){
 
+  if(!supabaseClient){
+    showLogin();
+    return;
+  }
+
   const {
     data
   }=
@@ -4942,6 +4971,7 @@ async function logout(){
    AUTH STATE
    ========================= */
 
+if(supabaseClient){
 supabaseClient
   .auth
   .onAuthStateChange(
@@ -4968,6 +4998,28 @@ supabaseClient
 
     }
   );
+}
+
+
+function switchAuth(type){
+
+  const loginForm = document.getElementById("loginForm");
+  const signupForm = document.getElementById("signupForm");
+  const loginTab = document.getElementById("loginTab");
+  const signupTab = document.getElementById("signupTab");
+
+  if(type === "signup"){
+    loginForm.style.display = "none";
+    signupForm.style.display = "block";
+    loginTab.classList.remove("active");
+    signupTab.classList.add("active");
+  }else{
+    loginForm.style.display = "block";
+    signupForm.style.display = "none";
+    loginTab.classList.add("active");
+    signupTab.classList.remove("active");
+  }
+}
 
 
 /* =========================
@@ -4975,6 +5027,14 @@ supabaseClient
    ========================= */
 
 async function login(){
+
+  try{
+
+  if(!supabaseClient){
+    const msg=document.getElementById("authMsg");
+    if(msg) msg.textContent="ログイン機能を読み込めませんでした。インターネット接続を確認して、ページを再読み込みしてください。";
+    return;
+  }
 
   const username=
     document.getElementById(
@@ -5009,31 +5069,40 @@ async function login(){
     username.toLowerCase();
 
 
-  const hashBuffer=
-    await crypto.subtle.digest(
-      "SHA-256",
-      new TextEncoder().encode(
-        normalized
+  let hash;
+
+  if(window.crypto && crypto.subtle){
+
+    const hashBuffer=
+      await crypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(
+          normalized
+        )
+      );
+
+    hash=
+      Array.from(
+        new Uint8Array(
+          hashBuffer
+        )
       )
-    );
-
-
-  const hashArray=
-    Array.from(
-      new Uint8Array(
-        hashBuffer
-      )
-    );
-
-
-  const hash=
-    hashArray
       .map(
         b=>b
           .toString(16)
           .padStart(2,"0")
       )
       .join("");
+
+  }else{
+
+    alert(
+      "このブラウザではログイン機能を実行できません。\n"+
+      "Safariでファイルを直接開いている場合は、Chromeまたはlocalhostで開いてください。"
+    );
+
+    return;
+  }
 
 
   const email=
@@ -5080,6 +5149,17 @@ async function login(){
 
   await enterApp();
 
+  }catch(error){
+
+    console.error("LOGIN ERROR:",error);
+
+    alert(
+      "ログイン処理でエラーが発生しました。\n"+
+      (error?.message || error)
+    );
+
+  }
+
 }
 
 
@@ -5089,16 +5169,27 @@ async function login(){
 
 async function signup(){
 
+  if(!supabaseClient){
+    const msg=document.getElementById("authMsg");
+    if(msg) msg.textContent="アカウント機能を読み込めませんでした。インターネット接続を確認して、ページを再読み込みしてください。";
+    return;
+  }
+
   const username=
     document.getElementById(
-      "loginUsername"
+      "signupUsername"
     ).value
     .trim();
 
 
   const password=
     document.getElementById(
-      "loginPassword"
+      "signupPassword"
+    ).value;
+
+  const password2=
+    document.getElementById(
+      "signupPassword2"
     ).value;
 
 
@@ -5117,6 +5208,16 @@ async function signup(){
 
     alert(
       "パスワードは8文字以上にしてください。"
+    );
+
+    return;
+
+  }
+
+  if(password !== password2){
+
+    alert(
+      "パスワードが一致していません。"
     );
 
     return;
@@ -5267,9 +5368,50 @@ async function signup(){
 
 
 /* =========================
+   ボタンイベント
+   ========================= */
+
+function setupAuthButtons(){
+
+  const loginButton = document.getElementById("loginButton");
+  const signupButton = document.getElementById("signupButton");
+  const loginTab = document.getElementById("loginTab");
+  const signupTab = document.getElementById("signupTab");
+
+  if(loginButton){
+    loginButton.addEventListener("click", function(e){
+      e.preventDefault();
+      login();
+    });
+  }
+
+  if(signupButton){
+    signupButton.addEventListener("click", function(e){
+      e.preventDefault();
+      signup();
+    });
+  }
+
+  if(loginTab){
+    loginTab.addEventListener("click", function(e){
+      e.preventDefault();
+      switchAuth("login");
+    });
+  }
+
+  if(signupTab){
+    signupTab.addEventListener("click", function(e){
+      e.preventDefault();
+      switchAuth("signup");
+    });
+  }
+}
+
+/* =========================
    起動
    ========================= */
 
+setupAuthButtons();
 enterApp();
 
 </script>
