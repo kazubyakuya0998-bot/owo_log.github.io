@@ -1402,22 +1402,6 @@ h1{
 
 <script>
 
-/* =========================
-   Supabase設定
-   ========================= */
-
-const SUPABASE_URL =
-  "https://xjanjhywkozjohxultta.supabase.co";
-
-const SUPABASE_ANON_KEY =
-  "sb_publishable_ICkqvGWwyLdz5_rPE7YCCg_yyoqIL0v";
-
-const {createClient} = window.supabase;
-
-const sb = createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
 
 
 /* =========================
@@ -2414,7 +2398,6 @@ function closeModal(){
   document.getElementById("modalBody")
     .innerHTML="";
 }
-<script>
 
 /* =========================
    TODO
@@ -4133,7 +4116,6 @@ function renderRecord(){
 
       `;
 }
-<script>
 
 /* =========================
    RECEIPT
@@ -4593,7 +4575,7 @@ function renderAll(){
 
   renderWeek();
 
-  renderTodos();
+  renderTodo();
 
   renderMoney();
 
@@ -4688,68 +4670,6 @@ document.addEventListener(
   }
 );
 
-
-/* =========================
-   MODAL
-   ========================= */
-
-function openModal(title,body){
-
-  document.getElementById(
-    "modalTitle"
-  ).textContent=title;
-
-
-  document.getElementById(
-    "modalBody"
-  ).innerHTML=body;
-
-
-  document.getElementById(
-    "modal"
-  ).classList.add("open");
-
-}
-
-
-function closeModal(){
-
-  document.getElementById(
-    "modal"
-  ).classList.remove("open");
-
-}
-
-
-document.getElementById(
-  "modal"
-).addEventListener(
-  "click",
-  e=>{
-
-    if(e.target.id==="modal")
-      closeModal();
-
-  }
-);
-
-
-/* =========================
-   Supabase
-   ========================= */
-
-const SUPABASE_URL =
-  "https://xjanjhywkozjohxultta.supabase.co";
-
-const SUPABASE_ANON_KEY =
-  "sb_publishable_ICkqvGWwyLdz5_rPE7YCCg_yyoqIL0v";
-
-
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
 
 
 /* =========================
@@ -4954,7 +4874,7 @@ async function enterApp(){
 
 
   document.getElementById(
-    "loginScreen"
+    "authScreen"
   ).style.display="none";
 
 
@@ -4991,7 +4911,7 @@ function showLogin(){
 
 
   document.getElementById(
-    "loginScreen"
+    "authScreen"
   ).style.display="flex";
 
 
@@ -5167,7 +5087,7 @@ async function login(){
    REGISTER
    ========================= */
 
-async function register(){
+async function signup(){
 
   const username=
     document.getElementById(
