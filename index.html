@@ -5228,46 +5228,13 @@ async function signup(){
   const normalized=
     username.toLowerCase();
 
-
   /*
-    ユーザー名の重複確認
+    ユーザー名の重複確認はRPCを使わず、
+    ユーザー名から作った内部メールアドレスを
+    Supabase Auth側で一意に管理する。
+    これならDB側に username_available 関数が
+    用意されていなくてもアカウントを作成できる。
   */
-
-  const {
-    data:available,
-    error:checkError
-  }=
-    await supabaseClient
-      .rpc(
-        "username_available",
-        {
-          p_username:normalized
-        }
-      );
-
-
-  if(checkError){
-
-    console.error(checkError);
-
-    alert(
-      "ユーザー名を確認できませんでした。"
-    );
-
-    return;
-
-  }
-
-
-  if(!available){
-
-    alert(
-      "そのユーザー名はすでに使われています。"
-    );
-
-    return;
-
-  }
 
 
   /*
