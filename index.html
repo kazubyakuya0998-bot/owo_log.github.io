@@ -691,26 +691,6 @@ async function signup(){
 
   authMessage("登録中...",true);
 
-  const {
-    data:avail,
-    error:availErr
-  }=await sb.rpc(
-    "username_available",
-    {p_username:u}
-  );
-
-  if(availErr){
-    authMessage(
-      "登録確認に失敗しました。Supabaseの設定を確認してください。"
-    );
-    return;
-  }
-
-  if(!avail){
-    authMessage("そのユーザー名はすでに使われています。");
-    return;
-  }
-
   const email=await internalEmail(u);
 
   const {
