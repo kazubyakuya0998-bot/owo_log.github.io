@@ -3,721 +3,844 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
 <title>MY LOG</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 :root{
   --bg:#f3f0e8;
   --paper:#fffdf8;
-  --paper2:#f8f5ed;
   --ink:#252525;
-  --muted:#77736b;
-  --line:#d9d4c8;
-  --accent:#252525;
-  --danger:#a44;
+  --muted:#777;
+  --line:#cfc9bc;
+  --soft:#eeeae0;
+  --accent:#222
 }
 
-html,
 body{
   margin:0;
-  padding:0;
-  min-height:100%;
   background:var(--bg);
   color:var(--ink);
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Hiragino Kaku Gothic ProN",
-    "Hiragino Sans",
-    "Yu Gothic",
-    sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif
 }
 
-body{
-  padding-bottom:80px;
-}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
 
-button,
-input,
-textarea,
-select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-input,
-textarea,
-select{
-  width:100%;
-  border:1px solid var(--line);
-  background:white;
-  border-radius:10px;
-  padding:11px 12px;
-  outline:none;
-}
-
-input:focus,
-textarea:focus,
-select:focus{
-  border-color:#777;
-}
-
-textarea{
-  min-height:110px;
-  resize:vertical;
-}
-
-.hidden{
-  display:none!important;
-}
-
-/* =========================
-   LOGIN
-========================= */
-
-#loginScreen{
+.auth-wrap{
   min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
+  display:grid;
+  place-items:center;
+  padding:24px
 }
 
-.login-card{
-  width:100%;
-  max-width:420px;
+.auth-card{
+  width:min(430px,100%);
   background:var(--paper);
   border:1px solid var(--line);
-  padding:30px 24px;
-  border-radius:18px;
-  box-shadow:0 8px 30px rgba(0,0,0,.05);
-}
-
-.login-logo{
-  text-align:center;
-  font-size:30px;
-  letter-spacing:.18em;
-  font-weight:700;
-  margin-bottom:8px;
-}
-
-.login-sub{
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-  margin-bottom:28px;
-}
-
-.login-label{
-  display:block;
-  font-size:12px;
-  font-weight:700;
-  margin:15px 0 6px;
-}
-
-.login-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:20px;
-}
-
-.btn{
-  border:1px solid var(--ink);
-  background:var(--ink);
-  color:white;
-  border-radius:10px;
-  padding:11px 14px;
-  font-weight:700;
-}
-
-.btn.secondary{
-  background:white;
-  color:var(--ink);
-}
-
-.btn.light{
-  background:var(--paper2);
-  color:var(--ink);
-  border-color:var(--line);
-}
-
-.btn.danger{
-  background:white;
-  color:var(--danger);
-  border-color:#caa;
-}
-
-.btn.small{
-  padding:7px 10px;
-  font-size:12px;
-}
-
-.login-message{
-  margin-top:14px;
-  min-height:20px;
-  font-size:12px;
-  color:var(--danger);
-  text-align:center;
-}
-
-/* =========================
-   APP
-========================= */
-
-#app{
-  display:none;
-}
-
-.app-header{
-  position:sticky;
-  top:0;
-  z-index:20;
-  background:rgba(243,240,232,.96);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line);
-}
-
-.header-inner{
-  max-width:1000px;
-  margin:auto;
-  padding:14px 16px 10px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
+  padding:28px;
+  box-shadow:0 8px 30px #0000000c
 }
 
 .logo{
-  font-size:20px;
+  font-size:30px;
   font-weight:800;
-  letter-spacing:.12em;
+  letter-spacing:.12em
 }
 
-.sync-status{
-  font-size:10px;
+.sub{
+  font:12px ui-monospace,SFMono-Regular,monospace;
   color:var(--muted);
-  white-space:nowrap;
+  letter-spacing:.12em
 }
 
-#nav{
-  max-width:1000px;
+.dash{
+  border-top:1px dashed var(--line);
+  margin:20px 0
+}
+
+.auth-tabs{
+  display:flex;
+  border-bottom:1px solid var(--line);
+  margin-bottom:18px
+}
+
+.auth-tabs button{
+  flex:1;
+  border:0;
+  background:none;
+  padding:11px;
+  color:var(--muted)
+}
+
+.auth-tabs button.active{
+  color:var(--ink);
+  font-weight:700;
+  border-bottom:2px solid var(--ink)
+}
+
+label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  margin:12px 0 6px
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  padding:10px 11px;
+  border-radius:7px;
+  color:var(--ink)
+}
+
+textarea{
+  min-height:100px;
+  resize:vertical
+}
+
+.primary{
+  width:100%;
+  border:0;
+  background:#222;
+  color:#fff;
+  padding:12px;
+  border-radius:7px;
+  font-weight:700;
+  margin-top:16px
+}
+
+.small{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.6
+}
+
+.auth-msg{
+  min-height:20px;
+  margin-top:12px;
+  font-size:13px
+}
+
+#app{min-height:100vh}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:#f3f0eefa;
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line)
+}
+
+.top{
+  max-width:1200px;
+  margin:auto;
+  padding:14px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px
+}
+
+.brand{
+  font-weight:900;
+  letter-spacing:.14em
+}
+
+.brand small{
+  display:block;
+  font-size:9px;
+  font-weight:500;
+  letter-spacing:.2em;
+  color:var(--muted)
+}
+
+.userbar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font:11px ui-monospace,SFMono-Regular,monospace
+}
+
+.ghost{
+  border:1px solid var(--line);
+  background:transparent;
+  border-radius:6px;
+  padding:7px 10px
+}
+
+nav{
+  max-width:1200px;
   margin:auto;
   display:flex;
-  overflow-x:auto;
-  gap:4px;
-  padding:0 10px 10px;
-  scrollbar-width:none;
+  overflow:auto;
+  border-top:1px dashed var(--line)
 }
 
-#nav::-webkit-scrollbar{
-  display:none;
-}
-
-.nav-btn{
-  flex:0 0 auto;
+nav button{
+  white-space:nowrap;
   border:0;
-  background:transparent;
-  color:var(--muted);
-  padding:8px 11px;
-  border-radius:8px;
+  background:none;
+  padding:10px 13px;
   font-size:11px;
+  letter-spacing:.08em;
+  color:var(--muted)
 }
 
-.nav-btn.active{
-  background:var(--ink);
-  color:white;
+nav button.active{
+  color:#111;
+  font-weight:800;
+  border-bottom:2px solid #111
 }
 
-.main{
-  max-width:1000px;
+main{
+  max-width:1200px;
   margin:auto;
-  padding:18px 14px 40px;
+  padding:20px 16px 50px
 }
 
-.page{
-  display:none;
-}
-
-.page.active{
-  display:block;
-}
+.page{display:none}
+.page.active{display:block}
 
 .page-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:12px;
+  margin-bottom:15px
+}
+
+h1{
   font-size:25px;
-  font-weight:800;
-  letter-spacing:.05em;
-  margin:4px 0 18px;
+  margin:0
 }
 
-.page-sub{
+.kicker{
+  font:10px ui-monospace,SFMono-Regular,monospace;
   color:var(--muted);
-  font-size:11px;
-  margin-top:-12px;
-  margin-bottom:18px;
+  letter-spacing:.14em
 }
-
-/* =========================
-   CARDS
-========================= */
 
 .card{
   background:var(--paper);
   border:1px solid var(--line);
-  border-radius:14px;
-  padding:15px;
-  margin-bottom:12px;
+  padding:16px;
+  margin-bottom:14px
 }
 
-.card-title{
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.08em;
-  margin-bottom:10px;
+.card h2{
+  font-size:14px;
+  margin:0 0 12px;
+  letter-spacing:.08em
 }
 
-.stats{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:9px;
+.btn{
+  border:1px solid #222;
+  background:#222;
+  color:#fff;
+  border-radius:6px;
+  padding:8px 12px;
+  font-size:12px
 }
 
-.stat{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:14px;
+.btn.light{
+  background:transparent;
+  color:#222;
+  border-color:var(--line)
 }
 
-.stat-label{
-  color:var(--muted);
-  font-size:10px;
-  margin-bottom:6px;
-}
-
-.stat-value{
-  font-size:23px;
-  font-weight:800;
+.btn.danger{
+  background:transparent;
+  color:#8a3333;
+  border-color:#d5aaaa
 }
 
 .grid2{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
+  gap:14px
 }
 
-@media(max-width:600px){
-  .grid2{
-    grid-template-columns:1fr;
-  }
-}
-
-.row{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.between{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-}
-
-.wrap{
-  flex-wrap:wrap;
-}
-
-.muted{
-  color:var(--muted);
-}
-
-.small-text{
-  font-size:11px;
-}
-
-.empty{
-  text-align:center;
-  color:var(--muted);
-  padding:22px 10px;
-  font-size:12px;
-}
-
-/* =========================
-   HOME
-========================= */
-
-.home-date{
-  font-size:13px;
-  color:var(--muted);
-  margin-bottom:5px;
-}
-
-.home-today{
-  font-size:30px;
-  font-weight:800;
-  margin-bottom:20px;
-}
-
-.home-list{
-  display:flex;
-  flex-direction:column;
-  gap:7px;
-}
-
-.home-item{
-  padding:10px 11px;
-  background:var(--paper2);
-  border-radius:9px;
-  border-left:3px solid var(--ink);
-}
-
-.home-item-title{
-  font-weight:700;
-  font-size:13px;
-}
-
-.home-item-sub{
-  color:var(--muted);
-  font-size:10px;
-  margin-top:3px;
-}
-
-/* =========================
-   WEEK
-========================= */
-
-.week-controls{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  margin-bottom:12px;
-}
-
-.week-label{
-  font-weight:800;
-  font-size:14px;
-}
-
-.week-grid{
+.stats{
   display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:5px;
-  overflow-x:auto;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px
 }
 
-.week-day{
-  min-width:0;
+.stat{
   background:var(--paper);
   border:1px solid var(--line);
-  border-radius:9px;
-  min-height:145px;
-  padding:7px;
+  padding:14px
 }
 
-.week-day-head{
-  text-align:center;
-  border-bottom:1px solid var(--line);
-  padding-bottom:6px;
-  margin-bottom:6px;
+.stat .label{
+  font:10px ui-monospace,SFMono-Regular,monospace;
+  color:var(--muted)
 }
 
-.week-day-name{
-  font-size:9px;
-  color:var(--muted);
-}
-
-.week-day-number{
-  font-size:16px;
+.stat .value{
+  font-size:24px;
   font-weight:800;
+  margin-top:5px
 }
-
-.week-event{
-  font-size:9px;
-  background:var(--paper2);
-  border-radius:5px;
-  padding:5px;
-  margin-bottom:4px;
-  cursor:pointer;
-}
-
-.week-event-time{
-  color:var(--muted);
-  font-size:8px;
-}
-
-@media(max-width:700px){
-  .week-grid{
-    grid-template-columns:repeat(7,minmax(100px,1fr));
-    overflow-x:auto;
-    padding-bottom:5px;
-  }
-}
-
-/* =========================
-   LIST ITEMS
-========================= */
 
 .list{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+  display:grid;
+  gap:8px
 }
 
 .item{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:12px;
+  border-top:1px dashed var(--line);
+  padding:10px 0;
+  display:flex;
+  justify-content:space-between;
+  gap:10px
 }
 
-.item.done{
-  opacity:.55;
-}
+.item:first-child{border-top:0}
 
-.item.done .item-title{
-  text-decoration:line-through;
+.item-main{
+  min-width:0
 }
 
 .item-title{
-  font-size:13px;
-  font-weight:800;
-}
-
-.item-detail{
-  margin-top:5px;
-  font-size:11px;
-  color:var(--muted);
-  white-space:pre-wrap;
+  font-weight:700;
+  font-size:14px
 }
 
 .item-meta{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:8px;
-}
-
-.tag{
-  display:inline-block;
-  padding:4px 7px;
-  border-radius:999px;
-  background:var(--paper2);
+  font-size:11px;
   color:var(--muted);
-  font-size:9px;
+  margin-top:3px;
+  line-height:1.5
 }
 
-.item-actions{
+.actions{
   display:flex;
   gap:5px;
   flex-wrap:wrap;
-  margin-top:10px;
+  align-items:center
 }
 
-.star{
+.actions button{
+  font-size:11px;
+  padding:5px 7px;
+  border:1px solid var(--line);
+  background:transparent;
+  border-radius:5px
+}
+
+.stars{
   letter-spacing:1px;
+  font-size:12px
 }
 
-.photo{
-  display:block;
-  width:100%;
-  max-height:240px;
-  object-fit:cover;
-  border-radius:9px;
-  margin-top:10px;
+.done{
+  text-decoration:line-through;
+  color:#999
 }
 
-/* =========================
-   FORMS
-========================= */
-
-.form-grid{
+.formgrid{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px
 }
 
-@media(max-width:600px){
-  .form-grid{
-    grid-template-columns:1fr;
-  }
+.formgrid .full{
+  grid-column:1/-1
 }
 
-.form-group{
-  margin-bottom:10px;
-}
-
-.form-label{
-  display:block;
-  font-size:10px;
-  font-weight:800;
-  color:var(--muted);
-  margin-bottom:5px;
-}
-
-.form-full{
-  grid-column:1 / -1;
-}
-
-.check-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
+.empty{
+  padding:22px 14px;
+  text-align:center;
+  color:#999;
   font-size:12px;
+  border:1px dashed var(--line);
+  background:#faf8f2;
+  line-height:1.8
 }
 
-.check-row input{
-  width:auto;
+.empty .empty-mark{
+  font-size:22px;
+  display:block;
+  color:#aaa;
+  margin-bottom:3px
 }
 
-/* =========================
-   RECEIPT
-========================= */
+.empty.left{text-align:left}
 
+/* 本文・詳細は左揃え＆余計な空白を作らない */
+.note .item-meta{
+  text-align:left;
+  white-space:normal;
+  word-break:break-word
+}
+
+.todo-completed{
+  margin-top:14px;
+  border-top:1px dashed var(--line);
+  padding-top:14px
+}
+
+.todo-completed summary{
+  cursor:pointer;
+  font-size:12px;
+  color:#777;
+  font-weight:700;
+  list-style:none
+}
+
+.todo-completed summary::-webkit-details-marker{
+  display:none
+}
+
+.todo-completed summary:before{
+  content:"＋ ";
+  font-weight:900
+}
+
+.todo-completed[open] summary:before{
+  content:"− "
+}
+
+/* 月間カレンダー */
+.month-card{
+  margin-top:10px;
+  padding:11px 12px;
+  background:#fbfaf6;
+  border:1px solid #ddd7cb
+}
+
+.month-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px
+}
+
+.month-title{
+  font:700 11px ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.1em;
+  color:#777
+}
+
+.month-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:2px
+}
+
+.month-wd,.month-cell{
+  min-height:30px;
+  font:9px ui-monospace,SFMono-Regular,monospace;
+  text-align:center;
+  color:#888
+}
+
+.month-wd{
+  min-height:18px
+}
+
+.month-cell{
+  position:relative;
+  padding-top:4px;
+  color:#555;
+  border-radius:4px
+}
+
+.month-cell.today{
+  font-weight:900;
+  color:#111;
+  text-decoration:underline
+}
+
+.month-cell.other{
+  opacity:.25
+}
+
+.month-dots{
+  display:flex;
+  justify-content:center;
+  gap:2px;
+  margin-top:3px;
+  min-height:5px
+}
+
+.month-dot{
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  display:block
+}
+
+.month-nav{
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--ink);
+  width:24px;
+  height:22px;
+  border-radius:4px;
+  font:11px ui-monospace,SFMono-Regular,monospace;
+  padding:0
+}
+
+.month-nav:hover{
+  background:var(--soft)
+}
+
+/* HOME レシート */
+.home-receipt{
+  max-width:620px;
+  margin:0 auto;
+  background:#fffdf8;
+  border:1px solid #d8d1c5;
+  padding:18px 16px;
+  position:relative
+}
+
+.home-receipt:before,
+.home-receipt:after{
+  content:"";
+  display:block;
+  height:7px;
+  background:repeating-linear-gradient(
+    135deg,
+    transparent 0 5px,
+    #d8d1c5 5px 6px,
+    transparent 6px 10px
+  );
+  opacity:.55
+}
+
+.home-receipt .receipt-line{
+  margin:10px 0
+}
+
+.home-receipt .receipt-row{
+  font-size:11px
+}
+
+.home-receipt .receipt-stamp{
+  font:9px ui-monospace,SFMono-Regular,monospace;
+  color:#999;
+  letter-spacing:.12em
+}
+
+.home-receipt .receipt-today{
+  font:700 18px ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.08em
+}
+
+.home-receipt .receipt-empty{
+  font-size:11px;
+  color:#999;
+  padding:12px 0;
+  text-align:left
+}
+
+/* 予定カラー */
+.event{
+  margin:8px;
+  border:1px solid var(--line);
+  padding:8px;
+  background:#f7f4ec;
+  border-radius:6px
+}
+
+.event.color-1{background:#f5d7d7}
+.event.color-2{background:#f5dbe8}
+.event.color-3{background:#dcebdc}
+.event.color-4{background:#f4edc9}
+.event.color-5{background:#dce8f5}
+.event.color-6{background:#fff}
+.event.color-7{background:#e2e2e2}
+
+.event-time{
+  font:10px ui-monospace,SFMono-Regular,monospace;
+  color:#666
+}
+
+.event-name{
+  font-size:12px;
+  font-weight:700;
+  margin-top:2px
+}
+
+.event-detail{
+  font-size:10px;
+  color:#777;
+  margin-top:2px
+}
+
+.dot{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#777;
+  margin-right:5px
+}
+
+.color-1{background:#e8bcbc}
+.color-2{background:#edc6d8}
+.color-3{background:#cfe2cf}
+.color-4{background:#eee1a9}
+.color-5{background:#c9dced}
+.color-6{background:#fff}
+.color-7,.color-8{background:#d9d9d9}
+
+.todo-row{
+  align-items:flex-start
+}
+
+.check{
+  width:18px;
+  height:18px;
+  accent-color:#222;
+  margin-top:2px
+}
+
+.folder{
+  border:1px solid var(--line);
+  padding:12px;
+  background:#fbf9f2
+}
+
+.folder-name{
+  font-weight:800
+}
+
+.note{
+  padding:10px 0;
+  border-top:1px dashed var(--line)
+}
+
+.note:first-child{
+  border-top:0
+}
+
+.record-photo{
+  width:70px;
+  height:70px;
+  object-fit:cover;
+  border:1px solid var(--line);
+  border-radius:5px
+}
+
+/* 印刷用レシート */
 .receipt{
-  max-width:600px;
+  max-width:680px;
   margin:auto;
   background:#fff;
-  border:1px solid #ccc;
   padding:24px 20px;
-  position:relative;
+  border:1px solid #d9d3c7;
+  font-family:ui-monospace,SFMono-Regular,monospace
 }
 
-.receipt:after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:-8px;
-  height:8px;
-  background:
-    linear-gradient(
-      -45deg,
-      transparent 5px,
-      #fff 0
-    ) 0 0/10px 10px repeat-x;
-}
-
-.receipt-header{
+.receipt h2{
   text-align:center;
-  padding-bottom:15px;
-  border-bottom:1px dashed #aaa;
-  margin-bottom:15px;
+  letter-spacing:.15em
 }
 
-.receipt-title{
-  font-weight:900;
-  letter-spacing:.15em;
+.receipt-line{
+  border-top:1px dashed #888;
+  margin:13px 0
 }
 
 .receipt-row{
   display:flex;
   justify-content:space-between;
-  padding:8px 0;
-  border-bottom:1px dotted #ccc;
-  font-size:12px;
+  padding:4px 0;
+  font-size:12px
 }
 
-.receipt-total{
-  font-size:18px;
-  font-weight:900;
-  padding-top:14px;
+.barcode{
+  height:45px;
+  margin:18px auto 5px;
+  width:180px;
+  background:repeating-linear-gradient(
+    90deg,
+    #111 0 2px,
+    transparent 2px 5px,
+    #111 5px 6px,
+    transparent 6px 9px
+  )
 }
 
-/* =========================
-   MODAL
-========================= */
+.receipt-section-title{
+  text-align:center;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.12em;
+  margin:4px 0 10px
+}
+
+.receipt-day{
+  border-top:1px dashed #aaa;
+  padding:8px 0
+}
+
+.receipt-day:first-of-type{
+  border-top:0
+}
+
+.receipt-day-head{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  margin-bottom:4px
+}
+
+.receipt-day-head span{
+  color:#777
+}
+
+.receipt-event{
+  display:flex;
+  gap:6px;
+  align-items:flex-start;
+  padding:4px 0;
+  font-size:11px
+}
+
+.receipt-event-dot{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  flex:none;
+  margin-top:4px
+}
+
+.receipt-small{
+  font-size:9px;
+  color:#777;
+  line-height:1.5;
+  margin-top:1px
+}
+
+.receipt-none{
+  font-size:10px;
+  color:#aaa;
+  padding:4px 0
+}
+
+.receipt-todo{
+  display:flex;
+  gap:7px;
+  align-items:flex-start;
+  border-top:1px dashed #aaa;
+  padding:7px 0;
+  font-size:11px
+}
+
+.receipt-todo:first-of-type{
+  border-top:0
+}
+
+.receipt-todo>span{
+  font-size:13px
+}
+
+.home-date{
+  font:12px ui-monospace,SFMono-Regular,monospace;
+  color:#777
+}
 
 .modal{
   position:fixed;
   inset:0;
-  z-index:100;
+  background:#0007;
+  z-index:30;
   display:none;
-  align-items:flex-end;
+  align-items:center;
   justify-content:center;
-  background:rgba(0,0,0,.35);
-  padding:12px;
+  padding:18px
 }
 
 .modal.show{
-  display:flex;
+  display:flex
 }
 
 .modal-box{
-  width:100%;
-  max-width:600px;
+  width:min(520px,100%);
   max-height:90vh;
   overflow:auto;
   background:var(--paper);
-  border-radius:18px 18px 10px 10px;
-  padding:18px;
+  padding:20px;
+  border:1px solid var(--line)
 }
 
-.modal-title{
-  font-size:18px;
-  font-weight:800;
-  margin-bottom:16px;
-}
-
-.modal-actions{
+.modal-head{
   display:flex;
-  gap:7px;
-  justify-content:flex-end;
-  margin-top:16px;
-  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px
 }
 
-/* =========================
-   FOOTER
-========================= */
-
-.app-footer{
-  text-align:center;
-  color:var(--muted);
-  font-size:9px;
-  padding:30px 0;
+.modal-head h3{
+  margin:0;
+  font-size:17px
 }
 
-/* =========================
-   PRINT
-========================= */
+.close{
+  border:0;
+  background:none;
+  font-size:20px
+}
+
+.sync{
+  font-size:10px;
+  color:#777
+}
+
+@media(max-width:700px){
+  .grid2,.stats{
+    grid-template-columns:1fr 1fr
+  }
+
+  .formgrid{
+    grid-template-columns:1fr
+  }
+
+  .stats .stat{
+    padding:11px
+  }
+
+  .stat .value{
+    font-size:20px
+  }
+
+  .top{
+    padding:12px
+  }
+
+  .userbar span{
+    max-width:90px;
+    overflow:hidden;
+    text-overflow:ellipsis
+  }
+}
 
 @media print{
-  body{
-    background:white;
-    padding:0;
-  }
-
-  .app-header,
-  .app-footer,
+  header,
+  #app>main>.page:not(#receipt),
   .no-print{
-    display:none!important;
-  }
-
-  .main{
-    padding:0;
-    max-width:none;
-  }
-
-  #receipt{
-    display:block!important;
+    display:none!important
   }
 
   .receipt{
     border:0;
     box-shadow:none;
+    margin:0 auto
+  }
+
+  body{
+    background:#fff
   }
 }
 </style>
@@ -725,67 +848,191 @@ textarea{
 
 <body>
 
-<!-- =========================
-     LOGIN SCREEN
-========================= -->
+<div id="authScreen" class="auth-wrap">
+  <div class="auth-card">
 
-<section id="loginScreen">
+    <div class="logo">MY LOG</div>
+    <div class="sub">RECORD / PLAN / NOTE</div>
 
-  <div class="login-card">
+    <div class="dash"></div>
 
-    <div class="login-logo">MY LOG</div>
-
-    <div class="login-sub">
-      YOUR PERSONAL RECORD
+    <div class="auth-tabs">
+      <button id="loginTab" class="active" onclick="switchAuth('login')">
+        LOGIN
+      </button>
+      <button id="signupTab" onclick="switchAuth('signup')">
+        NEW ACCOUNT
+      </button>
     </div>
 
-    <label class="login-label">
-      ユーザー名
-    </label>
-
-    <input
-      id="loginUsername"
-      type="text"
-      maxlength="30"
-      autocomplete="username"
-      placeholder="ユーザー名"
-    >
-
-    <label class="login-label">
-      パスワード
-    </label>
-
-    <input
-      id="loginPassword"
-      type="password"
-      autocomplete="current-password"
-      placeholder="8文字以上"
-    >
-
-    <div class="login-actions">
-
-      <button
-        class="btn"
-        type="button"
-        onclick="login()"
+    <div id="loginForm">
+      <label>ユーザー名</label>
+      <input
+        id="loginUsername"
+        autocomplete="username"
+        placeholder="ユーザー名"
       >
+
+      <label>パスワード</label>
+      <input
+        id="loginPassword"
+        type="password"
+        autocomplete="current-password"
+        placeholder="パスワード"
+      >
+
+      <button class="primary" onclick="login()">
         ログイン
       </button>
+    </div>
 
-      <button
-        class="btn secondary"
-        type="button"
-        onclick="signup()"
+    <div id="signupForm" style="display:none">
+
+      <label>ユーザー名</label>
+      <input
+        id="signupUsername"
+        autocomplete="username"
+        placeholder="好きなユーザー名"
       >
-        新規登録
+
+      <div class="small">
+        同じユーザー名は登録できません。大文字・小文字は区別しません。
+      </div>
+
+      <label>パスワード</label>
+      <input
+        id="signupPassword"
+        type="password"
+        autocomplete="new-password"
+        placeholder="8文字以上"
+      >
+
+      <label>パスワード（確認）</label>
+      <input
+        id="signupPassword2"
+        type="password"
+        autocomplete="new-password"
+        placeholder="もう一度入力"
+      >
+
+      <button class="primary" onclick="signup()">
+        アカウントを作る
       </button>
 
     </div>
 
-    <div
-      id="loginMessage"
-      class="login-message"
-    ></div>
+    <div id="authMsg" class="auth-msg"></div>
+
+    <div class="small">
+      この画面ではメールアドレスを入力する必要はありません。
+    </div>
+
+  </div>
+</div>
+
+<div id="app" style="display:none">
+
+<header>
+  <div class="top">
+
+    <div class="brand">
+      MY LOG
+      <small>RECORD / PLAN / NOTE</small>
+    </div>
+
+    <div class="userbar">
+      <span id="syncStatus">SYNC</span>
+      <span id="currentUsername"></span>
+
+      <button class="ghost" onclick="migrateOldData()">
+        旧データ移行
+      </button>
+
+      <button class="ghost" onclick="logout()">
+        ログアウト
+      </button>
+    </div>
+
+  </div>
+
+  <nav id="nav"></nav>
+</header>
+
+<main>
+<!-- =========================
+     HOME
+     ========================= -->
+
+<section id="home" class="page active">
+
+  <div class="page-title">
+    <div>
+      <div class="kicker">PERSONAL DASHBOARD</div>
+      <h1>HOME</h1>
+    </div>
+  </div>
+
+  <div class="home-receipt">
+
+    <div class="receipt-stamp">
+      MY LOG / DAILY RECEIPT
+    </div>
+
+    <div class="receipt-today" id="homeDate"></div>
+
+    <div class="receipt-line"></div>
+
+    <div style="font-size:11px;font-weight:800;letter-spacing:.12em">
+      TODAY
+    </div>
+
+    <div id="homeToday"></div>
+
+    <div class="receipt-line"></div>
+
+    <div class="receipt-row">
+      <span>OPEN TODO</span>
+      <b id="statTodo">0</b>
+    </div>
+
+    <div class="receipt-row">
+      <span>STUDY TODAY</span>
+      <b id="statStudy">0m</b>
+    </div>
+
+    <div class="receipt-row">
+      <span>SPENDING TODAY</span>
+      <b id="statMoney">¥0</b>
+    </div>
+
+    <div class="receipt-row">
+      <span>WEEK EVENTS</span>
+      <b id="statEvents">0</b>
+    </div>
+
+    <div class="receipt-line"></div>
+
+    <div style="font-size:11px;font-weight:800;letter-spacing:.12em">
+      UPCOMING TODO
+    </div>
+
+    <div id="homeTodos"></div>
+
+    <div class="receipt-line"></div>
+
+    <div style="font-size:11px;font-weight:800;letter-spacing:.12em">
+      RECENT RECORD
+    </div>
+
+    <div id="homeRecords"></div>
+
+    <div class="receipt-line"></div>
+
+    <div style="text-align:center;font-size:10px;color:#999">
+      KEEP GOING.
+    </div>
+
+    <div class="barcode"></div>
 
   </div>
 
@@ -793,556 +1040,358 @@ textarea{
 
 
 <!-- =========================
-     APP
-========================= -->
+     WEEK
+     ========================= -->
 
-<div id="app">
+<section id="week" class="page">
 
-  <header class="app-header">
+  <div class="page-title">
 
-    <div class="header-inner">
+    <div>
+      <div class="kicker">MONDAY — SUNDAY</div>
+      <h1>WEEK</h1>
+    </div>
 
-      <div class="logo">
-        MY LOG
-      </div>
+    <button class="btn" onclick="openEventModal()">
+      ＋ 予定を追加
+    </button>
 
-      <div class="row">
+  </div>
 
-        <span
-          id="syncStatus"
-          class="sync-status"
-        >
-          OFFLINE
-        </span>
 
-        <button
-          class="btn light small"
-          type="button"
-          onclick="logout()"
-        >
-          LOGOUT
-        </button>
+  <!-- 週間予定 -->
 
-      </div>
+  <div class="card">
+
+    <div class="week-controls">
+
+      <button
+        class="btn light"
+        onclick="changeWeek(-1)"
+      >
+        ← 前週
+      </button>
+
+      <b id="weekLabel"></b>
+
+      <button
+        class="btn light"
+        onclick="changeWeek(1)"
+      >
+        次週 →
+      </button>
 
     </div>
 
-    <nav id="nav"></nav>
+    <div id="weekGrid" class="week-grid"></div>
 
-  </header>
+    <div style="
+      margin-top:10px;
+      font-size:10px;
+      color:#777
+    ">
+      COLOR　
+      ● 授業　
+      ● 部活　
+      ● 塾　
+      ● 学校行事　
+      ● バイト　
+      ● 自由時間　
+      ● カフェ　
+      ● その他
+    </div>
+
+  </div>
 
 
-  <main class="main">
+  <!-- 月間カレンダー -->
 
-    <!-- =====================
-         HOME
-    ====================== -->
+  <div class="month-card">
 
-    <section
-      id="home"
-      class="page active"
-    >
+    <div class="month-head">
 
-      <div class="page-title">
-        HOME
-      </div>
+      <button
+        class="month-nav"
+        onclick="changeMonth(-1)"
+        aria-label="前月"
+      >
+        ←
+      </button>
 
       <div
-        id="homeDate"
-        class="home-date"
+        id="monthLabel"
+        class="month-title"
       ></div>
 
-      <div
-        id="homeToday"
-        class="home-today"
-      ></div>
+      <button
+        class="month-nav"
+        onclick="changeMonth(1)"
+        aria-label="次月"
+      >
+        →
+      </button>
 
+    </div>
 
-      <div class="stats">
+    <div
+      id="monthGrid"
+      class="month-grid"
+    ></div>
 
-        <div class="stat">
+  </div>
 
-          <div class="stat-label">
-            OPEN TODO
-          </div>
 
-          <div
-            id="statTodo"
-            class="stat-value"
-          >
-            0
-          </div>
+  <!-- 今週のTODO -->
 
-        </div>
+  <div class="card">
 
+    <h2>WEEK TODO</h2>
 
-        <div class="stat">
+    <div id="weekTodos"></div>
 
-          <div class="stat-label">
-            STUDY TODAY
-          </div>
+  </div>
 
-          <div
-            id="statStudy"
-            class="stat-value"
-          >
-            0m
-          </div>
-
-        </div>
-
-
-        <div class="stat">
-
-          <div class="stat-label">
-            SPENDING TODAY
-          </div>
-
-          <div
-            id="statMoney"
-            class="stat-value"
-          >
-            ¥0
-          </div>
-
-        </div>
-
-
-        <div class="stat">
-
-          <div class="stat-label">
-            EVENTS THIS WEEK
-          </div>
-
-          <div
-            id="statEvents"
-            class="stat-value"
-          >
-            0
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="card" style="margin-top:14px">
-
-        <div class="between">
-
-          <div class="card-title">
-            TODAY'S EVENTS
-          </div>
-
-          <button
-            class="btn light small"
-            type="button"
-            onclick="showPage('week')"
-          >
-            WEEK
-          </button>
-
-        </div>
-
-        <div
-          id="homeEvents"
-          class="home-list"
-        ></div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="between">
-
-          <div class="card-title">
-            TODO
-          </div>
-
-          <button
-            class="btn light small"
-            type="button"
-            onclick="showPage('todo')"
-          >
-            TODO
-          </button>
-
-        </div>
-
-        <div
-          id="homeTodos"
-          class="home-list"
-        ></div>
-
-      </div>
-
-
-      <div class="card">
-
-        <div class="between">
-
-          <div class="card-title">
-            RECENT RECORD
-          </div>
-
-          <button
-            class="btn light small"
-            type="button"
-            onclick="showPage('record')"
-          >
-            RECORD
-          </button>
-
-        </div>
-
-        <div
-          id="homeRecords"
-          class="home-list"
-        ></div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================
-         WEEK
-    ====================== -->
-
-    <section
-      id="week"
-      class="page"
-    >
-
-      <div class="page-title">
-        WEEK
-      </div>
-
-      <div class="week-controls">
-
-        <button
-          class="btn light small"
-          type="button"
-          onclick="changeWeek(-1)"
-        >
-          ← 前週
-        </button>
-
-        <div
-          id="weekLabel"
-          class="week-label"
-        ></div>
-
-        <button
-          class="btn light small"
-          type="button"
-          onclick="changeWeek(1)"
-        >
-          次週 →
-        </button>
-
-      </div>
-
-
-      <div
-        id="weekGrid"
-        class="week-grid"
-      ></div>
-
-
-      <div class="card" style="margin-top:14px">
-
-        <div class="between">
-
-          <div class="card-title">
-            WEEK TODO
-          </div>
-
-          <button
-            class="btn small"
-            type="button"
-            onclick="openTodoModal()"
-          >
-            + TODO
-          </button>
-
-        </div>
-
-        <div
-          id="weekTodos"
-          class="list"
-        ></div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================
-         TODO
-    ====================== -->
-
-    <section
-      id="todo"
-      class="page"
-    >
-
-      <div class="between">
-
-        <div class="page-title">
-          TODO
-        </div>
-
-        <button
-          class="btn small"
-          type="button"
-          onclick="openTodoModal()"
-        >
-          + ADD
-        </button>
-
-      </div>
-
-      <div
-        id="todoList"
-        class="list"
-      ></div>
-
-    </section>
-
-
-    <!-- =====================
-         MONEY
-    ====================== -->
-
-    <section
-      id="money"
-      class="page"
-    >
-
-      <div class="between">
-
-        <div class="page-title">
-          MONEY
-        </div>
-
-        <button
-          class="btn small"
-          type="button"
-          onclick="openMoneyModal()"
-        >
-          + ADD
-        </button>
-
-      </div>
-
-
-      <div class="stats">
-
-        <div class="stat">
-
-          <div class="stat-label">
-            TOTAL
-          </div>
-
-          <div
-            id="moneyTotal"
-            class="stat-value"
-          >
-            ¥0
-          </div>
-
-        </div>
-
-        <div class="stat">
-
-          <div class="stat-label">
-            THIS MONTH
-          </div>
-
-          <div
-            id="moneyMonth"
-            class="stat-value"
-          >
-            ¥0
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div
-        id="moneyList"
-        class="list"
-        style="margin-top:14px"
-      ></div>
-
-    </section>
-
-
-    <!-- =====================
-         WISH
-    ====================== -->
-
-    <section
-      id="wish"
-      class="page"
-    >
-
-      <div class="between">
-
-        <div class="page-title">
-          WISH
-        </div>
-
-        <button
-          class="btn small"
-          type="button"
-          onclick="openWishModal()"
-        >
-          + ADD
-        </button>
-
-      </div>
-
-
-      <div
-        id="wishList"
-        class="list"
-      ></div>
-
-    </section>
-
-
-    <!-- =====================
-         MEMO
-    ====================== -->
-
-    <section
-      id="memo"
-      class="page"
-    >
-
-      <div class="between">
-
-        <div class="page-title">
-          MEMO
-        </div>
-
-        <button
-          class="btn small"
-          type="button"
-          onclick="openMemoModal()"
-        >
-          + ADD
-        </button>
-
-      </div>
-
-
-      <div
-        id="memoList"
-        class="list"
-      ></div>
-
-    </section>
-
-
-    <!-- =====================
-         RECORD
-    ====================== -->
-
-    <section
-      id="record"
-      class="page"
-    >
-
-      <div class="between">
-
-        <div class="page-title">
-          RECORD
-        </div>
-
-        <button
-          class="btn small"
-          type="button"
-          onclick="openRecordModal()"
-        >
-          + ADD
-        </button>
-
-      </div>
-
-
-      <div
-        id="recordList"
-        class="list"
-      ></div>
-
-    </section>
-
-
-    <!-- =====================
-         RECEIPT
-    ====================== -->
-
-    <section
-      id="receipt"
-      class="page"
-    >
-
-      <div class="between no-print">
-
-        <div class="page-title">
-          RECEIPT
-        </div>
-
-        <button
-          class="btn small"
-          type="button"
-          onclick="printReceipt()"
-        >
-          PRINT / PDF
-        </button>
-
-      </div>
-
-
-      <div
-        id="receiptBody"
-        class="receipt"
-      ></div>
-
-    </section>
-
-  </main>
-
-
-  <footer class="app-footer">
-    MY LOG · PERSONAL RECORD SYSTEM
-  </footer>
-
-</div>
+</section>
 
 
 <!-- =========================
-     COMMON MODAL
-========================= -->
+     TODO
+     ========================= -->
+
+<section id="todo" class="page">
+
+  <div class="page-title">
+
+    <div>
+      <div class="kicker">TASK MANAGEMENT</div>
+      <h1>TODO</h1>
+    </div>
+
+    <button
+      class="btn"
+      onclick="openTodoModal()"
+    >
+      ＋ タスクを追加
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <div id="todoList"></div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     MONEY
+     ========================= -->
+
+<section id="money" class="page">
+
+  <div class="page-title">
+
+    <div>
+      <div class="kicker">SPENDING LOG</div>
+      <h1>MONEY</h1>
+    </div>
+
+    <button
+      class="btn"
+      onclick="openMoneyModal()"
+    >
+      ＋ 記録を追加
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <div class="kicker">TOTAL</div>
+
+    <div
+      id="moneyTotal"
+      style="
+        font-size:30px;
+        font-weight:900;
+        margin:4px 0 14px
+      "
+    >
+      ¥0
+    </div>
+
+    <div id="moneyList"></div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     WISH LIST
+     ========================= -->
+
+<section id="wish" class="page">
+
+  <div class="page-title">
+
+    <div>
+      <div class="kicker">WANT TO HAVE</div>
+      <h1>WISH LIST</h1>
+    </div>
+
+    <button
+      class="btn"
+      onclick="openWishModal()"
+    >
+      ＋ 追加
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <div id="wishList"></div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     MEMO
+     ========================= -->
+
+<section id="memo" class="page">
+
+  <div class="page-title">
+
+    <div>
+      <div class="kicker">NOTE FOLDERS</div>
+      <h1>MEMO</h1>
+    </div>
+
+    <button
+      class="btn"
+      onclick="openMemoModal()"
+    >
+      ＋ メモを追加
+    </button>
+
+  </div>
+
+  <div id="memoList"></div>
+
+</section>
+
+
+<!-- =========================
+     RECORD
+     ========================= -->
+
+<section id="record" class="page">
+
+  <div class="page-title">
+
+    <div>
+      <div class="kicker">STUDY LOG</div>
+      <h1>RECORD</h1>
+    </div>
+
+    <button
+      class="btn"
+      onclick="openRecordModal()"
+    >
+      ＋ 今日の記録
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <h2>今日の勉強時間</h2>
+
+    <div
+      id="todayStudy"
+      style="
+        font-size:32px;
+        font-weight:900
+      "
+    >
+      0 min
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <h2>記録一覧</h2>
+
+    <div id="recordList"></div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================
+     RECEIPT
+     ========================= -->
+
+<section id="receipt" class="page">
+
+  <div class="page-title">
+
+    <div>
+      <div class="kicker">WEEKLY SUMMARY</div>
+      <h1>RECEIPT</h1>
+    </div>
+
+    <button
+      class="btn"
+      onclick="window.print()"
+    >
+      印刷 / PDF
+    </button>
+
+  </div>
+
+  <div
+    class="receipt"
+    id="receiptBody"
+  ></div>
+
+</section>
+
+</main>
+
+
+<!-- =========================
+     MODAL
+     ========================= -->
 
 <div
   id="modal"
   class="modal"
-  onclick="closeModalByBackground(event)"
+  onclick="if(event.target===this)closeModal()"
 >
 
   <div class="modal-box">
 
-    <div
-      id="modalTitle"
-      class="modal-title"
-    ></div>
+    <div class="modal-head">
+
+      <h3 id="modalTitle"></h3>
+
+      <button
+        class="close"
+        onclick="closeModal()"
+      >
+        ×
+      </button>
+
+    </div>
 
     <div id="modalBody"></div>
 
@@ -1353,9 +1402,9 @@ textarea{
 
 <script>
 
-/* =========================================================
-   SUPABASE
-========================================================= */
+/* =========================
+   Supabase設定
+   ========================= */
 
 const SUPABASE_URL =
   "https://xjanjhywkozjohxultta.supabase.co";
@@ -1363,19 +1412,19 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
   "sb_publishable_ICkqvGWwyLdz5_rPE7YCCg_yyoqIL0v";
 
-const sb =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+const {createClient} = window.supabase;
+
+const sb = createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
 
-/* =========================================================
-   STATE
-========================================================= */
+/* =========================
+   基本データ
+   ========================= */
 
 let currentUser = null;
-
 let currentUsername = "";
 
 let events = [];
@@ -1387,142 +1436,19 @@ let records = [];
 
 let weekOffset = 0;
 
-let editingEventId = null;
-let editingTodoId = null;
-let editingMoneyId = null;
-let editingWishId = null;
-let editingMemoId = null;
-let editingRecordId = null;
-
-let selectedEventColor = "#252525";
+/*
+  月間カレンダー用。
+  WEEKを動かしても、月間カレンダーは
+  独立して前月・次月を見られるようにする。
+*/
+let monthOffset = 0;
 
 let saveQueue = Promise.resolve();
 
 
-/* =========================================================
-   BASIC HELPERS
-========================================================= */
-
-function uid(){
-
-  if(
-    window.crypto &&
-    typeof window.crypto.randomUUID === "function"
-  ){
-    return window.crypto.randomUUID();
-  }
-
-  return (
-    Date.now().toString(36) +
-    Math.random().toString(36).slice(2)
-  );
-}
-
-
-function escapeHtml(value){
-
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-
-function localDateString(date=new Date()){
-
-  const y = date.getFullYear();
-
-  const m = String(
-    date.getMonth()+1
-  ).padStart(2,"0");
-
-  const d = String(
-    date.getDate()
-  ).padStart(2,"0");
-
-  return `${y}-${m}-${d}`;
-}
-
-
-function dateKey(date=new Date()){
-  return localDateString(date);
-}
-
-
-function parseDate(str){
-
-  const [y,m,d] =
-    String(str).split("-").map(Number);
-
-  return new Date(
-    y,
-    (m||1)-1,
-    d||1
-  );
-}
-
-
-function addDays(date, amount){
-
-  const d = new Date(date);
-
-  d.setDate(
-    d.getDate()+amount
-  );
-
-  return d;
-}
-
-
-function formatDateJP(str){
-
-  if(!str)return "";
-
-  const d = parseDate(str);
-
-  return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
-}
-
-
-function formatDateTime(dateStr,timeStr){
-
-  if(!dateStr)return "";
-
-  if(!timeStr){
-    return formatDateJP(dateStr);
-  }
-
-  return `${formatDateJP(dateStr)} ${timeStr}`;
-}
-
-
-function setSync(text){
-
-  const el =
-    document.getElementById("syncStatus");
-
-  if(el){
-    el.textContent = text;
-  }
-}
-
-
-function showLoginMessage(message){
-
-  const el =
-    document.getElementById("loginMessage");
-
-  if(el){
-    el.textContent = message || "";
-  }
-}
-
-
-/* =========================================================
-   NAVIGATION
-========================================================= */
+/* =========================
+   ナビゲーション
+   ========================= */
 
 const navItems = [
   ["home","HOME"],
@@ -1535,1083 +1461,3131 @@ const navItems = [
   ["receipt","RECEIPT"]
 ];
 
+document.getElementById("nav").innerHTML =
+  navItems
+    .map(([id,label]) =>
+      `<button
+        id="nav-${id}"
+        onclick="showPage('${id}')"
+      >${label}</button>`
+    )
+    .join("");
 
-function buildNav(){
 
-  const nav =
-    document.getElementById("nav");
+/* =========================
+   共通関数
+   ========================= */
 
-  nav.innerHTML =
-    navItems.map(
-      ([id,label]) => `
-        <button
-          type="button"
-          id="nav-${id}"
-          class="nav-btn"
-          onclick="showPage('${id}')"
-        >
-          ${label}
-        </button>
-      `
-    ).join("");
+function uid(){
+  return crypto.randomUUID
+    ? crypto.randomUUID()
+    : Date.now()+"_"+Math.random().toString(36).slice(2);
 }
 
 
-function showPage(page){
+/*
+  日本時間で今日の日付を取得。
+  UTCによる日付ズレを防ぐ。
+*/
+function localDateString(d=new Date()){
 
-  document
-    .querySelectorAll(".page")
-    .forEach(el=>{
-      el.classList.remove("active");
-    });
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
 
-  const target =
-    document.getElementById(page);
+  return `${y}-${m}-${day}`;
+}
 
-  if(!target)return;
+function todayStr(){
+  return localDateString();
+}
 
-  target.classList.add("active");
 
-  document
-    .querySelectorAll(".nav-btn")
-    .forEach(el=>{
-      el.classList.remove("active");
-    });
+function dateKey(d){
+  return localDateString(d);
+}
 
-  const nav =
-    document.getElementById(
-      "nav-"+page
+
+function yen(n){
+  return "¥"+Number(n||0).toLocaleString("ja-JP");
+}
+
+
+function stars(n){
+
+  n=Number(n||0);
+
+  return "★".repeat(n)+"☆".repeat(5-n);
+}
+
+
+function fmtDate(d){
+
+  if(!d)return "";
+
+  const x=new Date(d+"T00:00:00");
+
+  return `${String(x.getMonth()+1).padStart(2,"0")}/${String(x.getDate()).padStart(2,"0")}`;
+}
+
+
+/*
+  表示時に余計なスペース・改行を整理する。
+  保存されている文章自体は変更しない。
+*/
+function cleanText(value=""){
+
+  return String(value)
+    .replace(/\r\n/g,"\n")
+    .replace(/[ \t]+\n/g,"\n")
+    .replace(/\n[ \t]+/g,"\n")
+    .replace(/[ \t]{2,}/g," ")
+    .replace(/\n{3,}/g,"\n\n")
+    .trim();
+}
+
+
+function esc(s=""){
+
+  return String(s)
+    .replace(
+      /[&<>"']/g,
+      m => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+      }[m])
+    );
+}
+
+
+/* =========================
+   週関連
+   ========================= */
+
+function currentWeekDates(){
+
+  const now=new Date();
+
+  const day=now.getDay();
+
+  const diff=day===0 ? -6 : 1-day;
+
+  const monday=new Date(now);
+
+  monday.setHours(0,0,0,0);
+
+  monday.setDate(
+    now.getDate()+diff+(weekOffset*7)
+  );
+
+  return Array.from(
+    {length:7},
+    (_,i)=>{
+      const d=new Date(monday);
+      d.setDate(monday.getDate()+i);
+      return d;
+    }
+  );
+}
+
+
+function weekText(){
+
+  const ds=currentWeekDates();
+
+  return `${fmtDate(dateKey(ds[0]))} — ${fmtDate(dateKey(ds[6]))}`;
+}
+
+
+function changeWeek(n){
+
+  weekOffset+=n;
+
+  renderWeek();
+  renderReceipt();
+}
+
+
+/* =========================
+   月間カレンダー
+   ========================= */
+
+function changeMonth(n){
+
+  monthOffset+=n;
+
+  renderMonthCalendar();
+}
+
+
+function renderMonthCalendar(){
+
+  const base=new Date();
+
+  base.setDate(1);
+
+  base.setMonth(
+    base.getMonth()+monthOffset
+  );
+
+  const year=base.getFullYear();
+  const month=base.getMonth();
+
+  document.getElementById("monthLabel").textContent =
+    `${year}.${String(month+1).padStart(2,"0")}`;
+
+
+  const firstDay=new Date(
+    year,
+    month,
+    1
+  );
+
+  const lastDay=new Date(
+    year,
+    month+1,
+    0
+  );
+
+
+  /*
+    月曜始まり。
+    JavaScriptの0=日曜を
+    月曜始まりに変換。
+  */
+  const start =
+    (firstDay.getDay()+6)%7;
+
+
+  const totalDays=lastDay.getDate();
+
+
+  const cells=[];
+
+  const weekNames=[
+    "MON",
+    "TUE",
+    "WED",
+    "THU",
+    "FRI",
+    "SAT",
+    "SUN"
+  ];
+
+
+  weekNames.forEach(w=>{
+    cells.push(
+      `<div class="month-wd">${w}</div>`
+    );
+  });
+
+
+  for(let i=0;i<start;i++){
+
+    cells.push(
+      `<div class="month-cell other"></div>`
+    );
+  }
+
+
+  for(let day=1;day<=totalDays;day++){
+
+    const date=new Date(
+      year,
+      month,
+      day
     );
 
-  if(nav){
-    nav.classList.add("active");
+    const key=dateKey(date);
+
+    const dayEvents=events.filter(
+      e=>e.date===key
+    );
+
+    const isToday=
+      key===todayStr();
+
+
+    const dots=dayEvents
+      .slice(0,4)
+      .map(e=>
+        `<span
+          class="month-dot color-${e.color||8}"
+        ></span>`
+      )
+      .join("");
+
+
+    cells.push(`
+      <div class="month-cell ${isToday?"today":""}">
+        ${day}
+        <div class="month-dots">
+          ${dots}
+        </div>
+      </div>
+    `);
   }
 
-  if(page === "home"){
-    renderHome();
+
+  /*
+    最後の週まで埋める。
+  */
+  while((cells.length-7)%7!==0){
+
+    cells.push(
+      `<div class="month-cell other"></div>`
+    );
   }
 
-  if(page === "week"){
-    renderWeek();
-  }
 
-  if(page === "todo"){
-    renderTodo();
-  }
-
-  if(page === "money"){
-    renderMoney();
-  }
-
-  if(page === "wish"){
-    renderWish();
-  }
-
-  if(page === "memo"){
-    renderMemo();
-  }
-
-  if(page === "record"){
-    renderRecord();
-  }
-
-  if(page === "receipt"){
-    renderReceipt();
-  }
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  document.getElementById("monthGrid").innerHTML =
+    cells.join("");
 }
 
 
-/* =========================================================
-   MODAL
-========================================================= */
+/* =========================
+   HOME
+   ========================= */
+
+function renderHome(){
+
+  const t=todayStr();
+
+
+  document.getElementById("homeDate").textContent =
+    new Date().toLocaleDateString(
+      "ja-JP",
+      {
+        year:"numeric",
+        month:"long",
+        day:"numeric",
+        weekday:"short"
+      }
+    );
+
+
+  const todayEvents=
+    events
+      .filter(e=>e.date===t)
+      .sort(
+        (a,b)=>
+          (a.time||"99:99")
+          .localeCompare(b.time||"99:99")
+      );
+
+
+  document.getElementById("homeToday").innerHTML =
+    todayEvents.length
+      ? todayEvents.map(e=>`
+
+        <div class="item">
+
+          <div class="item-main">
+
+            <div class="item-title">
+
+              <span
+                class="dot color-${e.color||8}"
+              ></span>
+
+              ${esc(e.name)}
+
+            </div>
+
+            <div class="item-meta">
+
+              ${e.allDay
+                ?"終日"
+                :esc(e.time||"")
+              }
+
+              ${
+                e.place
+                  ?" / "+esc(e.place)
+                  :""
+              }
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `).join("")
+
+      :`
+
+        <div class="receipt-empty">
+          今日の予定はありません。
+        </div>
+
+      `;
+
+
+  const open=
+    todos.filter(x=>!x.done).length;
+
+
+  const rec=
+    records.find(x=>x.date===t);
+
+
+  const spend=
+    money
+      .filter(x=>x.date===t)
+      .reduce(
+        (s,x)=>s+Number(x.price||0),
+        0
+      );
+
+
+  const week=currentWeekDates();
+
+  const a=dateKey(week[0]);
+  const b=dateKey(week[6]);
+
+
+  document.getElementById("statTodo").textContent =
+    open;
+
+
+  document.getElementById("statStudy").textContent =
+    (
+      Number(rec?.hours||0)*60+
+      Number(rec?.minutes||0)
+    )+"m";
+
+
+  document.getElementById("statMoney").textContent =
+    yen(spend);
+
+
+  document.getElementById("statEvents").textContent =
+    events.filter(
+      x=>x.date>=a&&x.date<=b
+    ).length;
+
+
+  const upcoming=
+    todos
+      .filter(x=>!x.done)
+      .slice(0,5);
+
+
+  document.getElementById("homeTodos").innerHTML =
+    upcoming.length
+      ? upcoming.map(x=>`
+
+        <div class="item">
+
+          <div class="item-main">
+
+            <div class="item-title">
+              ${esc(x.title)}
+            </div>
+
+            <div class="item-meta">
+              ${stars(x.priority)}
+
+              ${
+                x.due
+                  ? "　期限："+fmtDate(x.due)
+                  : ""
+              }
+            </div>
+
+          </div>
+
+        </div>
+
+      `).join("")
+
+      :`
+
+        <div class="receipt-empty">
+          未完了のTODOはありません。
+        </div>
+
+      `;
+
+
+  const rr=
+    [...records]
+      .sort(
+        (a,b)=>
+          b.date.localeCompare(a.date)
+      )
+      .slice(0,3);
+
+
+  document.getElementById("homeRecords").innerHTML =
+    rr.length
+      ? rr.map(x=>`
+
+        <div class="item">
+
+          <div class="item-main">
+
+            <div class="item-title">
+              ${fmtDate(x.date)}
+             　
+              ${
+                Number(x.hours||0)*60+
+                Number(x.minutes||0)
+              } min
+            </div>
+
+            <div class="item-meta">
+              ${esc(cleanText(x.note||""))}
+            </div>
+
+          </div>
+
+        </div>
+
+      `).join("")
+
+      :`
+
+        <div class="receipt-empty">
+          まだ記録がありません。
+        </div>
+
+      `;
+}
+
+
+/* =========================
+   WEEK
+   ========================= */
+
+function renderWeek(){
+
+  const ds=currentWeekDates();
+
+
+  document.getElementById("weekLabel").textContent =
+    weekText();
+
+
+  document.getElementById("weekGrid").innerHTML =
+    ds.map((d,i)=>{
+
+      const k=dateKey(d);
+
+
+      const dayEvents=
+        events
+          .filter(e=>e.date===k)
+          .sort(
+            (a,b)=>
+              (a.time||"99:99")
+              .localeCompare(b.time||"99:99")
+          );
+
+
+      const wd=[
+        "SUN",
+        "MON",
+        "TUE",
+        "WED",
+        "THU",
+        "FRI",
+        "SAT"
+      ][d.getDay()];
+
+
+      return `
+
+        <div class="day">
+
+          <div class="day-head">
+            ${wd}
+            <b>${fmtDate(k)}</b>
+          </div>
+
+
+          ${
+            dayEvents.length
+
+              ? dayEvents.map(e=>`
+
+                <div
+                  class="event color-${e.color||8}"
+                >
+
+                  <div class="event-time">
+                    ${
+                      e.allDay
+                        ?"終日"
+                        :esc(e.time||"")
+                    }
+                  </div>
+
+                  <div class="event-name">
+                    ${esc(e.name)}
+                  </div>
+
+                  <div class="event-detail">
+                    ${esc(cleanText(
+                      [
+                        e.place||"",
+                        e.detail||""
+                      ]
+                      .filter(Boolean)
+                      .join(" ")
+                    ))}
+                  </div>
+
+                  <div
+                    class="actions"
+                    style="margin-top:5px"
+                  >
+
+                    <button
+                      onclick="editEvent('${e.id}')"
+                    >
+                      編集
+                    </button>
+
+                    <button
+                      onclick="deleteEvent('${e.id}')"
+                    >
+                      削除
+                    </button>
+
+                  </div>
+
+                </div>
+
+              `).join("")
+
+              :`
+
+                <div class="empty">
+                  —
+                </div>
+
+              `
+          }
+
+        </div>
+
+      `;
+
+    }).join("");
+
+
+  const a=dateKey(ds[0]);
+  const b=dateKey(ds[6]);
+
+
+  const wt=
+    todos.filter(
+      x=>
+        x.due &&
+        x.due>=a &&
+        x.due<=b &&
+        !x.done
+    );
+
+
+  document.getElementById("weekTodos").innerHTML =
+    wt.length
+
+      ? wt.map(x=>`
+
+        <div class="item">
+
+          <div class="item-main">
+
+            <div class="item-title">
+              ${esc(x.title)}
+            </div>
+
+            <div class="item-meta">
+              ${stars(x.priority)}
+             　
+              ${fmtDate(x.due)}
+            </div>
+
+          </div>
+
+        </div>
+
+      `).join("")
+
+      :`
+
+        <div class="empty">
+          <span class="empty-mark">○</span>
+          今週の未完了TODOはありません。
+        </div>
+
+      `;
+
+
+  renderMonthCalendar();
+}
+
+
+/* =========================
+   予定追加・編集
+   ========================= */
+
+function openEventModal(id=null){
+
+  const e=
+    events.find(x=>x.id===id)
+    ||
+    {
+      date:dateKey(
+        currentWeekDates()[0]
+      ),
+      time:"",
+      name:"",
+      place:"",
+      detail:"",
+      color:8,
+      allDay:false
+    };
+
+
+  openModal(
+    id
+      ?"予定を編集"
+      :"予定を追加",
+
+    `
+
+      <div class="formgrid">
+
+        <div>
+
+          <label>日付</label>
+
+          <input
+            id="e_date"
+            type="date"
+            value="${e.date||""}"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>時間</label>
+
+          <input
+            id="e_time"
+            type="time"
+            value="${e.time||""}"
+          >
+
+        </div>
+
+
+        <div class="full">
+
+          <label>予定名</label>
+
+          <input
+            id="e_name"
+            value="${esc(e.name||"")}"
+            placeholder="予定名"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>場所</label>
+
+          <input
+            id="e_place"
+            value="${esc(e.place||"")}"
+            placeholder="場所"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>色</label>
+
+          <select id="e_color">
+
+            <option value="1" ${e.color==1?"selected":""}>
+              赤
+            </option>
+
+            <option value="2" ${e.color==2?"selected":""}>
+              ピンク
+            </option>
+
+            <option value="3" ${e.color==3?"selected":""}>
+              緑
+            </option>
+
+            <option value="4" ${e.color==4?"selected":""}>
+              黄
+            </option>
+
+            <option value="5" ${e.color==5?"selected":""}>
+              青
+            </option>
+
+            <option value="6" ${e.color==6?"selected":""}>
+              白
+            </option>
+
+            <option value="7" ${e.color==7?"selected":""}>
+              グレー
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="full">
+
+          <label>詳細</label>
+
+          <textarea
+            id="e_detail"
+            placeholder="詳細"
+          >${esc(e.detail||"")}</textarea>
+
+        </div>
+
+
+        <div class="full">
+
+          <label>
+            <input
+              id="e_allDay"
+              type="checkbox"
+              ${e.allDay?"checked":""}
+              style="width:auto"
+            >
+            終日
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="primary"
+        onclick="saveEvent('${id||""}')"
+      >
+        保存
+      </button>
+
+    `
+  );
+}
+
+
+async function saveEvent(id){
+
+  const obj={
+
+    id:id||uid(),
+
+    date:
+      document.getElementById("e_date").value,
+
+    time:
+      document.getElementById("e_time").value,
+
+    name:
+      document.getElementById("e_name").value.trim(),
+
+    place:
+      document.getElementById("e_place").value.trim(),
+
+    detail:
+      document.getElementById("e_detail").value.trim(),
+
+    color:
+      Number(
+        document.getElementById("e_color").value
+      ),
+
+    allDay:
+      document.getElementById("e_allDay").checked
+
+  };
+
+
+  if(!obj.name){
+
+    alert("予定名を入力してください。");
+
+    return;
+  }
+
+
+  if(!obj.date){
+
+    alert("日付を入力してください。");
+
+    return;
+  }
+
+
+  const i=
+    events.findIndex(
+      x=>x.id===obj.id
+    );
+
+
+  if(i>=0){
+
+    events[i]=obj;
+
+  }else{
+
+    events.push(obj);
+
+  }
+
+
+  await saveAll();
+
+  closeModal();
+
+  renderAll();
+}
+
+
+function editEvent(id){
+  openEventModal(id);
+}
+
+
+function deleteEvent(id){
+
+  if(!confirm("この予定を削除しますか？"))
+    return;
+
+  events=
+    events.filter(
+      x=>x.id!==id
+    );
+
+  saveAll();
+
+  renderAll();
+}
+
+
+/* =========================
+   モーダル
+   ========================= */
 
 function openModal(title,body){
 
-  document.getElementById(
-    "modalTitle"
-  ).textContent = title;
+  document.getElementById("modalTitle")
+    .textContent=title;
 
-  document.getElementById(
-    "modalBody"
-  ).innerHTML = body;
+  document.getElementById("modalBody")
+    .innerHTML=body;
 
-  document
-    .getElementById("modal")
+  document.getElementById("modal")
     .classList.add("show");
 }
 
 
 function closeModal(){
 
-  document
-    .getElementById("modal")
+  document.getElementById("modal")
     .classList.remove("show");
+
+  document.getElementById("modalBody")
+    .innerHTML="";
+}
+<script>
+
+/* =========================
+   TODO
+   ========================= */
+
+function openTodoModal(id=null){
+
+  const t =
+    todos.find(x=>x.id===id)
+    ||
+    {
+      title:"",
+      priority:3,
+      due:"",
+      detail:"",
+      done:false
+    };
+
+
+  openModal(
+    id ? "TODOを編集" : "TODOを追加",
+
+    `
+
+      <div class="formgrid">
+
+        <div class="full">
+
+          <label>タスク</label>
+
+          <input
+            id="t_title"
+            value="${esc(t.title||"")}"
+            placeholder="やること"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>優先度</label>
+
+          <select id="t_priority">
+
+            <option value="1" ${t.priority==1?"selected":""}>
+              ★☆☆☆☆
+            </option>
+
+            <option value="2" ${t.priority==2?"selected":""}>
+              ★★☆☆☆
+            </option>
+
+            <option value="3" ${t.priority==3?"selected":""}>
+              ★★★☆☆
+            </option>
+
+            <option value="4" ${t.priority==4?"selected":""}>
+              ★★★★☆
+            </option>
+
+            <option value="5" ${t.priority==5?"selected":""}>
+              ★★★★★
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label>いつまで？</label>
+
+          <input
+            id="t_due"
+            type="date"
+            value="${t.due||""}"
+          >
+
+        </div>
+
+
+        <div class="full">
+
+          <label>詳細</label>
+
+          <textarea
+            id="t_detail"
+            placeholder="詳細"
+          >${esc(t.detail||"")}</textarea>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="primary"
+        onclick="saveTodo('${id||""}')"
+      >
+        保存
+      </button>
+
+    `
+  );
 }
 
 
-function closeModalByBackground(event){
+async function saveTodo(id){
 
-  if(event.target.id === "modal"){
-    closeModal();
-  }
-}
+  const obj={
 
+    id:id||uid(),
 
-/* =========================================================
-   AUTH HELPERS
-========================================================= */
+    title:
+      document.getElementById("t_title")
+        .value
+        .trim(),
 
-function normalizeUsername(username){
+    priority:
+      Number(
+        document.getElementById("t_priority")
+          .value
+      ),
 
-  return String(username || "")
-    .trim()
-    .toLowerCase();
-}
+    due:
+      document.getElementById("t_due")
+        .value,
 
+    detail:
+      document.getElementById("t_detail")
+        .value
+        .trim(),
 
-async function usernameToEmail(username){
+    done:
+      id
+        ? !!todos.find(x=>x.id===id)?.done
+        : false,
 
-  const normalized =
-    normalizeUsername(username);
+    completedAt:
+      id
+        ? todos.find(x=>x.id===id)?.completedAt||null
+        : null
 
-  const buffer =
-    new TextEncoder().encode(normalized);
-
-  const hashBuffer =
-    await crypto.subtle.digest(
-      "SHA-256",
-      buffer
-    );
-
-  const hashArray =
-    Array.from(
-      new Uint8Array(hashBuffer)
-    );
-
-  const hash =
-    hashArray
-      .map(
-        b => b.toString(16).padStart(2,"0")
-      )
-      .join("");
-
-  return `u_${hash}@mylog.local`;
-}
+  };
 
 
-function validateUsername(username){
+  if(!obj.title){
 
-  const value =
-    String(username || "").trim();
+    alert("タスクを入力してください。");
 
-  if(!value){
-    return "ユーザー名を入力してください。";
-  }
-
-  if(value.length < 2){
-    return "ユーザー名は2文字以上にしてください。";
-  }
-
-  if(value.length > 30){
-    return "ユーザー名は30文字以内にしてください。";
-  }
-
-  return "";
-}
-
-
-function validatePassword(password){
-
-  if(!password){
-    return "パスワードを入力してください。";
-  }
-
-  if(password.length < 8){
-    return "パスワードは8文字以上にしてください。";
-  }
-
-  return "";
-}
-
-
-/* =========================================================
-   SIGN UP
-========================================================= */
-
-async function signup(){
-
-  showLoginMessage("");
-
-  const username =
-    document
-      .getElementById("loginUsername")
-      .value
-      .trim();
-
-  const password =
-    document
-      .getElementById("loginPassword")
-      .value;
-
-  const usernameError =
-    validateUsername(username);
-
-  if(usernameError){
-    showLoginMessage(usernameError);
     return;
   }
 
-  const passwordError =
-    validatePassword(password);
 
-  if(passwordError){
-    showLoginMessage(passwordError);
-    return;
-  }
-
-  try{
-
-    showLoginMessage(
-      "登録しています…"
+  const i=
+    todos.findIndex(
+      x=>x.id===obj.id
     );
 
-    const normalized =
-      normalizeUsername(username);
 
-    const {data:available,error:checkError} =
-      await sb.rpc(
-        "username_available",
-        {
-          p_username:normalized
-        }
-      );
+  if(i>=0){
 
-    if(checkError){
-      throw checkError;
-    }
+    todos[i]={
+      ...todos[i],
+      ...obj
+    };
 
-    if(available === false){
-      showLoginMessage(
-        "そのユーザー名はすでに使われています。"
-      );
-      return;
-    }
+  }else{
 
-    const email =
-      await usernameToEmail(username);
+    todos.push(obj);
 
-    const {data,error} =
-      await sb.auth.signUp({
-        email,
-        password,
-        options:{
-          data:{
-            username:username
-          }
-        }
-      });
-
-    if(error){
-      throw error;
-    }
-
-    if(!data.user){
-      throw new Error(
-        "ユーザー登録に失敗しました。"
-      );
-    }
-
-    showLoginMessage(
-      "登録しました。ログインしています…"
-    );
-
-    await enterApp(data.user);
-
-  }catch(error){
-
-    console.error(error);
-
-    showLoginMessage(
-      authErrorMessage(error)
-    );
-  }
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-async function login(){
-
-  showLoginMessage("");
-
-  const username =
-    document
-      .getElementById("loginUsername")
-      .value
-      .trim();
-
-  const password =
-    document
-      .getElementById("loginPassword")
-      .value;
-
-  const usernameError =
-    validateUsername(username);
-
-  if(usernameError){
-    showLoginMessage(usernameError);
-    return;
   }
 
-  if(!password){
-    showLoginMessage(
-      "パスワードを入力してください。"
-    );
-    return;
-  }
 
-  try{
+  await saveAll();
 
-    showLoginMessage(
-      "ログインしています…"
-    );
-
-    const email =
-      await usernameToEmail(username);
-
-    const {data,error} =
-      await sb.auth.signInWithPassword({
-        email,
-        password
-      });
-
-    if(error){
-      throw error;
-    }
-
-    if(!data.user){
-      throw new Error(
-        "ログインできませんでした。"
-      );
-    }
-
-    await enterApp(data.user);
-
-  }catch(error){
-
-    console.error(error);
-
-    showLoginMessage(
-      authErrorMessage(error)
-    );
-  }
-}
-
-
-function authErrorMessage(error){
-
-  const msg =
-    String(
-      error?.message ||
-      error ||
-      ""
-    );
-
-  if(
-    msg.toLowerCase().includes(
-      "invalid login credentials"
-    )
-  ){
-    return "ユーザー名またはパスワードが違います。";
-  }
-
-  if(
-    msg.toLowerCase().includes(
-      "user already registered"
-    )
-  ){
-    return "そのユーザー名はすでに登録されています。";
-  }
-
-  if(
-    msg.toLowerCase().includes(
-      "password should be at least"
-    )
-  ){
-    return "パスワードは8文字以上にしてください。";
-  }
-
-  return "エラーが発生しました："+msg;
-}
-
-
-/* =========================================================
-   ENTER / LOGOUT
-========================================================= */
-
-async function enterApp(user){
-
-  currentUser = user;
-
-  currentUsername =
-    user?.user_metadata?.username ||
-    "";
-
-  document
-    .getElementById("loginScreen")
-    .style.display = "none";
-
-  document
-    .getElementById("app")
-    .style.display = "block";
-
-  setSync("LOADING");
-
-  buildNav();
-
-  await loadCloud();
+  closeModal();
 
   renderAll();
-
-  showPage("home");
 }
 
 
-async function logout(){
+function toggleTodo(id){
 
-  try{
-
-    await sb.auth.signOut();
-
-  }catch(error){
-
-    console.error(error);
-
-  }
-
-  currentUser = null;
-  currentUsername = "";
-
-  events = [];
-  todos = [];
-  money = [];
-  wishes = [];
-  notes = [];
-  records = [];
-
-  document
-    .getElementById("app")
-    .style.display = "none";
-
-  document
-    .getElementById("loginScreen")
-    .style.display = "flex";
-
-  showLoginMessage("");
-
-  document
-    .getElementById("loginPassword")
-    .value = "";
-}
-
-
-/* =========================================================
-   AUTH SESSION
-========================================================= */
-
-sb.auth.onAuthStateChange(
-  async (event,session)=>{
-
-    if(session?.user && !currentUser){
-
-      try{
-        await enterApp(session.user);
-      }catch(error){
-        console.error(error);
-      }
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   END PART 1
-========================================================= */
-
-/* =========================================================
-   CLOUD DATA
-========================================================= */
-
-async function loadCloud(){
-
-  if(!currentUser){
-    return;
-  }
-
-  try{
-
-    const {data,error} =
-      await sb
-        .from("mylog_data")
-        .select("*")
-        .eq("user_id",currentUser.id)
-        .maybeSingle();
-
-    if(error){
-      console.error("LOAD ERROR",error);
-      setSync("ERROR");
-      throw new Error(
-        "データ読み込みエラー: " +
-        (error.message || error.code || "unknown")
-      );
-    }
-
-    if(data){
-
-      events =
-        Array.isArray(data.events)
-          ? data.events
-          : [];
-
-      todos =
-        Array.isArray(data.todos)
-          ? data.todos
-          : [];
-
-      money =
-        Array.isArray(data.money)
-          ? data.money
-          : [];
-
-      wishes =
-        Array.isArray(data.wishes)
-          ? data.wishes
-          : [];
-
-      notes =
-        Array.isArray(data.notes)
-          ? data.notes
-          : [];
-
-      records =
-        Array.isArray(data.records)
-          ? data.records
-          : [];
-
-    }else{
-
-      events = [];
-      todos = [];
-      money = [];
-      wishes = [];
-      notes = [];
-      records = [];
-
-    }
-
-    setSync("SYNCED");
-
-  }catch(error){
-
-    console.error(error);
-    setSync("ERROR");
-
-    alert(
-      error.message ||
-      "データの読み込みに失敗しました。"
+  const t=
+    todos.find(
+      x=>x.id===id
     );
+
+  if(!t)return;
+
+
+  t.done=!t.done;
+
+
+  /*
+    完了した時刻を保存。
+    既存のTODOデータは削除しない。
+  */
+  if(t.done){
+
+    t.completedAt=
+      new Date().toISOString();
+
+  }else{
+
+    t.completedAt=null;
+
   }
+
+
+  saveAll();
+
+  renderAll();
 }
 
 
-/* =========================================================
-   SAVE
-========================================================= */
+function editTodo(id){
+  openTodoModal(id);
+}
 
-async function saveCloudNow(){
 
-  if(!currentUser){
-    return false;
+function deleteTodo(id){
+
+  if(!confirm("このTODOを削除しますか？"))
+    return;
+
+
+  todos=
+    todos.filter(
+      x=>x.id!==id
+    );
+
+
+  saveAll();
+
+  renderAll();
+}
+
+
+function moveTodo(id,dir){
+
+  const i=
+    todos.findIndex(
+      x=>x.id===id
+    );
+
+  if(i<0)return;
+
+
+  const ni=i+dir;
+
+  if(ni<0 || ni>=todos.length)
+    return;
+
+
+  [
+    todos[i],
+    todos[ni]
+  ]=[
+    todos[ni],
+    todos[i]
+  ];
+
+
+  saveAll();
+
+  renderAll();
+}
+
+
+function renderTodo(){
+
+  const open=
+    todos.filter(
+      x=>!x.done
+    );
+
+
+  const completed=
+    todos.filter(
+      x=>x.done
+    );
+
+
+  let html="";
+
+
+  if(open.length){
+
+    html += open.map((x,i)=>`
+
+      <div class="item todo-row">
+
+        <input
+          class="check"
+          type="checkbox"
+          onchange="toggleTodo('${x.id}')"
+        >
+
+        <div class="item-main">
+
+          <div class="item-title">
+            ${esc(x.title)}
+          </div>
+
+          <div class="item-meta">
+
+            <span class="stars">
+              ${stars(x.priority)}
+            </span>
+
+            ${
+              x.due
+                ? `　期限：${fmtDate(x.due)}`
+                : ""
+            }
+
+          </div>
+
+
+          ${
+            x.detail
+              ? `
+                <div class="item-meta">
+                  ${esc(cleanText(x.detail))}
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+
+        <div class="actions">
+
+          <button
+            onclick="moveTodo('${x.id}',-1)"
+          >
+            ↑
+          </button>
+
+          <button
+            onclick="moveTodo('${x.id}',1)"
+          >
+            ↓
+          </button>
+
+          <button
+            onclick="editTodo('${x.id}')"
+          >
+            編集
+          </button>
+
+          <button
+            onclick="deleteTodo('${x.id}')"
+          >
+            削除
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+  }else{
+
+    html+=`
+
+      <div class="empty">
+
+        <span class="empty-mark">✓</span>
+
+        未完了のTODOはありません。
+
+      </div>
+
+    `;
+
   }
 
-  setSync("SAVING");
 
-  const payload = {
-    user_id:currentUser.id,
-    events:events,
-    todos:todos,
-    money:money,
-    wishes:wishes,
-    notes:notes,
-    records:records,
-    updated_at:new Date().toISOString()
+  /*
+    完了済みTODOは別枠。
+    最初の3件だけ表示。
+    4件目以降はdetailsの中。
+  */
+
+  if(completed.length){
+
+    const first3=
+      completed.slice(0,3);
+
+    const rest=
+      completed.slice(3);
+
+
+    html+=`
+
+      <div class="todo-completed">
+
+        <div
+          class="kicker"
+          style="margin-bottom:8px"
+        >
+          COMPLETED
+        </div>
+
+        ${first3.map(x=>completedTodoHTML(x)).join("")}
+
+        ${
+          rest.length
+            ? `
+
+              <details>
+
+                <summary>
+                  さらに ${rest.length} 件
+                </summary>
+
+                ${rest
+                  .map(x=>completedTodoHTML(x))
+                  .join("")}
+
+              </details>
+
+            `
+            : ""
+        }
+
+      </div>
+
+    `;
+
+  }
+
+
+  document.getElementById("todoList").innerHTML =
+    html;
+}
+
+
+function completedTodoHTML(x){
+
+  return `
+
+    <div class="item todo-row">
+
+      <input
+        class="check"
+        type="checkbox"
+        checked
+        onchange="toggleTodo('${x.id}')"
+      >
+
+      <div class="item-main">
+
+        <div class="item-title done">
+          ${esc(x.title)}
+        </div>
+
+        <div class="item-meta">
+
+          <span class="stars">
+            ${stars(x.priority)}
+          </span>
+
+          ${
+            x.due
+              ? `　期限：${fmtDate(x.due)}`
+              : ""
+          }
+
+          ${
+            x.completedAt
+              ? `
+               　完了：
+                ${new Date(x.completedAt)
+                  .toLocaleDateString("ja-JP")}
+              `
+              : ""
+          }
+
+        </div>
+
+
+        ${
+          x.detail
+            ? `
+              <div class="item-meta">
+                ${esc(cleanText(x.detail))}
+              </div>
+            `
+            : ""
+        }
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          onclick="editTodo('${x.id}')"
+        >
+          編集
+        </button>
+
+        <button
+          onclick="deleteTodo('${x.id}')"
+        >
+          削除
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+/* =========================
+   MONEY
+   ========================= */
+
+function openMoneyModal(id=null){
+
+  const m=
+    money.find(x=>x.id===id)
+    ||
+    {
+      date:todayStr(),
+      genre:"",
+      price:"",
+      detail:""
+    };
+
+
+  openModal(
+    id ? "支出を編集" : "支出を追加",
+
+    `
+
+      <div class="formgrid">
+
+        <div>
+
+          <label>日付</label>
+
+          <input
+            id="m_date"
+            type="date"
+            value="${m.date||""}"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>金額</label>
+
+          <input
+            id="m_price"
+            type="number"
+            min="0"
+            value="${m.price||""}"
+            placeholder="0"
+          >
+
+        </div>
+
+
+        <div class="full">
+
+          <label>ジャンル</label>
+
+          <input
+            id="m_genre"
+            value="${esc(m.genre||"")}"
+            placeholder="食費 / 交通費 / 趣味..."
+          >
+
+        </div>
+
+
+        <div class="full">
+
+          <label>詳細</label>
+
+          <textarea
+            id="m_detail"
+            placeholder="詳細"
+          >${esc(m.detail||"")}</textarea>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="primary"
+        onclick="saveMoney('${id||""}')"
+      >
+        保存
+      </button>
+
+    `
+  );
+}
+
+
+async function saveMoney(id){
+
+  const obj={
+
+    id:id||uid(),
+
+    date:
+      document.getElementById("m_date").value,
+
+    genre:
+      document.getElementById("m_genre")
+        .value
+        .trim(),
+
+    price:
+      Number(
+        document.getElementById("m_price")
+          .value||0
+      ),
+
+    detail:
+      document.getElementById("m_detail")
+        .value
+        .trim()
+
   };
 
 
-  try{
+  if(!obj.date){
 
-    /*
-      まずUPDATE。
+    alert("日付を入力してください。");
 
-      signup時にSupabase側のtriggerで
-      mylog_dataの行が作られるので、
-      通常はこちらで保存できる。
-    */
-
-    const {
-      data:updated,
-      error:updateError
-    } =
-      await sb
-        .from("mylog_data")
-        .update(payload)
-        .eq("user_id",currentUser.id)
-        .select("user_id")
-        .maybeSingle();
+    return;
+  }
 
 
-    if(updateError){
+  const i=
+    money.findIndex(
+      x=>x.id===obj.id
+    );
 
-      console.error(
-        "UPDATE ERROR",
-        updateError
+
+  if(i>=0)
+    money[i]=obj;
+  else
+    money.push(obj);
+
+
+  await saveAll();
+
+  closeModal();
+
+  renderAll();
+}
+
+
+function editMoney(id){
+  openMoneyModal(id);
+}
+
+
+function deleteMoney(id){
+
+  if(!confirm("この記録を削除しますか？"))
+    return;
+
+
+  money=
+    money.filter(
+      x=>x.id!==id
+    );
+
+
+  saveAll();
+
+  renderAll();
+}
+
+
+function renderMoney(){
+
+  const total=
+    money.reduce(
+      (s,x)=>s+Number(x.price||0),
+      0
+    );
+
+
+  document.getElementById("moneyTotal")
+    .textContent=yen(total);
+
+
+  const list=
+    [...money]
+      .sort(
+        (a,b)=>
+          b.date.localeCompare(a.date)
       );
 
-      throw new Error(
-        "保存エラー: " +
-        (
-          updateError.message ||
-          updateError.code ||
-          "unknown error"
-        )
+
+  document.getElementById("moneyList").innerHTML =
+    list.length
+
+      ? list.map(x=>`
+
+        <div class="item">
+
+          <div class="item-main">
+
+            <div class="item-title">
+              ${yen(x.price)}
+            </div>
+
+            <div class="item-meta">
+
+              ${fmtDate(x.date)}
+
+              ${
+                x.genre
+                  ? " / "+esc(x.genre)
+                  : ""
+              }
+
+            </div>
+
+            ${
+              x.detail
+                ? `
+                  <div class="item-meta">
+                    ${esc(cleanText(x.detail))}
+                  </div>
+                `
+                : ""
+            }
+
+          </div>
+
+
+          <div class="actions">
+
+            <button
+              onclick="editMoney('${x.id}')"
+            >
+              編集
+            </button>
+
+            <button
+              onclick="deleteMoney('${x.id}')"
+            >
+              削除
+            </button>
+
+          </div>
+
+        </div>
+
+      `).join("")
+
+      :`
+
+        <div class="empty">
+
+          <span class="empty-mark">¥</span>
+
+          まだ支出記録がありません。
+
+        </div>
+
+      `;
+
+}
+
+
+/* =========================
+   WISH LIST
+   ========================= */
+
+function openWishModal(id=null){
+
+  const w=
+    wishes.find(x=>x.id===id)
+    ||
+    {
+      title:"",
+      priority:3,
+      genre:"",
+      price:"",
+      detail:""
+    };
+
+
+  openModal(
+    id ? "WISHを編集" : "WISHを追加",
+
+    `
+
+      <div class="formgrid">
+
+        <div class="full">
+
+          <label>欲しいもの</label>
+
+          <input
+            id="w_title"
+            value="${esc(w.title||"")}"
+            placeholder="欲しいもの"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>欲しい度</label>
+
+          <select id="w_priority">
+
+            <option value="1" ${w.priority==1?"selected":""}>
+              ★☆☆☆☆
+            </option>
+
+            <option value="2" ${w.priority==2?"selected":""}>
+              ★★☆☆☆
+            </option>
+
+            <option value="3" ${w.priority==3?"selected":""}>
+              ★★★☆☆
+            </option>
+
+            <option value="4" ${w.priority==4?"selected":""}>
+              ★★★★☆
+            </option>
+
+            <option value="5" ${w.priority==5?"selected":""}>
+              ★★★★★
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label>価格</label>
+
+          <input
+            id="w_price"
+            type="number"
+            min="0"
+            value="${w.price||""}"
+            placeholder="0"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>ジャンル</label>
+
+          <input
+            id="w_genre"
+            value="${esc(w.genre||"")}"
+            placeholder="服 / 本 / コスメ..."
+          >
+
+        </div>
+
+
+        <div class="full">
+
+          <label>詳細</label>
+
+          <textarea
+            id="w_detail"
+            placeholder="詳細"
+          >${esc(w.detail||"")}</textarea>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="primary"
+        onclick="saveWish('${id||""}')"
+      >
+        保存
+      </button>
+
+    `
+  );
+}
+
+
+async function saveWish(id){
+
+  const obj={
+
+    id:id||uid(),
+
+    title:
+      document.getElementById("w_title")
+        .value
+        .trim(),
+
+    priority:
+      Number(
+        document.getElementById("w_priority")
+          .value
+      ),
+
+    genre:
+      document.getElementById("w_genre")
+        .value
+        .trim(),
+
+    price:
+      Number(
+        document.getElementById("w_price")
+          .value||0
+      ),
+
+    detail:
+      document.getElementById("w_detail")
+        .value
+        .trim()
+
+  };
+
+
+  if(!obj.title){
+
+    alert("欲しいものを入力してください。");
+
+    return;
+  }
+
+
+  const i=
+    wishes.findIndex(
+      x=>x.id===obj.id
+    );
+
+
+  if(i>=0)
+    wishes[i]=obj;
+  else
+    wishes.push(obj);
+
+
+  await saveAll();
+
+  closeModal();
+
+  renderAll();
+}
+
+
+function editWish(id){
+  openWishModal(id);
+}
+
+
+function deleteWish(id){
+
+  if(!confirm("このWISHを削除しますか？"))
+    return;
+
+
+  wishes=
+    wishes.filter(
+      x=>x.id!==id
+    );
+
+
+  saveAll();
+
+  renderAll();
+}
+
+
+function renderWish(){
+
+  const list=
+    [...wishes]
+      .sort(
+        (a,b)=>
+          Number(b.priority||0)-
+          Number(a.priority||0)
       );
+
+
+  document.getElementById("wishList").innerHTML =
+    list.length
+
+      ? list.map(x=>`
+
+        <div class="item">
+
+          <div class="item-main">
+
+            <div class="item-title">
+              ${esc(x.title)}
+            </div>
+
+            <div class="item-meta">
+
+              <span class="stars">
+                ${stars(x.priority)}
+              </span>
+
+              ${
+                x.genre
+                  ? " / "+esc(x.genre)
+                  : ""
+              }
+
+              ${
+                x.price
+                  ? " / "+yen(x.price)
+                  : ""
+              }
+
+            </div>
+
+
+            ${
+              x.detail
+                ? `
+                  <div class="item-meta">
+                    ${esc(cleanText(x.detail))}
+                  </div>
+                `
+                : ""
+            }
+
+          </div>
+
+
+          <div class="actions">
+
+            <button
+              onclick="editWish('${x.id}')"
+            >
+              編集
+            </button>
+
+            <button
+              onclick="deleteWish('${x.id}')"
+            >
+              削除
+            </button>
+
+          </div>
+
+        </div>
+
+      `).join("")
+
+      :`
+
+        <div class="empty">
+
+          <span class="empty-mark">♡</span>
+
+          まだWISHがありません。
+
+          <br>
+
+          欲しいものをここに残しておこう。
+
+        </div>
+
+      `;
+
+}
+
+
+/* =========================
+   MEMO
+   ========================= */
+
+function openMemoModal(id=null){
+
+  const n=
+    notes.find(x=>x.id===id)
+    ||
+    {
+      folder:"INBOX",
+      title:"",
+      text:""
+    };
+
+
+  openModal(
+    id ? "メモを編集" : "メモを追加",
+
+    `
+
+      <div class="formgrid">
+
+        <div>
+
+          <label>フォルダ</label>
+
+          <input
+            id="n_folder"
+            value="${esc(n.folder||"INBOX")}"
+            placeholder="フォルダ"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>タイトル</label>
+
+          <input
+            id="n_title"
+            value="${esc(n.title||"")}"
+            placeholder="タイトル"
+          >
+
+        </div>
+
+
+        <div class="full">
+
+          <label>本文</label>
+
+          <textarea
+            id="n_text"
+            placeholder="本文"
+          >${esc(n.text||"")}</textarea>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="primary"
+        onclick="saveMemo('${id||""}')"
+      >
+        保存
+      </button>
+
+    `
+  );
+}
+
+
+async function saveMemo(id){
+
+  const obj={
+
+    id:id||uid(),
+
+    folder:
+      document.getElementById("n_folder")
+        .value
+        .trim()||"INBOX",
+
+    title:
+      document.getElementById("n_title")
+        .value
+        .trim(),
+
+    text:
+      document.getElementById("n_text")
+        .value
+        .trim()
+
+  };
+
+
+  if(!obj.title){
+
+    alert("タイトルを入力してください。");
+
+    return;
+  }
+
+
+  const i=
+    notes.findIndex(
+      x=>x.id===obj.id
+    );
+
+
+  if(i>=0)
+    notes[i]=obj;
+  else
+    notes.push(obj);
+
+
+  await saveAll();
+
+  closeModal();
+
+  renderAll();
+}
+
+
+function editMemo(id){
+  openMemoModal(id);
+}
+
+
+function deleteMemo(id){
+
+  if(!confirm("このメモを削除しますか？"))
+    return;
+
+
+  notes=
+    notes.filter(
+      x=>x.id!==id
+    );
+
+
+  saveAll();
+
+  renderAll();
+}
+
+
+function renderMemo(){
+
+  const folders={};
+
+
+  notes.forEach(n=>{
+
+    const folder=
+      n.folder||"INBOX";
+
+    if(!folders[folder])
+      folders[folder]=[];
+
+    folders[folder].push(n);
+
+  });
+
+
+  const keys=
+    Object.keys(folders);
+
+
+  document.getElementById("memoList").innerHTML =
+    keys.length
+
+      ? keys.map(folder=>`
+
+        <div class="card folder">
+
+          <div class="folder-name">
+            ${esc(folder)}
+          </div>
+
+          <div
+            class="note"
+            style="margin-top:8px"
+          >
+
+            ${folders[folder]
+              .map(n=>`
+
+                <div class="note">
+
+                  <div class="item">
+
+                    <div class="item-main">
+
+                      <div class="item-title">
+                        ${esc(n.title)}
+                      </div>
+
+                      <div
+                        class="item-meta"
+                        style="text-align:left"
+                      >
+                        ${esc(cleanText(n.text||""))}
+                      </div>
+
+                    </div>
+
+
+                    <div class="actions">
+
+                      <button
+                        onclick="editMemo('${n.id}')"
+                      >
+                        編集
+                      </button>
+
+                      <button
+                        onclick="deleteMemo('${n.id}')"
+                      >
+                        削除
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              `)
+              .join("")}
+
+          </div>
+
+        </div>
+
+      `).join("")
+
+      :`
+
+        <div class="card">
+
+          <div class="empty left">
+
+            <span class="empty-mark">✎</span>
+
+            まだメモがありません。
+
+            <br>
+
+            思いついたことを残しておこう。
+
+          </div>
+
+        </div>
+
+      `;
+}
+
+
+/* =========================
+   RECORD
+   ========================= */
+
+function openRecordModal(id=null){
+
+  const r=
+    records.find(x=>x.id===id)
+    ||
+    {
+      date:todayStr(),
+      hours:0,
+      minutes:0,
+      note:"",
+      photo:""
+    };
+
+
+  openModal(
+    id ? "記録を編集" : "学習記録を追加",
+
+    `
+
+      <div class="formgrid">
+
+        <div>
+
+          <label>日付</label>
+
+          <input
+            id="r_date"
+            type="date"
+            value="${r.date||""}"
+          >
+
+        </div>
+
+
+        <div></div>
+
+
+        <div>
+
+          <label>時間</label>
+
+          <input
+            id="r_hours"
+            type="number"
+            min="0"
+            value="${r.hours||0}"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>分</label>
+
+          <input
+            id="r_minutes"
+            type="number"
+            min="0"
+            max="59"
+            value="${r.minutes||0}"
+          >
+
+        </div>
+
+
+        <div class="full">
+
+          <label>メモ</label>
+
+          <textarea
+            id="r_note"
+            placeholder="今日の勉強メモ"
+          >${esc(r.note||"")}</textarea>
+
+        </div>
+
+
+        <div class="full">
+
+          <label>写真</label>
+
+          <input
+            id="r_photo"
+            type="file"
+            accept="image/*"
+          >
+
+          ${
+            r.photo
+              ? `
+                <div style="margin-top:8px">
+                  <img
+                    src="${r.photo}"
+                    class="record-photo"
+                  >
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="primary"
+        onclick="saveRecord('${id||""}')"
+      >
+        保存
+      </button>
+
+    `
+  );
+}
+
+
+async function saveRecord(id){
+
+  const file=
+    document.getElementById("r_photo")
+      .files[0];
+
+
+  let photo=
+    records.find(x=>x.id===id)?.photo||"";
+
+
+  if(file){
+
+    photo=
+      await readFileAsDataURL(file);
+
+  }
+
+
+  const obj={
+
+    id:id||uid(),
+
+    date:
+      document.getElementById("r_date")
+        .value,
+
+    hours:
+      Number(
+        document.getElementById("r_hours")
+          .value||0
+      ),
+
+    minutes:
+      Number(
+        document.getElementById("r_minutes")
+          .value||0
+      ),
+
+    note:
+      document.getElementById("r_note")
+        .value
+        .trim(),
+
+    photo
+
+  };
+
+
+  if(!obj.date){
+
+    alert("日付を入力してください。");
+
+    return;
+  }
+
+
+  const i=
+    records.findIndex(
+      x=>x.id===obj.id
+    );
+
+
+  if(i>=0)
+    records[i]=obj;
+  else
+    records.push(obj);
+
+
+  await saveAll();
+
+  closeModal();
+
+  renderAll();
+}
+
+
+function readFileAsDataURL(file){
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const reader=
+        new FileReader();
+
+      reader.onload=()=>
+        resolve(reader.result);
+
+      reader.onerror=reject;
+
+      reader.readAsDataURL(file);
+
     }
+  );
+}
 
 
-    /*
-      もし行が存在しなかった場合だけINSERT。
-    */
-
-    if(!updated){
-
-      const {
-        error:insertError
-      } =
-        await sb
-          .from("mylog_data")
-          .insert(payload);
+function editRecord(id){
+  openRecordModal(id);
+}
 
 
-      if(insertError){
+function deleteRecord(id){
 
-        console.error(
-          "INSERT ERROR",
-          insertError
-        );
+  if(!confirm("この記録を削除しますか？"))
+    return;
 
-        throw new Error(
-          "初回保存エラー: " +
-          (
-            insertError.message ||
-            insertError.code ||
-            "unknown error"
+
+  records=
+    records.filter(
+      x=>x.id!==id
+    );
+
+
+  saveAll();
+
+  renderAll();
+}
+
+
+function renderRecord(){
+
+  const today=
+    records.find(
+      x=>x.date===todayStr()
+    );
+
+
+  const todayMinutes=
+    Number(today?.hours||0)*60+
+    Number(today?.minutes||0);
+
+
+  document.getElementById("todayStudy")
+    .textContent=
+      todayMinutes+" min";
+
+
+  const list=
+    [...records]
+      .sort(
+        (a,b)=>
+          b.date.localeCompare(a.date)
+      );
+
+
+  document.getElementById("recordList").innerHTML =
+    list.length
+
+      ? list.map(x=>{
+
+        const minutes=
+          Number(x.hours||0)*60+
+          Number(x.minutes||0);
+
+
+        return `
+
+          <div class="item">
+
+            ${
+              x.photo
+                ? `
+                  <img
+                    src="${x.photo}"
+                    class="record-photo"
+                  >
+                `
+                : ""
+            }
+
+
+            <div class="item-main">
+
+              <div class="item-title">
+
+                ${fmtDate(x.date)}
+
+               　
+
+                ${minutes} min
+
+              </div>
+
+
+              ${
+                x.note
+                  ? `
+                    <div
+                      class="item-meta"
+                      style="text-align:left"
+                    >
+                      ${esc(cleanText(x.note))}
+                    </div>
+                  `
+                  : ""
+              }
+
+            </div>
+
+
+            <div class="actions">
+
+              <button
+                onclick="editRecord('${x.id}')"
+              >
+                編集
+              </button>
+
+              <button
+                onclick="deleteRecord('${x.id}')"
+              >
+                削除
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }).join("")
+
+      :`
+
+        <div class="empty">
+
+          <span class="empty-mark">□</span>
+
+          まだ学習記録がありません。
+
+          <br>
+
+          今日の勉強を記録してみよう。
+
+        </div>
+
+      `;
+}
+<script>
+
+/* =========================
+   RECEIPT
+   ========================= */
+
+function renderReceipt(){
+
+  const ds=currentWeekDates();
+
+  const a=dateKey(ds[0]);
+  const b=dateKey(ds[6]);
+
+
+  /* 学習時間 */
+
+  const study=
+    records
+      .filter(
+        x=>x.date>=a && x.date<=b
+      )
+      .reduce(
+        (s,x)=>
+          s+
+          Number(x.hours||0)*60+
+          Number(x.minutes||0),
+        0
+      );
+
+
+  /* 支出 */
+
+  const spend=
+    money
+      .filter(
+        x=>x.date>=a && x.date<=b
+      )
+      .reduce(
+        (s,x)=>
+          s+Number(x.price||0),
+        0
+      );
+
+
+  /* TODO */
+
+  const done=
+    todos.filter(
+      x=>x.done
+    ).length;
+
+  const total=
+    todos.length;
+
+
+  /* 予定 */
+
+  const ev=
+    events.filter(
+      x=>x.date>=a && x.date<=b
+    ).length;
+
+
+  /*
+    未完了TODO
+    期限があるものを先に。
+    期限なしは最後。
+  */
+
+  const openTodos=
+    [...todos]
+      .filter(
+        x=>!x.done
+      )
+      .sort(
+        (a,b)=>{
+
+          const ad=
+            a.due||"9999-99-99";
+
+          const bd=
+            b.due||"9999-99-99";
+
+          return (
+            ad.localeCompare(bd)
+            ||
+            (b.priority||0)-
+            (a.priority||0)
+          );
+
+        }
+      );
+
+
+  /*
+    週間予定
+  */
+
+  const schedule=
+    ds.map(d=>{
+
+      const k=
+        dateKey(d);
+
+      const wd=
+        [
+          "SUN",
+          "MON",
+          "TUE",
+          "WED",
+          "THU",
+          "FRI",
+          "SAT"
+        ][d.getDay()];
+
+
+      const dayEvents=
+        events
+          .filter(
+            e=>e.date===k
           )
-        );
-      }
-    }
+          .sort(
+            (a,b)=>
+              (a.time||"99:99")
+              .localeCompare(
+                b.time||"99:99"
+              )
+          );
 
 
-    setSync("SYNCED");
+      return `
 
-    return true;
+        <div class="receipt-day">
+
+          <div class="receipt-day-head">
+
+            <b>${wd}</b>
+
+            <span>
+              ${fmtDate(k)}
+            </span>
+
+          </div>
 
 
-  }catch(error){
+          ${
+            dayEvents.length
 
-    console.error(error);
+              ? dayEvents.map(e=>`
 
-    setSync("ERROR");
+                  <div class="receipt-event">
 
-    throw error;
-  }
+                    <span
+                      class="receipt-event-dot
+                      color-${Math.min(
+                        Number(e.color)||7,
+                        7
+                      )}"
+                    ></span>
+
+
+                    <div>
+
+                      <b>
+                        ${esc(
+                          cleanText(
+                            e.name
+                          )
+                        )}
+                      </b>
+
+
+                      <div class="receipt-small">
+
+                        ${
+                          e.allDay
+                            ? "終日"
+                            : esc(
+                                cleanText(
+                                  e.time||""
+                                )
+                              )
+                        }
+
+
+                        ${
+                          cleanText(e.place)
+                            ? " / "+
+                              esc(
+                                cleanText(
+                                  e.place
+                                )
+                              )
+                            : ""
+                        }
+
+
+                        ${
+                          cleanText(e.detail)
+                            ? " / "+
+                              esc(
+                                cleanText(
+                                  e.detail
+                                )
+                              )
+                            : ""
+                        }
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                `).join("")
+
+              : `
+                  <div class="receipt-none">
+                    —
+                  </div>
+                `
+          }
+
+        </div>
+
+      `;
+
+    }).join("");
+
+
+  /*
+    未完了TODO
+  */
+
+  const todoHtml=
+
+    openTodos.length
+
+      ? openTodos.map(x=>`
+
+          <div class="receipt-todo">
+
+            <span>□</span>
+
+
+            <div>
+
+              <b>
+                ${esc(
+                  cleanText(
+                    x.title
+                  )
+                )}
+              </b>
+
+
+              <div class="receipt-small">
+
+                ${stars(x.priority)}
+
+                ${
+                  x.due
+                    ? `
+                     　期限：
+                      ${fmtDate(x.due)}
+                    `
+                    : ""
+                }
+
+                ${
+                  cleanText(x.detail)
+                    ? `
+                      / 
+                      ${esc(
+                        cleanText(
+                          x.detail
+                        )
+                      )}
+                    `
+                    : ""
+                }
+
+              </div>
+
+            </div>
+
+          </div>
+
+        `).join("")
+
+      : `
+
+          <div class="receipt-none">
+
+            未完了のTODOはありません。
+
+          </div>
+
+        `;
+
+
+  /*
+    レシート本体
+  */
+
+  document.getElementById(
+    "receiptBody"
+  ).innerHTML=
+
+  `
+
+    <h2>MY LOG</h2>
+
+
+    <div
+      style="
+        text-align:center;
+        font-size:11px
+      "
+    >
+      WEEK SUMMARY
+    </div>
+
+
+    <div class="receipt-line"></div>
+
+
+    <div
+      style="
+        text-align:center;
+        font-size:11px
+      "
+    >
+      ${a.replaceAll("-",".")}
+      -
+      ${b.replaceAll("-",".")}
+    </div>
+
+
+    <div class="receipt-line"></div>
+
+
+    <div class="receipt-row">
+
+      <span>
+        STUDY TIME
+      </span>
+
+      <b>
+        ${study} min
+      </b>
+
+    </div>
+
+
+    <div class="receipt-row">
+
+      <span>
+        SPENDING
+      </span>
+
+      <b>
+        ${yen(spend)}
+      </b>
+
+    </div>
+
+
+    <div class="receipt-row">
+
+      <span>
+        TASKS DONE
+      </span>
+
+      <b>
+        ${done} / ${total}
+      </b>
+
+    </div>
+
+
+    <div class="receipt-row">
+
+      <span>
+        EVENTS
+      </span>
+
+      <b>
+        ${ev}
+      </b>
+
+    </div>
+
+
+    <div class="receipt-line"></div>
+
+
+    <!-- WEEKLY SCHEDULE -->
+
+    <div class="receipt-section-title">
+      WEEKLY SCHEDULE
+    </div>
+
+
+    ${schedule}
+
+
+    <div class="receipt-line"></div>
+
+
+    <!-- TODO -->
+
+    <div class="receipt-section-title">
+      TODO / NOT DONE
+    </div>
+
+
+    ${todoHtml}
+
+
+    <div class="receipt-line"></div>
+
+
+    <div
+      style="
+        text-align:center;
+        font-size:13px;
+        font-weight:800
+      "
+    >
+      GOOD JOB THIS WEEK!
+    </div>
+
+
+    <div class="barcode"></div>
+
+
+    <div
+      style="
+        text-align:center;
+        font-size:9px
+      "
+    >
+      KEEP GOING.
+    </div>
+
+  `;
 }
 
 
-/*
-  保存を順番待ちにする。
-
-  例えば連続してTODOを編集しても、
-  保存処理がぶつからないようにする。
-*/
-
-function saveAll(){
-
-  if(!currentUser){
-    return Promise.resolve(false);
-  }
-
-  saveQueue =
-    saveQueue
-      .catch(()=>{
-        /*
-          前回の保存が失敗していても、
-          次の保存を止めない。
-        */
-      })
-      .then(
-        ()=>saveCloudNow()
-      );
-
-  return saveQueue;
-}
-
-
-/* =========================================================
-   LOCAL STORAGE
-   旧データ移行用
-========================================================= */
-
-function getLocalData(){
-
-  function read(key){
-
-    try{
-
-      const raw =
-        localStorage.getItem(key);
-
-      if(!raw){
-        return [];
-      }
-
-      const parsed =
-        JSON.parse(raw);
-
-      return Array.isArray(parsed)
-        ? parsed
-        : [];
-
-    }catch(error){
-
-      console.error(
-        "LOCAL READ ERROR",
-        key,
-        error
-      );
-
-      return [];
-    }
-  }
-
-
-  return {
-
-    events:read("mylog_events"),
-
-    todos:read("mylog_todos"),
-
-    money:read("mylog_money"),
-
-    wishes:read("mylog_wishes"),
-
-    notes:read("mylog_notes"),
-
-    records:read("mylog_records")
-
-  };
-}
-
-
-/* =========================================================
-   OLD DATA MIGRATION
-========================================================= */
-
-async function migrateOldData(){
-
-  if(!currentUser){
-
-    alert(
-      "先にログインしてください。"
-    );
-
-    return;
-  }
-
-
-  const old =
-    getLocalData();
-
-
-  const count =
-    old.events.length +
-    old.todos.length +
-    old.money.length +
-    old.wishes.length +
-    old.notes.length +
-    old.records.length;
-
-
-  if(count === 0){
-
-    alert(
-      "この端末のブラウザには、移行できる旧データがありませんでした。"
-    );
-
-    return;
-  }
-
-
-  const ok =
-    confirm(
-      "この端末に残っている旧データを、現在のアカウントへ移行しますか？\n\n" +
-      `イベント：${old.events.length}\n` +
-      `TODO：${old.todos.length}\n` +
-      `お金：${old.money.length}\n` +
-      `WISH：${old.wishes.length}\n` +
-      `MEMO：${old.notes.length}\n` +
-      `RECORD：${old.records.length}\n\n` +
-      "現在のクラウドデータに追加します。"
-    );
-
-
-  if(!ok){
-    return;
-  }
-
-
-  try{
-
-    setSync("IMPORT");
-
-
-    /*
-      IDが同じものは重複させない。
-    */
-
-    function mergeArrays(current,oldItems){
-
-      const result =
-        Array.isArray(current)
-          ? [...current]
-          : [];
-
-      const ids =
-        new Set(
-          result.map(item=>item.id)
-        );
-
-      oldItems.forEach(item=>{
-
-        const copy = {
-          ...item
-        };
-
-        if(!copy.id){
-          copy.id = uid();
-        }
-
-        if(!ids.has(copy.id)){
-
-          result.push(copy);
-          ids.add(copy.id);
-
-        }
-
-      });
-
-      return result;
-    }
-
-
-    events =
-      mergeArrays(
-        events,
-        old.events
-      );
-
-    todos =
-      mergeArrays(
-        todos,
-        old.todos
-      );
-
-    money =
-      mergeArrays(
-        money,
-        old.money
-      );
-
-    wishes =
-      mergeArrays(
-        wishes,
-        old.wishes
-      );
-
-    notes =
-      mergeArrays(
-        notes,
-        old.notes
-      );
-
-    records =
-      mergeArrays(
-        records,
-        old.records
-      );
-
-
-    const saved =
-      await saveCloudNow();
-
-
-    if(saved){
-
-      renderAll();
-
-      alert(
-        "旧データの移行が完了しました。"
-      );
-    }
-
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      error.message ||
-      "旧データの移行に失敗しました。"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   DATA SORT HELPERS
-========================================================= */
-
-function sortByDateAsc(a,b){
-
-  const ad =
-    String(
-      a.date ||
-      a.createdAt ||
-      ""
-    );
-
-  const bd =
-    String(
-      b.date ||
-      b.createdAt ||
-      ""
-    );
-
-  return ad.localeCompare(bd);
-}
-
-
-function sortByDateDesc(a,b){
-
-  return -sortByDateAsc(a,b);
-}
-
-
-/* =========================================================
-   EVENT HELPERS
-========================================================= */
-
-function getEventsForDate(date){
-
-  return events
-    .filter(event=>event.date === date)
-    .sort((a,b)=>{
-
-      /*
-        終日イベントを先にする。
-      */
-
-      if(!!a.allDay !== !!b.allDay){
-        return a.allDay ? -1 : 1;
-      }
-
-      return String(
-        a.time || ""
-      ).localeCompare(
-        String(b.time || "")
-      );
-
-    });
-}
-
-
-/* =========================================================
-   WEEK
-========================================================= */
-
-function getMonday(date){
-
-  const d =
-    new Date(date);
-
-  const day =
-    d.getDay();
-
-  const diff =
-    day === 0
-      ? -6
-      : 1-day;
-
-  d.setDate(
-    d.getDate()+diff
-  );
-
-  d.setHours(
-    0,0,0,0
-  );
-
-  return d;
-}
-
-
-function getCurrentWeekMonday(){
-
-  const today =
-    new Date();
-
-  const monday =
-    getMonday(today);
-
-  monday.setDate(
-    monday.getDate() +
-    weekOffset*7
-  );
-
-  return monday;
-}
-
-
-function changeWeek(amount){
-
-  weekOffset += amount;
-
-  renderWeek();
-}
-
-
-/* =========================================================
-   RENDER ALL
-========================================================= */
+/* =========================
+   全体表示
+   ========================= */
 
 function renderAll(){
 
@@ -2619,7 +4593,7 @@ function renderAll(){
 
   renderWeek();
 
-  renderTodo();
+  renderTodos();
 
   renderMoney();
 
@@ -2634,3944 +4608,78 @@ function renderAll(){
 }
 
 
-/* =========================================================
-   HOME
-========================================================= */
+/* =========================
+   PAGE切り替え
+   ========================= */
 
-function renderHome(){
+function showPage(id){
 
-  const today =
-    localDateString();
-
-
-  const d =
-    parseDate(today);
-
-
-  const weekdays =
-    [
-      "日",
-      "月",
-      "火",
-      "水",
-      "木",
-      "金",
-      "土"
-    ];
+  document
+    .querySelectorAll(".page")
+    .forEach(
+      p=>p.classList.remove("active")
+    );
 
 
-  const dateEl =
+  const page=
+    document.getElementById(id);
+
+
+  if(page)
+    page.classList.add("active");
+
+
+  document
+    .querySelectorAll("#nav button")
+    .forEach(
+      b=>b.classList.remove("active")
+    );
+
+
+  const nav=
     document.getElementById(
-      "homeDate"
-    );
-
-  const todayEl =
-    document.getElementById(
-      "homeToday"
+      "nav-"+id
     );
 
 
-  if(dateEl){
+  if(nav)
+    nav.classList.add("active");
 
-    dateEl.textContent =
-      `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（${weekdays[d.getDay()]}）`;
 
-  }
+  if(id==="week")
+    renderWeek();
 
-
-  if(todayEl){
-
-    todayEl.textContent =
-      "TODAY";
-  }
-
-
-  /* TODO */
-
-  const openTodos =
-    todos.filter(
-      todo=>!todo.done
-    );
-
-
-  document.getElementById(
-    "statTodo"
-  ).textContent =
-    openTodos.length;
-
-
-  /* STUDY */
-
-  const todayRecords =
-    records.filter(
-      record=>record.date === today
-    );
-
-
-  const studyMinutes =
-    todayRecords.reduce(
-      (sum,record)=>{
-
-        const hours =
-          Number(
-            record.hours || 0
-          );
-
-        const minutes =
-          Number(
-            record.minutes || 0
-          );
-
-        return sum +
-          hours*60 +
-          minutes;
-
-      },
-      0
-    );
-
-
-  document.getElementById(
-    "statStudy"
-  ).textContent =
-    studyMinutes >= 60
-      ? `${Math.floor(studyMinutes/60)}h ${studyMinutes%60}m`
-      : `${studyMinutes}m`;
-
-
-  /* MONEY */
-
-  const todayMoney =
-    money
-      .filter(item=>item.date === today)
-      .reduce(
-        (sum,item)=>
-          sum + Number(item.price || 0),
-        0
-      );
-
-
-  document.getElementById(
-    "statMoney"
-  ).textContent =
-    "¥" +
-    todayMoney.toLocaleString();
-
-
-  /* EVENTS */
-
-  const monday =
-    getCurrentWeekMonday();
-
-
-  /*
-    HOMEではweekOffsetを使わず
-    「今週」を表示する。
-  */
-
-  const currentMonday =
-    getMonday(
-      new Date()
-    );
-
-
-  const currentSunday =
-    addDays(
-      currentMonday,
-      6
-    );
-
-
-  const weekEvents =
-    events.filter(event=>{
-
-      const d =
-        parseDate(event.date);
-
-      return d >= currentMonday &&
-             d <= currentSunday;
-
-    });
-
-
-  document.getElementById(
-    "statEvents"
-  ).textContent =
-    weekEvents.length;
-
-
-  /* TODAY EVENTS */
-
-  const eventContainer =
-    document.getElementById(
-      "homeEvents"
-    );
-
-
-  const todayEvents =
-    getEventsForDate(today);
-
-
-  if(!todayEvents.length){
-
-    eventContainer.innerHTML =
-      `<div class="empty">
-        今日の予定はありません。
-      </div>`;
-
-  }else{
-
-    eventContainer.innerHTML =
-      todayEvents
-        .map(event=>`
-
-          <div
-            class="home-item"
-            onclick="openEventModal('${event.id}')"
-          >
-
-            <div class="home-item-title">
-              ${escapeHtml(event.name || "無題")}
-            </div>
-
-            <div class="home-item-sub">
-
-              ${
-                event.allDay
-                  ? "終日"
-                  : escapeHtml(
-                      event.time || ""
-                    )
-              }
-
-              ${
-                event.place
-                  ? " · " +
-                    escapeHtml(event.place)
-                  : ""
-              }
-
-            </div>
-
-          </div>
-
-        `)
-        .join("");
-
-  }
-
-
-  /* HOME TODO */
-
-  const todoContainer =
-    document.getElementById(
-      "homeTodos"
-    );
-
-
-  const homeTodos =
-    openTodos
-      .slice()
-      .sort(
-        (a,b)=>
-          Number(b.priority||0) -
-          Number(a.priority||0)
-      )
-      .slice(0,5);
-
-
-  if(!homeTodos.length){
-
-    todoContainer.innerHTML =
-      `<div class="empty">
-        未完了のTODOはありません。
-      </div>`;
-
-  }else{
-
-    todoContainer.innerHTML =
-      homeTodos
-        .map(todo=>`
-
-          <div
-            class="home-item"
-            onclick="toggleTodo('${todo.id}')"
-          >
-
-            <div class="home-item-title">
-              ${escapeHtml(todo.title || "無題")}
-            </div>
-
-            <div class="home-item-sub">
-
-              ${
-                "★".repeat(
-                  Number(todo.priority || 0)
-                )
-              }
-
-              ${
-                todo.dueDate
-                  ? " · " +
-                    formatDateJP(todo.dueDate)
-                  : ""
-              }
-
-            </div>
-
-          </div>
-
-        `)
-        .join("");
-
-  }
-
-
-  /* HOME RECORD */
-
-  const recordContainer =
-    document.getElementById(
-      "homeRecords"
-    );
-
-
-  const recentRecords =
-    records
-      .slice()
-      .sort(sortByDateDesc)
-      .slice(0,5);
-
-
-  if(!recentRecords.length){
-
-    recordContainer.innerHTML =
-      `<div class="empty">
-        まだ記録がありません。
-      </div>`;
-
-  }else{
-
-    recordContainer.innerHTML =
-      recentRecords
-        .map(record=>`
-
-          <div
-            class="home-item"
-            onclick="openRecordModal('${record.id}')"
-          >
-
-            <div class="home-item-title">
-              ${escapeHtml(record.note || "学習記録")}
-            </div>
-
-            <div class="home-item-sub">
-
-              ${formatDateJP(record.date)}
-
-              ·
-
-              ${
-                Number(record.hours || 0)
-              }h ${
-                Number(record.minutes || 0)
-              }m
-
-            </div>
-
-          </div>
-
-        `)
-        .join("");
-
-  }
+  if(id==="receipt")
+    renderReceipt();
 
 }
 
 
-/* =========================================================
-   WEEK RENDER
-========================================================= */
-
-function renderWeek(){
-
-  const monday =
-    getCurrentWeekMonday();
-
-
-  const sunday =
-    addDays(
-      monday,
-      6
-    );
-
-
-  const label =
-    document.getElementById(
-      "weekLabel"
-    );
-
-
-  label.textContent =
-    `${formatDateJP(localDateString(monday))} – ${formatDateJP(localDateString(sunday))}`;
-
-
-  const grid =
-    document.getElementById(
-      "weekGrid"
-    );
-
-
-  const dayNames =
-    [
-      "月",
-      "火",
-      "水",
-      "木",
-      "金",
-      "土",
-      "日"
-    ];
-
-
-  grid.innerHTML =
-    Array.from(
-      {length:7},
-      (_,index)=>{
-
-        const date =
-          addDays(
-            monday,
-            index
-          );
-
-        const key =
-          localDateString(date);
-
-
-        const dayEvents =
-          getEventsForDate(key);
-
-
-        return `
-
-          <div class="week-day">
-
-            <div class="week-day-head">
-
-              <div class="week-day-name">
-                ${dayNames[index]}
-              </div>
-
-              <div class="week-day-number">
-                ${date.getDate()}
-              </div>
-
-            </div>
-
-            ${
-              dayEvents.length
-                ? dayEvents
-                    .map(event=>`
-
-                      <div
-                        class="week-event"
-                        onclick="openEventModal('${event.id}')"
-                      >
-
-                        <div>
-                          ${escapeHtml(
-                            event.name || "無題"
-                          )}
-                        </div>
-
-                        <div class="week-event-time">
-
-                          ${
-                            event.allDay
-                              ? "終日"
-                              : escapeHtml(
-                                  event.time || ""
-                                )
-                          }
-
-                        </div>
-
-                      </div>
-
-                    `)
-                    .join("")
-                : `
-                  <div
-                    class="muted"
-                    style="font-size:9px;text-align:center;padding-top:15px"
-                  >
-                    —
-                  </div>
-                `
-            }
-
-            <button
-              class="btn light small"
-              style="width:100%;margin-top:5px"
-              type="button"
-              onclick="openEventModal(null,'${key}')"
-            >
-              +
-            </button>
-
-          </div>
-
-        `;
-
-      }
-    ).join("");
-
-
-  renderWeekTodos();
-
-}
-
-
-/* =========================================================
-   WEEK TODO
-========================================================= */
-
-function renderWeekTodos(){
-
-  const container =
-    document.getElementById(
-      "weekTodos"
-    );
-
-
-  const monday =
-    getCurrentWeekMonday();
-
-
-  const sunday =
-    addDays(
-      monday,
-      6
-    );
-
-
-  const weekTodos =
-    todos
-      .filter(todo=>{
-
-        if(!todo.dueDate){
-          return false;
-        }
-
-        const d =
-          parseDate(todo.dueDate);
-
-        return d >= monday &&
-               d <= sunday;
-
-      })
-      .sort((a,b)=>{
-
-        return String(
-          a.dueDate || ""
-        ).localeCompare(
-          String(b.dueDate || "")
-        );
-
-      });
-
-
-  if(!weekTodos.length){
-
-    container.innerHTML =
-      `<div class="empty">
-        今週期限のTODOはありません。
-      </div>`;
-
-    return;
-  }
-
-
-  container.innerHTML =
-    weekTodos
-      .map(
-        todo=>todoHtml(todo)
-      )
-      .join("");
-
-}
-
-
-/* =========================================================
-   END PART 2
-========================================================= */
-
-/* =========================================================
-   TODO
-========================================================= */
-
-function todoHtml(todo){
-
-  const priority =
-    Math.max(
-      0,
-      Math.min(
-        5,
-        Number(todo.priority || 0)
-      )
-    );
-
-  return `
-
-    <div
-      class="item ${todo.done ? "done" : ""}"
-    >
-
-      <div class="between">
-
-        <div class="row">
-
-          <input
-            type="checkbox"
-            ${todo.done ? "checked" : ""}
-            onchange="toggleTodo('${todo.id}')"
-            style="width:auto"
-          >
-
-          <div class="item-title">
-            ${escapeHtml(todo.title || "無題")}
-          </div>
-
-        </div>
-
-        <div class="star">
-          ${"★".repeat(priority)}
-          ${"☆".repeat(5-priority)}
-        </div>
-
-      </div>
-
-
-      ${
-        todo.detail
-          ? `
-            <div class="item-detail">
-              ${escapeHtml(todo.detail)}
-            </div>
-          `
-          : ""
-      }
-
-
-      <div class="item-meta">
-
-        ${
-          todo.dueDate
-            ? `
-              <span class="tag">
-                期限 ${formatDateJP(todo.dueDate)}
-              </span>
-            `
-            : ""
-        }
-
-        ${
-          priority
-            ? `
-              <span class="tag">
-                優先度 ${priority}/5
-              </span>
-            `
-            : ""
-        }
-
-      </div>
-
-
-      <div class="item-actions">
-
-        <button
-          class="btn light small"
-          type="button"
-          onclick="openTodoModal('${todo.id}')"
-        >
-          編集
-        </button>
-
-        <button
-          class="btn light small"
-          type="button"
-          onclick="moveTodo('${todo.id}',-1)"
-        >
-          ↑
-        </button>
-
-        <button
-          class="btn light small"
-          type="button"
-          onclick="moveTodo('${todo.id}',1)"
-        >
-          ↓
-        </button>
-
-        <button
-          class="btn danger small"
-          type="button"
-          onclick="deleteTodo('${todo.id}')"
-        >
-          削除
-        </button>
-
-      </div>
-
-    </div>
-
-  `;
-}
-
-
-function renderTodo(){
-
-  const container =
-    document.getElementById(
-      "todoList"
-    );
-
-  if(!todos.length){
-
-    container.innerHTML =
-      `<div class="empty">
-        TODOはありません。
-      </div>`;
-
-    return;
-  }
-
-
-  container.innerHTML =
-    todos
-      .map(todo=>todoHtml(todo))
-      .join("");
-}
-
-
-function openTodoModal(id=null){
-
-  editingTodoId =
-    id || null;
-
-
-  const todo =
-    id
-      ? todos.find(
-          item=>item.id === id
-        )
-      : null;
-
-
-  const title =
-    todo
-      ? "EDIT TODO"
-      : "NEW TODO";
-
-
-  openModal(
-    title,
-    `
-
-      <div class="form-group">
-
-        <label class="form-label">
-          TITLE
-        </label>
-
-        <input
-          id="todoTitle"
-          type="text"
-          maxlength="100"
-          value="${escapeHtml(todo?.title || "")}"
-          placeholder="やること"
-        >
-
-      </div>
-
-
-      <div class="form-grid">
-
-        <div class="form-group">
-
-          <label class="form-label">
-            PRIORITY
-          </label>
-
-          <select id="todoPriority">
-
-            <option value="1"
-              ${Number(todo?.priority || 1)===1 ? "selected":""}>
-              ★☆☆☆☆
-            </option>
-
-            <option value="2"
-              ${Number(todo?.priority || 1)===2 ? "selected":""}>
-              ★★☆☆☆
-            </option>
-
-            <option value="3"
-              ${Number(todo?.priority || 1)===3 ? "selected":""}>
-              ★★★☆☆
-            </option>
-
-            <option value="4"
-              ${Number(todo?.priority || 1)===4 ? "selected":""}>
-              ★★★★☆
-            </option>
-
-            <option value="5"
-              ${Number(todo?.priority || 1)===5 ? "selected":""}>
-              ★★★★★
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label class="form-label">
-            DUE DATE
-          </label>
-
-          <input
-            id="todoDueDate"
-            type="date"
-            value="${escapeHtml(todo?.dueDate || "")}"
-          >
-
-        </div>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          DETAIL
-        </label>
-
-        <textarea
-          id="todoDetail"
-          placeholder="メモ・詳細"
-        >${escapeHtml(todo?.detail || "")}</textarea>
-
-      </div>
-
-
-      <div class="modal-actions">
-
-        <button
-          class="btn secondary"
-          type="button"
-          onclick="closeModal()"
-        >
-          キャンセル
-        </button>
-
-        <button
-          class="btn"
-          type="button"
-          onclick="saveTodo()"
-        >
-          保存
-        </button>
-
-      </div>
-
-    `
-  );
-}
-
-
-async function saveTodo(){
-
-  const title =
-    document
-      .getElementById("todoTitle")
-      .value
-      .trim();
-
-
-  if(!title){
-
-    alert(
-      "TODOを入力してください。"
-    );
-
-    return;
-  }
-
-
-  const priority =
-    Number(
-      document
-        .getElementById("todoPriority")
-        .value
-    );
-
-
-  const dueDate =
-    document
-      .getElementById("todoDueDate")
-      .value;
-
-
-  const detail =
-    document
-      .getElementById("todoDetail")
-      .value
-      .trim();
-
-
-  if(editingTodoId){
-
-    const todo =
-      todos.find(
-        item=>item.id === editingTodoId
-      );
-
-
-    if(todo){
-
-      todo.title = title;
-      todo.priority = priority;
-      todo.dueDate = dueDate;
-      todo.detail = detail;
-
-    }
-
-  }else{
-
-    todos.push({
-
-      id:uid(),
-
-      title:title,
-
-      priority:priority,
-
-      dueDate:dueDate,
-
-      detail:detail,
-
-      done:false,
-
-      createdAt:
-        new Date().toISOString()
-
-    });
-
-  }
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-    closeModal();
-
-  }catch(error){
-
-    alert(
-      error.message ||
-      "保存に失敗しました。"
-    );
-
-  }
-
-}
-
-
-async function toggleTodo(id){
-
-  const todo =
-    todos.find(
-      item=>item.id === id
-    );
-
-
-  if(!todo){
-    return;
-  }
-
-
-  todo.done =
-    !todo.done;
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-  }catch(error){
-
-    /*
-      保存に失敗した場合は
-      元に戻す。
-    */
-
-    todo.done =
-      !todo.done;
-
-    renderAll();
-
-    alert(
-      error.message ||
-      "保存に失敗しました。"
-    );
-
-  }
-
-}
-
-
-async function deleteTodo(id){
-
-  const ok =
-    confirm(
-      "このTODOを削除しますか？"
-    );
-
-
-  if(!ok){
-    return;
-  }
-
-
-  const old =
-    todos;
-
-
-  todos =
-    todos.filter(
-      item=>item.id !== id
-    );
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-  }catch(error){
-
-    todos = old;
-
-    renderAll();
-
-    alert(
-      error.message ||
-      "削除の保存に失敗しました。"
-    );
-
-  }
-
-}
-
-
-async function moveTodo(id,direction){
-
-  const index =
-    todos.findIndex(
-      item=>item.id === id
-    );
-
-
-  if(index < 0){
-    return;
-  }
-
-
-  const newIndex =
-    index + direction;
-
-
-  if(
-    newIndex < 0 ||
-    newIndex >= todos.length
-  ){
-    return;
-  }
-
-
-  [
-    todos[index],
-    todos[newIndex]
-  ] =
-  [
-    todos[newIndex],
-    todos[index]
-  ];
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-  }catch(error){
-
-    /*
-      保存失敗時は再読み込み。
-    */
-
-    await loadCloud();
-
-    renderAll();
-
-    alert(
-      error.message ||
-      "並び順の保存に失敗しました。"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   EVENT
-========================================================= */
-
-function openEventModal(
-  id=null,
-  defaultDate=""
-){
-
-  editingEventId =
-    id || null;
-
-
-  const event =
-    id
-      ? events.find(
-          item=>item.id === id
-        )
-      : null;
-
-
-  selectedEventColor =
-    event?.color ||
-    "#252525";
-
-
-  openModal(
-    event
-      ? "EDIT EVENT"
-      : "NEW EVENT",
-    `
-
-      <div class="form-group">
-
-        <label class="form-label">
-          EVENT NAME
-        </label>
-
-        <input
-          id="eventName"
-          type="text"
-          maxlength="100"
-          value="${escapeHtml(event?.name || "")}"
-          placeholder="予定の名前"
-        >
-
-      </div>
-
-
-      <div class="form-grid">
-
-        <div class="form-group">
-
-          <label class="form-label">
-            DATE
-          </label>
-
-          <input
-            id="eventDate"
-            type="date"
-            value="${escapeHtml(
-              event?.date ||
-              defaultDate ||
-              localDateString()
-            )}"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label class="form-label">
-            TIME
-          </label>
-
-          <input
-            id="eventTime"
-            type="time"
-            value="${escapeHtml(
-              event?.time || ""
-            )}"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label class="form-label">
-            PLACE
-          </label>
-
-          <input
-            id="eventPlace"
-            type="text"
-            maxlength="100"
-            value="${escapeHtml(
-              event?.place || ""
-            )}"
-            placeholder="場所"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label class="form-label">
-            COLOR
-          </label>
-
-          <select id="eventColor">
-
-            <option value="#252525"
-              ${event?.color === "#252525" || !event?.color ? "selected":""}>
-              BLACK
-            </option>
-
-            <option value="#777777"
-              ${event?.color === "#777777" ? "selected":""}>
-              GRAY
-            </option>
-
-            <option value="#77705f"
-              ${event?.color === "#77705f" ? "selected":""}>
-              BROWN
-            </option>
-
-            <option value="#6b6678"
-              ${event?.color === "#6b6678" ? "selected":""}>
-              PURPLE
-            </option>
-
-          </select>
-
-        </div>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="check-row">
-
-          <input
-            id="eventAllDay"
-            type="checkbox"
-            ${event?.allDay ? "checked":""}
-          >
-
-          終日
-
-        </label>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          DETAIL
-        </label>
-
-        <textarea
-          id="eventDetail"
-          placeholder="詳細"
-        >${escapeHtml(event?.detail || "")}</textarea>
-
-      </div>
-
-
-      <div class="modal-actions">
-
-        ${
-          event
-            ? `
-              <button
-                class="btn danger"
-                type="button"
-                onclick="deleteEvent('${event.id}')"
-              >
-                削除
-              </button>
-            `
-            : ""
-        }
-
-        <button
-          class="btn secondary"
-          type="button"
-          onclick="closeModal()"
-        >
-          キャンセル
-        </button>
-
-        <button
-          class="btn"
-          type="button"
-          onclick="saveEvent()"
-        >
-          保存
-        </button>
-
-      </div>
-
-    `
-  );
-
-}
-
-
-async function saveEvent(){
-
-  const name =
-    document
-      .getElementById("eventName")
-      .value
-      .trim();
-
-
-  if(!name){
-
-    alert(
-      "予定名を入力してください。"
-    );
-
-    return;
-  }
-
-
-  const date =
-    document
-      .getElementById("eventDate")
-      .value;
-
-
-  if(!date){
-
-    alert(
-      "日付を入力してください。"
-    );
-
-    return;
-  }
-
-
-  const time =
-    document
-      .getElementById("eventTime")
-      .value;
-
-
-  const place =
-    document
-      .getElementById("eventPlace")
-      .value
-      .trim();
-
-
-  const detail =
-    document
-      .getElementById("eventDetail")
-      .value
-      .trim();
-
-
-  const allDay =
-    document
-      .getElementById("eventAllDay")
-      .checked;
-
-
-  const color =
-    document
-      .getElementById("eventColor")
-      .value;
-
-
-  if(editingEventId){
-
-    const event =
-      events.find(
-        item=>item.id === editingEventId
-      );
-
-
-    if(event){
-
-      event.name = name;
-      event.date = date;
-      event.time = time;
-      event.place = place;
-      event.detail = detail;
-      event.allDay = allDay;
-      event.color = color;
-
-    }
-
-  }else{
-
-    events.push({
-
-      id:uid(),
-
-      name:name,
-
-      date:date,
-
-      time:time,
-
-      place:place,
-
-      detail:detail,
-
-      allDay:allDay,
-
-      color:color,
-
-      createdAt:
-        new Date().toISOString()
-
-    });
-
-  }
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-    closeModal();
-
-  }catch(error){
-
-    alert(
-      error.message ||
-      "保存に失敗しました。"
-    );
-
-  }
-
-}
-
-
-async function deleteEvent(id){
-
-  const ok =
-    confirm(
-      "この予定を削除しますか？"
-    );
-
-
-  if(!ok){
-    return;
-  }
-
-
-  const old =
-    events;
-
-
-  events =
-    events.filter(
-      item=>item.id !== id
-    );
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-    closeModal();
-
-  }catch(error){
-
-    events = old;
-
-    renderAll();
-
-    alert(
-      error.message ||
-      "削除に失敗しました。"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   MONEY
-========================================================= */
-
-function renderMoney(){
-
-  const total =
-    money.reduce(
-      (sum,item)=>
-        sum + Number(item.price || 0),
-      0
-    );
-
-
-  const now =
-    new Date();
-
-
-  const year =
-    now.getFullYear();
-
-
-  const month =
-    now.getMonth()+1;
-
-
-  const monthTotal =
-    money
-      .filter(item=>{
-
-        if(!item.date){
-          return false;
-        }
-
-        const d =
-          parseDate(item.date);
-
-        return (
-          d.getFullYear() === year &&
-          d.getMonth()+1 === month
-        );
-
-      })
-      .reduce(
-        (sum,item)=>
-          sum + Number(item.price || 0),
-        0
-      );
-
-
-  document.getElementById(
-    "moneyTotal"
-  ).textContent =
-    "¥" +
-    total.toLocaleString();
-
-
-  document.getElementById(
-    "moneyMonth"
-  ).textContent =
-    "¥" +
-    monthTotal.toLocaleString();
-
-
-  const container =
-    document.getElementById(
-      "moneyList"
-    );
-
-
-  const sorted =
-    money
-      .slice()
-      .sort(sortByDateDesc);
-
-
-  if(!sorted.length){
-
-    container.innerHTML =
-      `<div class="empty">
-        支出記録はありません。
-      </div>`;
-
-    return;
-  }
-
-
-  container.innerHTML =
-    sorted
-      .map(item=>`
-
-        <div class="item">
-
-          <div class="between">
-
-            <div>
-
-              <div class="item-title">
-                ${escapeHtml(
-                  item.detail ||
-                  "支出"
-                )}
-              </div>
-
-              <div class="item-meta">
-
-                <span class="tag">
-                  ${formatDateJP(item.date)}
-                </span>
-
-                ${
-                  item.genre
-                    ? `
-                      <span class="tag">
-                        ${escapeHtml(item.genre)}
-                      </span>
-                    `
-                    : ""
-                }
-
-              </div>
-
-            </div>
-
-
-            <div
-              style="font-size:18px;font-weight:800"
-            >
-              ¥${Number(
-                item.price || 0
-              ).toLocaleString()}
-            </div>
-
-          </div>
-
-
-          <div class="item-actions">
-
-            <button
-              class="btn light small"
-              type="button"
-              onclick="openMoneyModal('${item.id}')"
-            >
-              編集
-            </button>
-
-            <button
-              class="btn danger small"
-              type="button"
-              onclick="deleteMoney('${item.id}')"
-            >
-              削除
-            </button>
-
-          </div>
-
-        </div>
-
-      `)
-      .join("");
-
-}
-
-
-function openMoneyModal(id=null){
-
-  editingMoneyId =
-    id || null;
-
-
-  const item =
-    id
-      ? money.find(
-          x=>x.id === id
-        )
-      : null;
-
-
-  openModal(
-    item
-      ? "EDIT MONEY"
-      : "NEW MONEY",
-    `
-
-      <div class="form-grid">
-
-        <div class="form-group">
-
-          <label class="form-label">
-            DATE
-          </label>
-
-          <input
-            id="moneyDate"
-            type="date"
-            value="${escapeHtml(
-              item?.date ||
-              localDateString()
-            )}"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label class="form-label">
-            PRICE
-          </label>
-
-          <input
-            id="moneyPrice"
-            type="number"
-            min="0"
-            step="1"
-            value="${escapeHtml(
-              item?.price ?? ""
-            )}"
-            placeholder="0"
-          >
-
-        </div>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          GENRE
-        </label>
-
-        <input
-          id="moneyGenre"
-          type="text"
-          maxlength="50"
-          value="${escapeHtml(
-            item?.genre || ""
-          )}"
-          placeholder="食費 / 交通 / 学校 / 趣味…"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          DETAIL
-        </label>
-
-        <textarea
-          id="moneyDetail"
-          placeholder="何に使ったか"
-        >${escapeHtml(
-          item?.detail || ""
-        )}</textarea>
-
-      </div>
-
-
-      <div class="modal-actions">
-
-        ${
-          item
-            ? `
-              <button
-                class="btn danger"
-                type="button"
-                onclick="deleteMoney('${item.id}')"
-              >
-                削除
-              </button>
-            `
-            : ""
-        }
-
-        <button
-          class="btn secondary"
-          type="button"
-          onclick="closeModal()"
-        >
-          キャンセル
-        </button>
-
-        <button
-          class="btn"
-          type="button"
-          onclick="saveMoney()"
-        >
-          保存
-        </button>
-
-      </div>
-
-    `
-  );
-
-}
-
-
-async function saveMoney(){
-
-  const date =
-    document
-      .getElementById("moneyDate")
-      .value;
-
-
-  const price =
-    Number(
-      document
-        .getElementById("moneyPrice")
-        .value
-    );
-
-
-  const genre =
-    document
-      .getElementById("moneyGenre")
-      .value
-      .trim();
-
-
-  const detail =
-    document
-      .getElementById("moneyDetail")
-      .value
-      .trim();
-
-
-  if(!date){
-
-    alert(
-      "日付を入力してください。"
-    );
-
-    return;
-  }
-
-
-  if(
-    !Number.isFinite(price) ||
-    price < 0
-  ){
-
-    alert(
-      "金額を正しく入力してください。"
-    );
-
-    return;
-  }
-
-
-  if(editingMoneyId){
-
-    const item =
-      money.find(
-        x=>x.id === editingMoneyId
-      );
-
-
-    if(item){
-
-      item.date = date;
-      item.price = price;
-      item.genre = genre;
-      item.detail = detail;
-
-    }
-
-  }else{
-
-    money.push({
-
-      id:uid(),
-
-      date:date,
-
-      price:price,
-
-      genre:genre,
-
-      detail:detail,
-
-      createdAt:
-        new Date().toISOString()
-
-    });
-
-  }
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-    closeModal();
-
-  }catch(error){
-
-    alert(
-      error.message ||
-      "保存に失敗しました。"
-    );
-
-  }
-
-}
-
-
-async function deleteMoney(id){
-
-  const ok =
-    confirm(
-      "この支出記録を削除しますか？"
-    );
-
-
-  if(!ok){
-    return;
-  }
-
-
-  const old =
-    money;
-
-
-  money =
-    money.filter(
-      item=>item.id !== id
-    );
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-    closeModal();
-
-  }catch(error){
-
-    money = old;
-
-    renderAll();
-
-    alert(
-      error.message ||
-      "削除に失敗しました。"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   WISH
-========================================================= */
-
-function renderWish(){
-
-  const container =
-    document.getElementById(
-      "wishList"
-    );
-
-
-  const sorted =
-    wishes
-      .slice()
-      .sort(
-        (a,b)=>
-          Number(b.priority || 0) -
-          Number(a.priority || 0)
-      );
-
-
-  if(!sorted.length){
-
-    container.innerHTML =
-      `<div class="empty">
-        WISH LISTは空です。
-      </div>`;
-
-    return;
-  }
-
-
-  container.innerHTML =
-    sorted
-      .map(item=>`
-
-        <div class="item">
-
-          <div class="between">
-
-            <div class="item-title">
-              ${escapeHtml(
-                item.title || "無題"
-              )}
-            </div>
-
-            <div class="star">
-              ${"★".repeat(
-                Number(item.priority || 0)
-              )}
-              ${"☆".repeat(
-                5-Number(item.priority || 0)
-              )}
-            </div>
-
-          </div>
-
-
-          <div class="item-meta">
-
-            ${
-              item.genre
-                ? `
-                  <span class="tag">
-                    ${escapeHtml(item.genre)}
-                  </span>
-                `
-                : ""
-            }
-
-            ${
-              item.price
-                ? `
-                  <span class="tag">
-                    ¥${Number(
-                      item.price
-                    ).toLocaleString()}
-                  </span>
-                `
-                : ""
-            }
-
-          </div>
-
-
-          ${
-            item.detail
-              ? `
-                <div class="item-detail">
-                  ${escapeHtml(item.detail)}
-                </div>
-              `
-              : ""
-          }
-
-
-          <div class="item-actions">
-
-            <button
-              class="btn light small"
-              type="button"
-              onclick="openWishModal('${item.id}')"
-            >
-              編集
-            </button>
-
-            <button
-              class="btn danger small"
-              type="button"
-              onclick="deleteWish('${item.id}')"
-            >
-              削除
-            </button>
-
-          </div>
-
-        </div>
-
-      `)
-      .join("");
-
-}
-
-
-function openWishModal(id=null){
-
-  editingWishId =
-    id || null;
-
-
-  const item =
-    id
-      ? wishes.find(
-          x=>x.id === id
-        )
-      : null;
-
-
-  openModal(
-    item
-      ? "EDIT WISH"
-      : "NEW WISH",
-    `
-
-      <div class="form-group">
-
-        <label class="form-label">
-          TITLE
-        </label>
-
-        <input
-          id="wishTitle"
-          type="text"
-          maxlength="100"
-          value="${escapeHtml(
-            item?.title || ""
-          )}"
-          placeholder="ほしいもの"
-        >
-
-      </div>
-
-
-      <div class="form-grid">
-
-        <div class="form-group">
-
-          <label class="form-label">
-            PRIORITY
-          </label>
-
-          <select id="wishPriority">
-
-            <option value="1"
-              ${Number(item?.priority || 1)===1 ? "selected":""}>
-              ★☆☆☆☆
-            </option>
-
-            <option value="2"
-              ${Number(item?.priority || 1)===2 ? "selected":""}>
-              ★★☆☆☆
-            </option>
-
-            <option value="3"
-              ${Number(item?.priority || 1)===3 ? "selected":""}>
-              ★★★☆☆
-            </option>
-
-            <option value="4"
-              ${Number(item?.priority || 1)===4 ? "selected":""}>
-              ★★★★☆
-            </option>
-
-            <option value="5"
-              ${Number(item?.priority || 1)===5 ? "selected":""}>
-              ★★★★★
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label class="form-label">
-            PRICE
-          </label>
-
-          <input
-            id="wishPrice"
-            type="number"
-            min="0"
-            step="1"
-            value="${escapeHtml(
-              item?.price ?? ""
-            )}"
-            placeholder="0"
-          >
-
-        </div>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          GENRE
-        </label>
-
-        <input
-          id="wishGenre"
-          type="text"
-          maxlength="50"
-          value="${escapeHtml(
-            item?.genre || ""
-          )}"
-          placeholder="服 / 本 / コスメ / その他…"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          DETAIL
-        </label>
-
-        <textarea
-          id="wishDetail"
-          placeholder="メモ"
-        >${escapeHtml(
-          item?.detail || ""
-        )}</textarea>
-
-      </div>
-
-
-      <div class="modal-actions">
-
-        ${
-          item
-            ? `
-              <button
-                class="btn danger"
-                type="button"
-                onclick="deleteWish('${item.id}')"
-              >
-                削除
-              </button>
-            `
-            : ""
-        }
-
-        <button
-          class="btn secondary"
-          type="button"
-          onclick="closeModal()"
-        >
-          キャンセル
-        </button>
-
-        <button
-          class="btn"
-          type="button"
-          onclick="saveWish()"
-        >
-          保存
-        </button>
-
-      </div>
-
-    `
-  );
-
-}
-
-
-async function saveWish(){
-
-  const title =
-    document
-      .getElementById("wishTitle")
-      .value
-      .trim();
-
-
-  if(!title){
-
-    alert(
-      "WISHを入力してください。"
-    );
-
-    return;
-  }
-
-
-  const priority =
-    Number(
-      document
-        .getElementById("wishPriority")
-        .value
-    );
-
-
-  const priceRaw =
-    document
-      .getElementById("wishPrice")
-      .value;
-
-
-  const price =
-    priceRaw === ""
-      ? null
-      : Number(priceRaw);
-
-
-  const genre =
-    document
-      .getElementById("wishGenre")
-      .value
-      .trim();
-
-
-  const detail =
-    document
-      .getElementById("wishDetail")
-      .value
-      .trim();
-
-
-  if(
-    price !== null &&
-    (!Number.isFinite(price) || price < 0)
-  ){
-
-    alert(
-      "価格を正しく入力してください。"
-    );
-
-    return;
-  }
-
-
-  if(editingWishId){
-
-    const item =
-      wishes.find(
-        x=>x.id === editingWishId
-      );
-
-
-    if(item){
-
-      item.title = title;
-      item.priority = priority;
-      item.price = price;
-      item.genre = genre;
-      item.detail = detail;
-
-    }
-
-  }else{
-
-    wishes.push({
-
-      id:uid(),
-
-      title:title,
-
-      priority:priority,
-
-      price:price,
-
-      genre:genre,
-
-      detail:detail,
-
-      createdAt:
-        new Date().toISOString()
-
-    });
-
-  }
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-    closeModal();
-
-  }catch(error){
-
-    alert(
-      error.message ||
-      "保存に失敗しました。"
-    );
-
-  }
-
-}
-
-
-async function deleteWish(id){
-
-  const ok =
-    confirm(
-      "このWISHを削除しますか？"
-    );
-
-
-  if(!ok){
-    return;
-  }
-
-
-  const old =
-    wishes;
-
-
-  wishes =
-    wishes.filter(
-      item=>item.id !== id
-    );
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-    closeModal();
-
-  }catch(error){
-
-    wishes = old;
-
-    renderAll();
-
-    alert(
-      error.message ||
-      "削除に失敗しました。"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   MEMO
-========================================================= */
-
-function renderMemo(){
-
-  const container =
-    document.getElementById(
-      "memoList"
-    );
-
-
-  if(!notes.length){
-
-    container.innerHTML =
-      `<div class="empty">
-        MEMOはありません。
-      </div>`;
-
-    return;
-  }
-
-
-  /*
-    フォルダごとにまとめる。
-  */
-
-  const folders = {};
-
-
-  notes.forEach(note=>{
-
-    const folder =
-      note.folder?.trim() ||
-      "GENERAL";
-
-
-    if(!folders[folder]){
-      folders[folder] = [];
-    }
-
-
-    folders[folder].push(note);
-
-  });
-
-
-  container.innerHTML =
-    Object.entries(folders)
-      .map(
-        ([folder,items])=>`
-
-          <div class="card">
-
-            <div class="card-title">
-              ${escapeHtml(folder)}
-            </div>
-
-            <div class="list">
-
-              ${
-                items
-                  .map(note=>`
-
-                    <div class="item">
-
-                      <div class="item-title">
-                        ${escapeHtml(
-                          note.title || "無題"
-                        )}
-                      </div>
-
-                      ${
-                        note.text
-                          ? `
-                            <div class="item-detail">
-                              ${escapeHtml(note.text)}
-                            </div>
-                          `
-                          : ""
-                      }
-
-                      <div class="item-actions">
-
-                        <button
-                          class="btn light small"
-                          type="button"
-                          onclick="openMemoModal('${note.id}')"
-                        >
-                          編集
-                        </button>
-
-                        <button
-                          class="btn danger small"
-                          type="button"
-                          onclick="deleteMemo('${note.id}')"
-                        >
-                          削除
-                        </button>
-
-                      </div>
-
-                    </div>
-
-                  `)
-                  .join("")
-              }
-
-            </div>
-
-          </div>
-
-        `
-      )
-      .join("");
-
-}
-
-
-function openMemoModal(id=null){
-
-  editingMemoId =
-    id || null;
-
-
-  const note =
-    id
-      ? notes.find(
-          x=>x.id === id
-        )
-      : null;
-
-
-  openModal(
-    note
-      ? "EDIT MEMO"
-      : "NEW MEMO",
-    `
-
-      <div class="form-group">
-
-        <label class="form-label">
-          FOLDER
-        </label>
-
-        <input
-          id="memoFolder"
-          type="text"
-          maxlength="50"
-          value="${escapeHtml(
-            note?.folder || ""
-          )}"
-          placeholder="GENERAL"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          TITLE
-        </label>
-
-        <input
-          id="memoTitle"
-          type="text"
-          maxlength="100"
-          value="${escapeHtml(
-            note?.title || ""
-          )}"
-          placeholder="タイトル"
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          TEXT
-        </label>
-
-        <textarea
-          id="memoText"
-          placeholder="メモ"
-        >${escapeHtml(
-          note?.text || ""
-        )}</textarea>
-
-      </div>
-
-
-      <div class="modal-actions">
-
-        ${
-          note
-            ? `
-              <button
-                class="btn danger"
-                type="button"
-                onclick="deleteMemo('${note.id}')"
-              >
-                削除
-              </button>
-            `
-            : ""
-        }
-
-        <button
-          class="btn secondary"
-          type="button"
-          onclick="closeModal()"
-        >
-          キャンセル
-        </button>
-
-        <button
-          class="btn"
-          type="button"
-          onclick="saveMemo()"
-        >
-          保存
-        </button>
-
-      </div>
-
-    `
-  );
-
-}
-
-
-async function saveMemo(){
-
-  const folder =
-    document
-      .getElementById("memoFolder")
-      .value
-      .trim();
-
-
-  const title =
-    document
-      .getElementById("memoTitle")
-      .value
-      .trim();
-
-
-  const text =
-    document
-      .getElementById("memoText")
-      .value
-      .trim();
-
-
-  if(!title){
-
-    alert(
-      "タイトルを入力してください。"
-    );
-
-    return;
-  }
-
-
-  if(editingMemoId){
-
-    const note =
-      notes.find(
-        x=>x.id === editingMemoId
-      );
-
-
-    if(note){
-
-      note.folder = folder;
-      note.title = title;
-      note.text = text;
-
-    }
-
-  }else{
-
-    notes.push({
-
-      id:uid(),
-
-      folder:folder,
-
-      title:title,
-
-      text:text,
-
-      createdAt:
-        new Date().toISOString()
-
-    });
-
-  }
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-    closeModal();
-
-  }catch(error){
-
-    alert(
-      error.message ||
-      "保存に失敗しました。"
-    );
-
-  }
-
-}
-
-
-async function deleteMemo(id){
-
-  const ok =
-    confirm(
-      "このMEMOを削除しますか？"
-    );
-
-
-  if(!ok){
-    return;
-  }
-
-
-  const old =
-    notes;
-
-
-  notes =
-    notes.filter(
-      item=>item.id !== id
-    );
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-    closeModal();
-
-  }catch(error){
-
-    notes = old;
-
-    renderAll();
-
-    alert(
-      error.message ||
-      "削除に失敗しました。"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   RECORD
-========================================================= */
-
-function renderRecord(){
-
-  const container =
-    document.getElementById(
-      "recordList"
-    );
-
-
-  const sorted =
-    records
-      .slice()
-      .sort(sortByDateDesc);
-
-
-  if(!sorted.length){
-
-    container.innerHTML =
-      `<div class="empty">
-        学習記録はありません。
-      </div>`;
-
-    return;
-  }
-
-
-  container.innerHTML =
-    sorted
-      .map(record=>`
-
-        <div class="item">
-
-          <div class="between">
-
-            <div class="item-title">
-              ${formatDateJP(record.date)}
-            </div>
-
-            <div
-              style="font-weight:800"
-            >
-              ${
-                Number(record.hours || 0)
-              }h ${
-                Number(record.minutes || 0)
-              }m
-            </div>
-
-          </div>
-
-
-          ${
-            record.note
-              ? `
-                <div class="item-detail">
-                  ${escapeHtml(record.note)}
-                </div>
-              `
-              : ""
-          }
-
-
-          ${
-            record.photo
-              ? `
-                <img
-                  class="photo"
-                  src="${record.photo}"
-                  alt="record photo"
-                >
-              `
-              : ""
-          }
-
-
-          <div class="item-actions">
-
-            <button
-              class="btn light small"
-              type="button"
-              onclick="openRecordModal('${record.id}')"
-            >
-              編集
-            </button>
-
-            <button
-              class="btn danger small"
-              type="button"
-              onclick="deleteRecord('${record.id}')"
-            >
-              削除
-            </button>
-
-          </div>
-
-        </div>
-
-      `)
-      .join("");
-
-}
-
-
-function openRecordModal(id=null){
-
-  editingRecordId =
-    id || null;
-
-
-  const record =
-    id
-      ? records.find(
-          x=>x.id === id
-        )
-      : null;
-
-
-  openModal(
-    record
-      ? "EDIT RECORD"
-      : "NEW RECORD",
-    `
-
-      <div class="form-grid">
-
-        <div class="form-group">
-
-          <label class="form-label">
-            DATE
-          </label>
-
-          <input
-            id="recordDate"
-            type="date"
-            value="${escapeHtml(
-              record?.date ||
-              localDateString()
-            )}"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label class="form-label">
-            HOURS
-          </label>
-
-          <input
-            id="recordHours"
-            type="number"
-            min="0"
-            step="1"
-            value="${escapeHtml(
-              record?.hours ?? 0
-            )}"
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label class="form-label">
-            MINUTES
-          </label>
-
-          <input
-            id="recordMinutes"
-            type="number"
-            min="0"
-            max="59"
-            step="1"
-            value="${escapeHtml(
-              record?.minutes ?? 0
-            )}"
-          >
-
-        </div>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          NOTE
-        </label>
-
-        <textarea
-          id="recordNote"
-          placeholder="今日やったこと・感想"
-        >${escapeHtml(
-          record?.note || ""
-        )}</textarea>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          PHOTO
-        </label>
-
-        <input
-          id="recordPhoto"
-          type="file"
-          accept="image/*"
-        >
-
-        ${
-          record?.photo
-            ? `
-              <img
-                class="photo"
-                src="${record.photo}"
-                alt="current photo"
-              >
-            `
-            : ""
-        }
-
-        <div class="muted small-text" style="margin-top:6px">
-          写真は1枚まで。大きすぎる画像は保存できない場合があります。
-        </div>
-
-      </div>
-
-
-      <div class="modal-actions">
-
-        ${
-          record
-            ? `
-              <button
-                class="btn danger"
-                type="button"
-                onclick="deleteRecord('${record.id}')"
-              >
-                削除
-              </button>
-            `
-            : ""
-        }
-
-        <button
-          class="btn secondary"
-          type="button"
-          onclick="closeModal()"
-        >
-          キャンセル
-        </button>
-
-        <button
-          class="btn"
-          type="button"
-          onclick="saveRecord()"
-        >
-          保存
-        </button>
-
-      </div>
-
-    `
-  );
-
-}
-
-
-function resizeImage(file){
-
-  return new Promise(
-    (resolve,reject)=>{
-
-      const reader =
-        new FileReader();
-
-
-      reader.onload =
-        event=>{
-
-          const img =
-            new Image();
-
-
-          img.onload =
-            ()=>{
-
-              const max =
-                1000;
-
-
-              let width =
-                img.width;
-
-              let height =
-                img.height;
-
-
-              if(width > max){
-
-                height =
-                  Math.round(
-                    height * max / width
-                  );
-
-                width = max;
-
-              }
-
-
-              const canvas =
-                document.createElement(
-                  "canvas"
-                );
-
-
-              canvas.width =
-                width;
-
-              canvas.height =
-                height;
-
-
-              const ctx =
-                canvas.getContext(
-                  "2d"
-                );
-
-
-              ctx.drawImage(
-                img,
-                0,
-                0,
-                width,
-                height
-              );
-
-
-              resolve(
-                canvas.toDataURL(
-                  "image/jpeg",
-                  .78
-                )
-              );
-
-            };
-
-
-          img.onerror =
-            ()=>reject(
-              new Error(
-                "画像を読み込めませんでした。"
-              )
-            );
-
-
-          img.src =
-            event.target.result;
-
-        };
-
-
-      reader.onerror =
-        ()=>reject(
-          new Error(
-            "画像ファイルを読み込めませんでした。"
-          )
-        );
-
-
-      reader.readAsDataURL(file);
-
-    }
-  );
-}
-
-
-async function saveRecord(){
-
-  const date =
-    document
-      .getElementById("recordDate")
-      .value;
-
-
-  let hours =
-    Number(
-      document
-        .getElementById("recordHours")
-        .value
-    );
-
-
-  let minutes =
-    Number(
-      document
-        .getElementById("recordMinutes")
-        .value
-    );
-
-
-  const note =
-    document
-      .getElementById("recordNote")
-      .value
-      .trim();
-
-
-  const photoInput =
-    document
-      .getElementById("recordPhoto");
-
-
-  if(!date){
-
-    alert(
-      "日付を入力してください。"
-    );
-
-    return;
-  }
-
-
-  if(
-    !Number.isFinite(hours) ||
-    hours < 0
-  ){
-    hours = 0;
-  }
-
-
-  if(
-    !Number.isFinite(minutes) ||
-    minutes < 0
-  ){
-    minutes = 0;
-  }
-
-
-  /*
-    60分以上入力された場合に整理。
-  */
-
-  hours +=
-    Math.floor(minutes / 60);
-
-  minutes =
-    minutes % 60;
-
-
-  let photo = null;
-
-
-  try{
-
-    if(
-      photoInput &&
-      photoInput.files &&
-      photoInput.files[0]
-    ){
-
-      photo =
-        await resizeImage(
-          photoInput.files[0]
-        );
-
-    }
-
-
-    if(editingRecordId){
-
-      const record =
-        records.find(
-          x=>x.id === editingRecordId
-        );
-
-
-      if(record){
-
-        record.date = date;
-        record.hours = hours;
-        record.minutes = minutes;
-        record.note = note;
-
-        if(photo){
-          record.photo = photo;
-        }
-
-      }
-
-    }else{
-
-      records.push({
-
-        id:uid(),
-
-        date:date,
-
-        hours:hours,
-
-        minutes:minutes,
-
-        note:note,
-
-        photo:photo,
-
-        createdAt:
-          new Date().toISOString()
-
-      });
-
-    }
-
-
-    await saveAll();
-
-    renderAll();
-
-    closeModal();
-
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      error.message ||
-      "記録の保存に失敗しました。"
-    );
-
-  }
-
-}
-
-
-async function deleteRecord(id){
-
-  const ok =
-    confirm(
-      "この記録を削除しますか？"
-    );
-
-
-  if(!ok){
-    return;
-  }
-
-
-  const old =
-    records;
-
-
-  records =
-    records.filter(
-      item=>item.id !== id
-    );
-
-
-  try{
-
-    await saveAll();
-
-    renderAll();
-
-    closeModal();
-
-  }catch(error){
-
-    records = old;
-
-    renderAll();
-
-    alert(
-      error.message ||
-      "削除に失敗しました。"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   END PART 
-=========================================================
-
-/* =========================================================
-   RECEIPT
-========================================================= */
-
-function renderReceipt(){
-
-  const container =
-    document.getElementById(
-      "receiptBody"
-    );
-
-  if(!container){
-    return;
-  }
-
-
-  /*
-    今週ではなく、
-    現在表示しているWEEKの週を集計。
-  */
-
-  const monday =
-    getCurrentWeekMonday();
-
-  const sunday =
-    addDays(
-      monday,
-      6
-    );
-
-
-  const weekEvents =
-    events.filter(event=>{
-
-      if(!event.date){
-        return false;
-      }
-
-      const d =
-        parseDate(event.date);
-
-      return (
-        d >= monday &&
-        d <= sunday
-      );
-
-    });
-
-
-  const weekTodos =
-    todos.filter(todo=>{
-
-      if(!todo.dueDate){
-        return false;
-      }
-
-      const d =
-        parseDate(todo.dueDate);
-
-      return (
-        d >= monday &&
-        d <= sunday
-      );
-
-    });
-
-
-  const doneTodos =
-    weekTodos.filter(
-      todo=>todo.done
-    );
-
-
-  const weekRecords =
-    records.filter(record=>{
-
-      if(!record.date){
-        return false;
-      }
-
-      const d =
-        parseDate(record.date);
-
-      return (
-        d >= monday &&
-        d <= sunday
-      );
-
-    });
-
-
-  const studyMinutes =
-    weekRecords.reduce(
-      (sum,record)=>{
-
-        return sum +
-          Number(record.hours || 0)*60 +
-          Number(record.minutes || 0);
-
-      },
-      0
-    );
-
-
-  const weekMoney =
-    money
-      .filter(item=>{
-
-        if(!item.date){
-          return false;
-        }
-
-        const d =
-          parseDate(item.date);
-
-        return (
-          d >= monday &&
-          d <= sunday
-        );
-
-      })
-      .reduce(
-        (sum,item)=>
-          sum + Number(item.price || 0),
-        0
-      );
-
-
-  const studyText =
-    studyMinutes >= 60
-      ? `${Math.floor(studyMinutes/60)}h ${studyMinutes%60}m`
-      : `${studyMinutes}m`;
-
-
-  const username =
-    currentUsername ||
-    currentUser?.user_metadata?.username ||
-    "USER";
-
-
-  container.innerHTML = `
-
-    <div class="receipt-header">
-
-      <div class="receipt-title">
-        MY LOG
-      </div>
-
-      <div
-        class="muted"
-        style="font-size:10px;margin-top:5px"
-      >
-        WEEKLY RECEIPT
-      </div>
-
-      <div
-        style="font-size:10px;margin-top:10px"
-      >
-        ${escapeHtml(username)}
-      </div>
-
-    </div>
-
-
-    <div class="receipt-row">
-
-      <span>
-        PERIOD
-      </span>
-
-      <span>
-        ${formatDateJP(
-          localDateString(monday)
-        )}
-        –
-        ${formatDateJP(
-          localDateString(sunday)
-        )}
-      </span>
-
-    </div>
-
-
-    <div class="receipt-row">
-
-      <span>
-        STUDY TIME
-      </span>
-
-      <span>
-        ${studyText}
-      </span>
-
-    </div>
-
-
-    <div class="receipt-row">
-
-      <span>
-        TODO DONE
-      </span>
-
-      <span>
-        ${doneTodos.length}
-        /
-        ${weekTodos.length}
-      </span>
-
-    </div>
-
-
-    <div class="receipt-row">
-
-      <span>
-        EVENTS
-      </span>
-
-      <span>
-        ${weekEvents.length}
-      </span>
-
-    </div>
-
-
-    <div class="receipt-row">
-
-      <span>
-        SPENDING
-      </span>
-
-      <span>
-        ¥${weekMoney.toLocaleString()}
-      </span>
-
-    </div>
-
-
-    <div
-      class="receipt-total"
-    >
-
-      <div
-        style="
-          display:flex;
-          justify-content:space-between;
-        "
-      >
-
-        <span>
-          WEEK TOTAL
-        </span>
-
-        <span>
-          ${studyText}
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <div
-      style="
-        text-align:center;
-        color:#777;
-        font-size:9px;
-        margin-top:22px;
-        padding-top:12px;
-        border-top:1px dashed #aaa;
-      "
-    >
-      KEEP GOING.
-    </div>
-
-  `;
-}
-
-
-/* =========================================================
-   PRINT
-========================================================= */
-
-function printReceipt(){
-
-  showPage("receipt");
-
-  /*
-    少し待ってから印刷。
-    iPhoneでも表示が安定しやすい。
-  */
-
-  setTimeout(
-    ()=>{
-      window.print();
-    },
-    150
-  );
-
-}
-
-
-/* =========================================================
-   ACCOUNT / DATA SETTINGS
-========================================================= */
-
-/*
-  HOMEなどから簡単に旧データ移行を呼べるように、
-  MEMOページの下部に設定カードを追加。
-*/
-
-function renderMemoSettings(){
-
-  const container =
-    document.getElementById(
-      "memoList"
-    );
-
-  if(!container){
-    return;
-  }
-
-
-  /*
-    既存のMEMO一覧の後ろに
-    アカウント関連ボタンを追加。
-  */
-
-  const setting =
-    document.createElement("div");
-
-  setting.className =
-    "card";
-
-
-  setting.style.marginTop =
-    "14px";
-
-
-  setting.innerHTML = `
-
-    <div class="card-title">
-      DATA
-    </div>
-
-    <div class="muted small-text"
-         style="margin-bottom:10px">
-
-      この端末に残っている
-      旧MY LOGデータを、
-      現在のアカウントへ移行できます。
-
-    </div>
-
-    <div class="row wrap">
-
-      <button
-        class="btn light small"
-        type="button"
-        onclick="migrateOldData()"
-      >
-        旧データを移行
-      </button>
-
-    </div>
-
-  `;
-
-
-  container.appendChild(
-    setting
-  );
-
-}
-
-
-/* =========================================================
-   ORIGINAL MEMO RENDER WRAPPER
-========================================================= */
-
-const originalRenderMemo =
-  renderMemo;
-
-
-renderMemo = function(){
-
-  originalRenderMemo();
-
-  renderMemoSettings();
-
-};
-
-
-/* =========================================================
-   SUPABASE CONNECTION CHECK
-========================================================= */
-
-async function checkSupabaseConnection(){
-
-  try{
-
-    const {
-      data,
-      error
-    } =
-      await sb.auth.getSession();
-
-
-    if(error){
-
-      console.error(
-        "SUPABASE SESSION ERROR",
-        error
-      );
-
-      return;
-    }
-
-
-    if(data?.session?.user){
-
-      /*
-        セッションが残っていたら
-        自動ログイン。
-      */
-
-      if(!currentUser){
-
-        await enterApp(
-          data.session.user
-        );
-
-      }
-
-    }
-
-  }catch(error){
-
-    console.error(
-      "SUPABASE CHECK ERROR",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   VISIBILITY / RETURN FROM BACKGROUND
-========================================================= */
+/* =========================
+   初期表示
+   ========================= */
 
 document.addEventListener(
-  "visibilitychange",
-  async ()=>{
-
-    if(
-      document.visibilityState ===
-      "visible"
-    ){
-
-      /*
-        iPhoneで別アプリへ移動して戻ってきた
-        ときにもセッションを確認。
-      */
-
-      if(currentUser){
-
-        try{
-
-          const {
-            data,
-            error
-          } =
-            await sb.auth.getSession();
-
-
-          if(error){
-            console.error(error);
-            return;
-          }
-
-
-          if(
-            data?.session?.user &&
-            data.session.user.id ===
-              currentUser.id
-          ){
-
-            /*
-              最新データを取得。
-            */
-
-            await loadCloud();
-
-            renderAll();
-
-          }
-
-        }catch(error){
-
-          console.error(error);
-
-        }
-
-      }
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   BEFORE UNLOAD
-========================================================= */
-
-window.addEventListener(
-  "beforeunload",
+  "DOMContentLoaded",
   ()=>{
-    /*
-      保存処理そのものは各操作時に
-      awaitしているため、
-      ここでは無理に通信しない。
-    */
+
+    renderAll();
+
+    showPage("home");
+
   }
 );
 
 
-/* =========================================================
-   KEYBOARD
-========================================================= */
+/* =========================
+   キーボード操作
+   ========================= */
 
 document.addEventListener(
   "keydown",
-  event=>{
+  e=>{
 
-    if(event.key === "Escape"){
+    if(e.key==="Escape"){
 
       closeModal();
 
@@ -6581,47 +4689,667 @@ document.addEventListener(
 );
 
 
-/* =========================================================
-   INITIAL START
-========================================================= */
+/* =========================
+   MODAL
+   ========================= */
 
-async function startApp(){
+function openModal(title,body){
 
-  buildNav();
-
-  /*
-    まずログイン画面を表示。
-  */
-
-  document
-    .getElementById("loginScreen")
-    .style.display = "flex";
-
-  document
-    .getElementById("app")
-    .style.display = "none";
+  document.getElementById(
+    "modalTitle"
+  ).textContent=title;
 
 
-  setSync("OFFLINE");
+  document.getElementById(
+    "modalBody"
+  ).innerHTML=body;
 
 
-  await checkSupabaseConnection();
+  document.getElementById(
+    "modal"
+  ).classList.add("open");
 
 }
 
 
-/* =========================================================
-   START
-========================================================= */
+function closeModal(){
 
-startApp();
+  document.getElementById(
+    "modal"
+  ).classList.remove("open");
+
+}
 
 
-/* =========================================================
-   END JAVASCRIPT
-========================================================= */
+document.getElementById(
+  "modal"
+).addEventListener(
+  "click",
+  e=>{
+
+    if(e.target.id==="modal")
+      closeModal();
+
+  }
+);
+
+
+/* =========================
+   Supabase
+   ========================= */
+
+const SUPABASE_URL =
+  "https://xjanjhywkozjohxultta.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_ICkqvGWwyLdz5_rPE7YCCg_yyoqIL0v";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+
+/* =========================
+   USER DATA
+   ========================= */
+
+async function loadCloud(){
+
+  if(!currentUser)
+    return;
+
+
+  const {
+    data,
+    error
+  }=
+    await supabaseClient
+      .from("mylog_data")
+      .select("*")
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .maybeSingle();
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "データの読み込みに失敗しました。"
+    );
+
+    return;
+
+  }
+
+
+  if(!data)
+    return;
+
+
+  events=
+    Array.isArray(data.events)
+      ? data.events
+      : [];
+
+  todos=
+    Array.isArray(data.todos)
+      ? data.todos
+      : [];
+
+  money=
+    Array.isArray(data.money)
+      ? data.money
+      : [];
+
+  wishes=
+    Array.isArray(data.wishes)
+      ? data.wishes
+      : [];
+
+  notes=
+    Array.isArray(data.notes)
+      ? data.notes
+      : [];
+
+  records=
+    Array.isArray(data.records)
+      ? data.records
+      : [];
+
+
+  renderAll();
+
+}
+
+
+/* =========================
+   CLOUD SAVE
+   ========================= */
+
+async function saveCloudNow(){
+
+  if(!currentUser)
+    return;
+
+
+  const payload={
+
+    user_id:
+      currentUser.id,
+
+    events,
+
+    todos,
+
+    money,
+
+    wishes,
+
+    notes,
+
+    records,
+
+    updated_at:
+      new Date().toISOString()
+
+  };
+
+
+  let {
+    error
+  }=
+    await supabaseClient
+      .from("mylog_data")
+      .update(payload)
+      .eq(
+        "user_id",
+        currentUser.id
+      );
+
+
+  /*
+    まだデータがない場合はINSERT
+  */
+
+  if(error){
+
+    const result=
+      await supabaseClient
+        .from("mylog_data")
+        .insert(payload);
+
+    error=
+      result.error;
+
+  }
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "データの保存に失敗しました。"
+    );
+
+  }
+
+}
+
+
+/*
+  保存処理を順番に実行。
+  同時保存による上書きを防止。
+*/
+
+function saveAll(){
+
+  saveQueue=
+    saveQueue.then(
+      ()=>saveCloudNow()
+    );
+
+
+  return saveQueue;
+}
+
+
+/* =========================
+   SESSION
+   ========================= */
+
+async function enterApp(){
+
+  const {
+    data
+  }=
+    await supabaseClient
+      .auth
+      .getSession();
+
+
+  if(!data.session){
+
+    showLogin();
+
+    return;
+
+  }
+
+
+  currentUser=
+    data.session.user;
+
+
+  currentUsername=
+    currentUser.user_metadata?.username
+    || "";
+
+
+  document.getElementById(
+    "loginScreen"
+  ).style.display="none";
+
+
+  document.getElementById(
+    "app"
+  ).style.display="block";
+
+
+  const usernameEl=
+    document.getElementById(
+      "currentUsername"
+    );
+
+
+  if(usernameEl)
+    usernameEl.textContent=
+      currentUsername;
+
+
+  await loadCloud();
+
+}
+
+
+/* =========================
+   LOGIN表示
+   ========================= */
+
+function showLogin(){
+
+  currentUser=null;
+
+  currentUsername="";
+
+
+  document.getElementById(
+    "loginScreen"
+  ).style.display="flex";
+
+
+  document.getElementById(
+    "app"
+  ).style.display="none";
+
+}
+
+
+/* =========================
+   LOGOUT
+   ========================= */
+
+async function logout(){
+
+  await supabaseClient
+    .auth
+    .signOut();
+
+
+  showLogin();
+
+}
+
+
+/* =========================
+   AUTH STATE
+   ========================= */
+
+supabaseClient
+  .auth
+  .onAuthStateChange(
+    (event,session)=>{
+
+      if(session){
+
+        currentUser=
+          session.user;
+
+        currentUsername=
+          session.user
+            .user_metadata
+            ?.username
+          || "";
+
+      }else{
+
+        currentUser=null;
+
+        currentUsername="";
+
+      }
+
+    }
+  );
+
+
+/* =========================
+   LOGIN / REGISTER
+   ========================= */
+
+async function login(){
+
+  const username=
+    document.getElementById(
+      "loginUsername"
+    ).value
+    .trim();
+
+
+  const password=
+    document.getElementById(
+      "loginPassword"
+    ).value;
+
+
+  if(!username || !password){
+
+    alert(
+      "ユーザー名とパスワードを入力してください。"
+    );
+
+    return;
+
+  }
+
+
+  /*
+    ユーザー名から
+    ログイン用の内部メールアドレスを作る
+  */
+
+  const normalized=
+    username.toLowerCase();
+
+
+  const hashBuffer=
+    await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(
+        normalized
+      )
+    );
+
+
+  const hashArray=
+    Array.from(
+      new Uint8Array(
+        hashBuffer
+      )
+    );
+
+
+  const hash=
+    hashArray
+      .map(
+        b=>b
+          .toString(16)
+          .padStart(2,"0")
+      )
+      .join("");
+
+
+  const email=
+    "u_"+hash+
+    "@mylog.local";
+
+
+  const {
+    data,
+    error
+  }=
+    await supabaseClient
+      .auth
+      .signInWithPassword({
+
+        email,
+
+        password
+
+      });
+
+
+  if(error){
+
+    alert(
+      "ユーザー名またはパスワードが違います。"
+    );
+
+    return;
+
+  }
+
+
+  currentUser=
+    data.user;
+
+
+  currentUsername=
+    data.user
+      .user_metadata
+      ?.username
+    || username;
+
+
+  await enterApp();
+
+}
+
+
+/* =========================
+   REGISTER
+   ========================= */
+
+async function register(){
+
+  const username=
+    document.getElementById(
+      "loginUsername"
+    ).value
+    .trim();
+
+
+  const password=
+    document.getElementById(
+      "loginPassword"
+    ).value;
+
+
+  if(username.length<2){
+
+    alert(
+      "ユーザー名は2文字以上にしてください。"
+    );
+
+    return;
+
+  }
+
+
+  if(password.length<8){
+
+    alert(
+      "パスワードは8文字以上にしてください。"
+    );
+
+    return;
+
+  }
+
+
+  const normalized=
+    username.toLowerCase();
+
+
+  /*
+    ユーザー名の重複確認
+  */
+
+  const {
+    data:available,
+    error:checkError
+  }=
+    await supabaseClient
+      .rpc(
+        "username_available",
+        {
+          p_username:normalized
+        }
+      );
+
+
+  if(checkError){
+
+    console.error(checkError);
+
+    alert(
+      "ユーザー名を確認できませんでした。"
+    );
+
+    return;
+
+  }
+
+
+  if(!available){
+
+    alert(
+      "そのユーザー名はすでに使われています。"
+    );
+
+    return;
+
+  }
+
+
+  /*
+    内部メールアドレス
+  */
+
+  const hashBuffer=
+    await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(
+        normalized
+      )
+    );
+
+
+  const hashArray=
+    Array.from(
+      new Uint8Array(
+        hashBuffer
+      )
+    );
+
+
+  const hash=
+    hashArray
+      .map(
+        b=>b
+          .toString(16)
+          .padStart(2,"0")
+      )
+      .join("");
+
+
+  const email=
+    "u_"+hash+
+    "@mylog.local";
+
+
+  const {
+    data,
+    error
+  }=
+    await supabaseClient
+      .auth
+      .signUp({
+
+        email,
+
+        password,
+
+        options:{
+          data:{
+            username
+          }
+        }
+
+      });
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "アカウント作成に失敗しました。\n"+
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Email confirmation OFF 前提。
+  */
+
+  if(data.session){
+
+    currentUser=
+      data.session.user;
+
+    currentUsername=
+      username;
+
+
+    await enterApp();
+
+  }else{
+
+    alert(
+      "アカウントを作成しました。ログインしてください。"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   起動
+   ========================= */
+
+enterApp();
 
 </script>
-
-</body>
-</html>
