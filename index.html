@@ -5169,168 +5169,178 @@ async function login(){
 
 async function signup(){
 
-  if(!supabaseClient){
-    const msg=document.getElementById("authMsg");
-    if(msg) msg.textContent="アカウント機能を読み込めませんでした。インターネット接続を確認して、ページを再読み込みしてください。";
-    return;
-  }
+  try{
 
-  const username=
-    document.getElementById(
-      "signupUsername"
-    ).value
-    .trim();
+    if(!supabaseClient){
+      const msg=document.getElementById("authMsg");
+      if(msg) msg.textContent="アカウント機能を読み込めませんでした。インターネット接続を確認して、ページを再読み込みしてください。";
+      return;
+    }
 
-
-  const password=
-    document.getElementById(
-      "signupPassword"
-    ).value;
-
-  const password2=
-    document.getElementById(
-      "signupPassword2"
-    ).value;
+    const username=
+      document.getElementById(
+        "signupUsername"
+      ).value
+      .trim();
 
 
-  if(username.length<2){
+    const password=
+      document.getElementById(
+        "signupPassword"
+      ).value;
 
-    alert(
-      "ユーザー名は2文字以上にしてください。"
-    );
-
-    return;
-
-  }
-
-
-  if(password.length<8){
-
-    alert(
-      "パスワードは8文字以上にしてください。"
-    );
-
-    return;
-
-  }
-
-  if(password !== password2){
-
-    alert(
-      "パスワードが一致していません。"
-    );
-
-    return;
-
-  }
+    const password2=
+      document.getElementById(
+        "signupPassword2"
+      ).value;
 
 
-  const normalized=
-    username.toLowerCase();
+    if(username.length<2){
 
-  /*
-    ユーザー名の重複確認はRPCを使わず、
-    ユーザー名から作った内部メールアドレスを
-    Supabase Auth側で一意に管理する。
-    これならDB側に username_available 関数が
-    用意されていなくてもアカウントを作成できる。
-  */
+      alert(
+        "ユーザー名は2文字以上にしてください。"
+      );
 
+      return;
 
-  /*
-    内部メールアドレス
-  */
-
-  const hashBuffer=
-    await crypto.subtle.digest(
-      "SHA-256",
-      new TextEncoder().encode(
-        normalized
-      )
-    );
+    }
 
 
-  const hashArray=
-    Array.from(
-      new Uint8Array(
-        hashBuffer
-      )
-    );
+    if(password.length<8){
+
+      alert(
+        "パスワードは8文字以上にしてください。"
+      );
+
+      return;
+
+    }
+
+    if(password !== password2){
+
+      alert(
+        "パスワードが一致していません。"
+      );
+
+      return;
+
+    }
 
 
-  const hash=
-    hashArray
-      .map(
-        b=>b
-          .toString(16)
-          .padStart(2,"0")
-      )
-      .join("");
+    const normalized=
+      username.toLowerCase();
+
+    /*
+      ユーザー名の重複確認はRPCを使わず、
+      ユーザー名から作った内部メールアドレスを
+      Supabase Auth側で一意に管理する。
+      これならDB側に username_available 関数が
+      用意されていなくてもアカウントを作成できる。
+    */
 
 
-  const email=
-    "u_"+hash+
-    "@mylog.local";
+    /*
+      内部メールアドレス
+    */
+
+    const hashBuffer=
+      await crypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(
+          normalized
+        )
+      );
 
 
-  const {
-    data,
-    error
-  }=
-    await supabaseClient
-      .auth
-      .signUp({
+    const hashArray=
+      Array.from(
+        new Uint8Array(
+          hashBuffer
+        )
+      );
 
-        email,
 
-        password,
+    const hash=
+      hashArray
+        .map(
+          b=>b
+            .toString(16)
+            .padStart(2,"0")
+        )
+        .join("");
 
-        options:{
-          data:{
-            username
+
+    const email=
+      "u_"+hash+
+      "@mylog.local";
+
+
+    const {
+      data,
+      error
+    }=
+      await supabaseClient
+        .auth
+        .signUp({
+
+          email,
+
+          password,
+
+          options:{
+            data:{
+              username
+            }
           }
-        }
 
-      });
+        });
 
 
-  if(error){
+    if(error){
 
-    console.error(error);
+      console.error(error);
 
+      alert(
+        "アカウント作成に失敗しました。\n"+
+        error.message
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Email confirmation OFF 前提。
+    */
+
+    if(data.session){
+
+      currentUser=
+        data.session.user;
+
+      currentUsername=
+        username;
+
+
+      await enterApp();
+
+    }else{
+
+      alert(
+        "アカウントを作成しました。ログインしてください。"
+      );
+
+    }
+
+
+  }catch(error){
+    console.error("SIGNUP ERROR:",error);
     alert(
-      "アカウント作成に失敗しました。\n"+
-      error.message
+      "アカウント作成中にエラーが発生しました。\n"+
+      (error?.message || error)
     );
-
-    return;
-
   }
-
-
-  /*
-    Email confirmation OFF 前提。
-  */
-
-  if(data.session){
-
-    currentUser=
-      data.session.user;
-
-    currentUsername=
-      username;
-
-
-    await enterApp();
-
-  }else{
-
-    alert(
-      "アカウントを作成しました。ログインしてください。"
-    );
-
-  }
-
 }
 
 
