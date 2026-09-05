@@ -1,4 +1,4 @@
-><!doctype html>
+<!doctype html>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
@@ -274,22 +274,47 @@ function setModalMsg(t){$("modalMsg").textContent=t}
 
 $("loginBtn").onclick=async()=>{
   setAuthMsg("");
-  const {error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
-  if(error)setAuthMsg("ログインできませんでした: "+error.message);
+  const email=$("email").value.trim(), password=$("password").value;
+  if(!email||!password){setAuthMsg("メールアドレスとパスワードを入力してください。");return}
+  $("loginBtn").disabled=true; $("loginBtn").textContent="LOGIN...";
+  try{
+    const {data,error}=await db.auth.signInWithPassword({email,password});
+    if(error){
+      if(error.code==="email_not_confirmed"){
+        setAuthMsg("メールアドレスの確認が必要です。確認メールを確認してください。");
+      }else{
+        setAuthMsg("ログインできませんでした: "+(error.message||"認証エラー")+" ["+(error.code||"") +"]");
+      }
+      return;
+    }
+    await applySession(data.session);
+  }catch(e){
+    setAuthMsg("Supabaseへの接続に失敗しました。ページを再読み込みして、もう一度試してください。");
+  }finally{
+    $("loginBtn").disabled=false; $("loginBtn").textContent="LOGIN";
+  }
 };
 $("signupBtn").onclick=async()=>{
   setAuthMsg("");
   const email=$("email").value.trim(), password=$("password").value;
   if(!email||password.length<6){setAuthMsg("メールアドレスと6文字以上のパスワードを入力してください。");return}
-  const {error}=await db.auth.signUp({email,password});
-  if(error)setAuthMsg("登録できませんでした: "+error.message);
-  else setAuthMsg("登録しました。確認メールが届いた場合は、メールを確認してからLOGINしてください。");
+  $("signupBtn").disabled=true; $("signupBtn").textContent="SIGNING...";
+  try{
+    const {data,error}=await db.auth.signUp({email,password});
+    if(error) setAuthMsg("登録できませんでした: "+(error.message||"登録エラー"));
+    else if(data.session) await applySession(data.session);
+    else setAuthMsg("登録しました。確認メールが届いた場合は、メールを確認してからLOGINしてください。");
+  }catch(e){
+    setAuthMsg("Supabaseへの接続に失敗しました。");
+  }finally{
+    $("signupBtn").disabled=false; $("signupBtn").textContent="SIGN UP";
+  }
 };
 $("logoutBtn").onclick=()=>db.auth.signOut();
 $("prevWeek").onclick=()=>{weekStart=addDays(weekStart,-7);render()};
 $("nextWeek").onclick=()=>{weekStart=addDays(weekStart,7);render()};
 
-db.auth.onAuthStateChange(async(_event,session)=>{
+async function applySession(session){
   currentUser=session?.user||null;
   if(currentUser){
     $("authView").classList.add("hidden");
@@ -300,7 +325,15 @@ db.auth.onAuthStateChange(async(_event,session)=>{
     $("appView").classList.add("hidden");
     $("authView").classList.remove("hidden");
   }
+}
+db.auth.onAuthStateChange((_event,session)=>{
+  setTimeout(()=>applySession(session),0);
 });
+(async()=>{
+  const {data,error}=await db.auth.getSession();
+  if(error) setAuthMsg("Supabaseに接続できませんでした: "+(error.message||"接続エラー"));
+  else await applySession(data.session);
+})();
 
 async function loadItems(){
   const end=addDays(weekStart,7);
@@ -390,7 +423,7 @@ async function removeItem(id){
   if(error)alert("削除できませんでした: "+error.message);else await render();
 }
 async function toggleTodo(id,checked){
-  const {error}=await db.from("life_items").update({completed:checked,updated_at:new Date().toISOString()}).eq("id",id).eq("user_id",currentUser.id);
+  const {error}=await db.from("life_items").update({completed:checked}).eq("id",id).eq("user_id",currentUser.id);
   if(error)alert("更新できませんでした: "+error.message);else await render();
 }
 $("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
